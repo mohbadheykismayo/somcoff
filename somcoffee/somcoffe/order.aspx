@@ -1,0 +1,1218 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/homepage.Master" AutoEventWireup="true" CodeBehind="order.aspx.cs" Inherits="somcoffe.order" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    
+<!-- Modal -->
+<div class="modal fade" id="catmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Order</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="col-lg-3 col-sm-6 col-12">
+<div class="form-group">
+           <input style="display:none" id="orderin" />
+<label>Category</label>
+<select class="select" id="catdrop1">
+
+</select>
+</div>
+</div>
+             <div class="col-12">
+       <div class="row" id="orderslist1"></div>
+   </div>
+<div id="selectedItemsContainer1">
+    <!-- This is where the selected items will be displayed -->
+    <div id="selectedItemsList1">
+        <!-- Items will be dynamically appended here -->
+    </div>
+
+    <!-- Overall total price -->
+    <div class="total-price-container1">
+        <strong>Total Price: $<span id="totalPrice1">0.00</span></strong>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="action-buttons">
+        <button id="takeOrderBtn" class="btn btn-success">Take Order</button>
+        <button id="clearSelectionBtn" class="btn btn-warning">Clear Selection</button>
+    </div>
+</div>
+
+
+
+
+
+      </div>
+     <%-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>--%>
+    </div>
+  </div>
+</div>
+
+    <div class="card">
+<div class="card-body">
+<div class="row">
+
+
+<div class="col-lg-3 col-sm-6 col-12">
+<div class="form-group">
+<label>Category</label>
+<select class="select" id="catdrop">
+
+</select>
+</div>
+</div>
+
+<div class="col-lg-3 col-sm-6 col-12">
+<div class="form-group">
+<label> Status</label>
+<select class="select">
+<option>Closed</option>
+<option>Open</option>
+</select>
+</div>
+</div>
+
+  
+
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="row" id="orderslist"></div>
+    </div>
+
+    <div class="col-6">
+        
+<!-- Selected Items Container -->
+<div id="selectedItemsList"></div>
+
+<!-- Total Price -->
+<div>Total Price: $<span id="totalPrice">0.00</span></div>
+
+<!-- Clear Button -->
+<button id="clearSelection" class="btn btn-danger">Clear All Selections</button>
+<button id="takeOrder" class="btn btn-success">Take Order</button>
+
+
+        <br />
+        <br />
+        <br />
+        <h1> Recent Orders</h1>
+        <div class="row">
+            <div class="col-12">
+                
+<div class="table-responsive">
+<table class="table  " id="todaystocktbl">
+<thead>
+<tr>
+
+    <th>Order ID</th>
+<th>Order Date</th>
+
+
+</tr>
+</thead>
+<tbody>
+
+</tbody>
+</table>
+</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+</div>
+</div>
+        <script src="assets/js/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/jquery.dataTables.min.js"></script>
+<script src="assets/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        //$(document).ready(function () {
+        //    let selectedItems = {}; // Object to store selected items
+
+        //    $('#catdrop').change(function () {
+        //        var search = $(this).val();
+
+        //        $.ajax({
+        //            url: 'order.aspx/orderlist',
+        //            data: JSON.stringify({ 'search': search }),
+        //            dataType: "json",
+        //            type: 'POST',
+        //            contentType: "application/json",
+        //            success: function (response) {
+        //                const data = response.d;
+        //                const container = $('#orderslist');
+        //                container.empty();
+
+        //                data.forEach(item => {
+        //                    // Check if item is already selected
+        //                    const isChecked = selectedItems[item.ItemName] ? 'checked' : '';
+        //                    const itemHtml = `
+        //                <div class="col-lg-4 col-sm-4">
+        //                    <div class="productset flex-fill">
+        //                        <div class="productsetcontent">
+        //                            <input type="checkbox" class="item-checkbox" data-item-name="${item.ItemName}" data-item-quantity="${item.QuantityRemaining}" data-item-price="${item.Price || '0'}" ${isChecked} />
+        //                            <h3>${item.ItemName}</h3>
+        //                            <h4>${item.QuantityRemaining}</h4>
+        //                            <h4>${item.Price || 'N/A'}</h4>
+        //                        </div>
+        //                    </div>
+        //                </div>
+        //            `;
+        //                    container.append(itemHtml);
+        //                });
+
+        //                $('.item-checkbox').change(function () {
+        //                    const itemName = $(this).data('item-name');
+        //                    if ($(this).is(':checked')) {
+        //                        selectedItems[itemName] = {
+        //                            maxQuantity: $(this).data('item-quantity'),
+        //                            price: parseFloat($(this).data('item-price'))
+        //                        };
+        //                    } else {
+        //                        delete selectedItems[itemName];
+        //                    }
+        //                    updateSelectedItems();
+        //                });
+        //            },
+        //            error: function (response) {
+        //                alert(response.responseText);
+        //            }
+        //        });
+        //    });
+
+        //    function updateSelectedItems() {
+        //        const selectedItemsContainer = $('#selectedItemsList');
+        //        selectedItemsContainer.empty();
+
+        //        let overallTotalPrice = 0;
+
+        //        for (const [itemName, itemDetails] of Object.entries(selectedItems)) {
+        //            const { maxQuantity, price } = itemDetails;
+
+        //            const selectedItemHtml = `
+        //        <div class="selected-item">
+        //            <h5>${itemName}</h5>
+        //            <div>
+        //                Quantity: <input type="number" class="quantity-input" value="1" min="1" max="${maxQuantity}" />
+        //                Price per unit: $<span class="price">${price.toFixed(2)}</span>
+        //                <button class="increment-btn">+</button>
+        //                <button class="decrement-btn">-</button>
+        //                <span class="total-price">Total: $${price.toFixed(2)}</span>
+        //                <button class="remove-item btn btn-danger">Remove</button>
+        //            </div>
+        //        </div>
+        //    `;
+
+        //            selectedItemsContainer.append(selectedItemHtml);
+        //            overallTotalPrice += price; // Initial total price when quantity is 1
+        //        }
+
+        //        $('#totalPrice').text(overallTotalPrice.toFixed(2));
+
+        //        // Attach events to increment and decrement buttons
+        //        $('.increment-btn').click(function (e) {
+        //            e.preventDefault();
+        //            const quantityInput = $(this).siblings('.quantity-input');
+        //            const maxQuantity = parseInt(quantityInput.attr('max'));
+        //            const currentQuantity = parseInt(quantityInput.val());
+        //            const newQuantity = Math.min(currentQuantity + 1, maxQuantity);
+        //            quantityInput.val(newQuantity);
+        //            updateTotalPrice($(this).parent());
+        //            updateOverallTotalPrice();
+        //        });
+
+        //        $('.decrement-btn').click(function (e) {
+        //            e.preventDefault();
+        //            const quantityInput = $(this).siblings('.quantity-input');
+        //            const currentQuantity = parseInt(quantityInput.val());
+        //            if (currentQuantity > 1) {
+        //                quantityInput.val(currentQuantity - 1);
+        //                updateTotalPrice($(this).parent());
+        //                updateOverallTotalPrice();
+        //            }
+        //        });
+
+        //        $('.remove-item').click(function (e) {
+        //            e.preventDefault();
+        //            const itemName = $(this).siblings('h5').text();
+        //            $(this).closest('.selected-item').remove();
+        //            delete selectedItems[itemName]; // Remove item from selectedItems
+        //            updateOverallTotalPrice();
+        //            // Uncheck the corresponding checkbox
+        //            $(`.item-checkbox[data-item-name="${itemName}"]`).prop('checked', false);
+        //        });
+        //    }
+
+        //    function updateTotalPrice(parentElement) {
+        //        const quantity = parseInt(parentElement.find('.quantity-input').val());
+        //        const pricePerUnit = parseFloat(parentElement.find('.price').text());
+        //        const totalPrice = (quantity * pricePerUnit).toFixed(2);
+        //        parentElement.find('.total-price').text(`Total: $${totalPrice}`);
+        //    }
+
+        //    function updateOverallTotalPrice() {
+        //        let total = 0;
+        //        $('#selectedItemsList .selected-item').each(function () {
+        //            const totalPrice = parseFloat($(this).find('.total-price').text().replace('Total: $', ''));
+        //            total += totalPrice;
+        //        });
+        //        $('#totalPrice').text(total.toFixed(2));
+        //    }
+
+        //    $('#clearSelection').click(function (e) {
+        //        e.preventDefault(); // Prevent default button action
+        //        $('#selectedItemsList').empty();
+        //        $('#totalPrice').text('0.00');
+        //        selectedItems = {}; // Clear selected items object
+        //        $('.item-checkbox').prop('checked', false);
+        //    });
+        //});
+
+
+
+        displaytodaystock();
+        function displaytodaystock() {
+            $.ajax({
+                url: 'order.aspx/stockorder',
+                dataType: "json",
+                type: 'POST',
+                contentType: "application/json",
+                success: function (response) {
+                    console.log(response)
+
+
+                    $("#todaystocktbl tbody").empty();
+
+                    for (var i = 0; i < response.d.length; i++) {
+                        var OrderID = response.d[i].OrderID;
+                        var OrderDateTime = response.d[i].OrderDateTime;
+                    
+
+
+
+                        $("#todaystocktbl tbody").append(
+                            "<tr>" +
+                            "<td>" + OrderID + "</td>" +
+                            "<td>" + OrderDateTime + "</td>" +
+                       
+                            "<td>" +
+                            '<a class="me-3 edit-button" data-id="' + OrderID + '">' +
+                            '<img src="assets/img/icons/edit.svg" alt="Edit">' +
+                            '</a>' +
+                            '<a class="me-3 delete-btn" data-id="' + OrderID + '">' +
+                            '<img src="assets/img/icons/delete.svg" alt="Delete">' +
+                            '</a>' +
+                            "</td>" +
+                            "</tr>"
+                        );
+                    }
+
+
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+
+
+
+        $(document).ready(function () {
+            let selectedItems = {}; // Object to store selected items
+
+            $('#catdrop').change(function () {
+                var search = $(this).val();
+
+                $.ajax({
+                    url: 'order.aspx/orderlist',
+                    data: JSON.stringify({ 'search': search }),
+                    dataType: "json",
+                    type: 'POST',
+                    contentType: "application/json",
+                    success: function (response) {
+                        const data = response.d;
+                        const container = $('#orderslist');
+                        container.empty();
+
+                        data.forEach(item => {
+                            // Check if item is already selected
+                            const isChecked = selectedItems[item.ItemID] ? 'checked' : '';
+                            const itemHtml = `
+                <div class="col-lg-4 col-sm-4">
+                    <div class="productset flex-fill">
+                        <div class="productsetcontent">
+                            <input type="checkbox" class="item-checkbox" data-item-id="${item.ItemID}" data-item-name="${item.ItemName}" data-item-quantity="${item.QuantityRemaining}" data-item-price="${item.Price || '0'}" data-stock-id="${item.StockID}" ${isChecked} />
+                            <h3>${item.ItemName}</h3>
+                            <h4>${item.QuantityRemaining}</h4>
+                            <h4>${item.Price || 'N/A'}</h4>
+                        </div>
+                    </div>
+                </div>
+            `;
+                            container.append(itemHtml);
+                        });
+
+                        $('.item-checkbox').change(function () {
+                            const itemID = $(this).data('item-id');
+                            const itemName = $(this).data('item-name');
+                            const stockID = $(this).data('stock-id');
+                            if ($(this).is(':checked')) {
+                                selectedItems[itemID] = {
+                                    name: itemName,
+                                    stockID: stockID,
+                                    maxQuantity: $(this).data('item-quantity'),
+                                    price: parseFloat($(this).data('item-price')),
+                                    quantity: 1 // default quantity
+                                };
+                            } else {
+                                delete selectedItems[itemID];
+                            }
+                            updateSelectedItems();
+                        });
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+
+            function updateSelectedItems() {
+                const selectedItemsContainer = $('#selectedItemsList');
+                selectedItemsContainer.empty();
+
+                let overallTotalPrice = 0;
+
+                for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
+                    const { name, stockID, maxQuantity, price, quantity } = itemDetails;
+
+                    const selectedItemHtml = `
+            <div class="selected-item">
+                <h5>${name}</h5>
+                <div>
+                    Quantity: <input type="number" class="quantity-input" value="${quantity}" min="1" max="${maxQuantity}" data-item-id="${itemID}" />
+                    Price per unit: $<span class="price">${price.toFixed(2)}</span>
+                    <button class="increment-btn">+</button>
+                    <button class="decrement-btn">-</button>
+                    <span class="total-price">Total: $${(quantity * price).toFixed(2)}</span>
+                    <button class="remove-item btn btn-danger">Remove</button>
+                </div>
+            </div>
+        `;
+
+                    selectedItemsContainer.append(selectedItemHtml);
+                    overallTotalPrice += quantity * price;
+                }
+
+                $('#totalPrice').text(overallTotalPrice.toFixed(2));
+
+                $('.quantity-input').change(function () {
+                    const itemID = $(this).data('item-id');
+                    const newQuantity = parseInt($(this).val());
+                    selectedItems[itemID].quantity = newQuantity;
+                    updateTotalPrice($(this).parent());
+                    updateOverallTotalPrice();
+                });
+
+                // Attach events to increment and decrement buttons
+                $('.increment-btn').click(function (e) {
+                    e.preventDefault();
+                    const quantityInput = $(this).siblings('.quantity-input');
+                    const maxQuantity = parseInt(quantityInput.attr('max'));
+                    const currentQuantity = parseInt(quantityInput.val());
+                    const newQuantity = Math.min(currentQuantity + 1, maxQuantity);
+                    quantityInput.val(newQuantity);
+                    const itemID = quantityInput.data('item-id');
+                    selectedItems[itemID].quantity = newQuantity;
+                    updateTotalPrice($(this).parent());
+                    updateOverallTotalPrice();
+                });
+
+                $('.decrement-btn').click(function (e) {
+                    e.preventDefault();
+                    const quantityInput = $(this).siblings('.quantity-input');
+                    const currentQuantity = parseInt(quantityInput.val());
+                    if (currentQuantity > 1) {
+                        quantityInput.val(currentQuantity - 1);
+                        const itemID = quantityInput.data('item-id');
+                        selectedItems[itemID].quantity = currentQuantity - 1;
+                        updateTotalPrice($(this).parent());
+                        updateOverallTotalPrice();
+                    }
+                });
+
+                $('.remove-item').click(function (e) {
+                    e.preventDefault();
+                    const itemID = $(this).siblings('.quantity-input').data('item-id');
+                    $(this).closest('.selected-item').remove();
+                    delete selectedItems[itemID];
+                    updateOverallTotalPrice();
+                    $(`.item-checkbox[data-item-id="${itemID}"]`).prop('checked', false);
+                });
+            }
+
+            function updateTotalPrice(parentElement) {
+                const quantity = parseInt(parentElement.find('.quantity-input').val());
+                const pricePerUnit = parseFloat(parentElement.find('.price').text());
+                const totalPrice = (quantity * pricePerUnit).toFixed(2);
+                parentElement.find('.total-price').text(`Total: $${totalPrice}`);
+            }
+
+            function updateOverallTotalPrice() {
+                let total = 0;
+                $('#selectedItemsList .selected-item').each(function () {
+                    const totalPrice = parseFloat($(this).find('.total-price').text().replace('Total: $', ''));
+                    total += totalPrice;
+                });
+                $('#totalPrice').text(total.toFixed(2));
+            }
+
+            $('#clearSelection').click(function (e) {
+                e.preventDefault(); // Prevent default button action
+                $('#selectedItemsList').empty();
+                $('#totalPrice').text('0.00');
+                selectedItems = {}; // Clear selected items object
+                $('.item-checkbox').prop('checked', false);
+            });
+
+            $('#takeOrder').click(function (e) {
+                e.preventDefault(); // Prevent page refresh
+
+                const orderData = [];
+                const customerId = $('#customerID').val() || null; // Get CustomerID or null if empty
+                const employeeId = $('#employeeID').val() || null; // Get EmployeeID or null if empty
+                const bookingId = $('#bookingID').val() || null; // Get BookingID or null if empty
+
+                for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
+                    orderData.push({
+                        ItemID: itemID,
+                        StockID: itemDetails.stockID, // Include StockID
+                        Quantity: itemDetails.quantity,
+                        SubTotalAmount: (itemDetails.quantity * itemDetails.price).toFixed(2)
+                    });
+                }
+                console.log(orderData);
+                $.ajax({
+                    url: 'order.aspx/takeOrder',
+                    data: JSON.stringify({
+                        order: orderData,
+                        customerId: customerId,
+                        employeeId: employeeId,
+                        bookingId: bookingId
+                    }),
+                    dataType: "json",
+                    type: 'POST',
+                    contentType: "application/json",
+                    success: function (response) {
+                        alert(response.d); // Display the success message from the server
+                    },
+                    error: function (response) {
+                        alert('Error placing the order: ' + response.responseText);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+
+
+
+            $(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "items.aspx/getcat",
+                    data: '{}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var catdrop = $("[id*=catdrop]");
+                        catdrop.empty().append('<option selected="selected" value="0">Please select</option>');
+                        $.each(r.d, function () {
+                            catdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                    }
+                });
+
+
+
+            });
+
+        });
+        $(document).ready(function () {
+
+
+
+            $(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "items.aspx/getcat",
+                    data: '{}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var catdrop1 = $("[id*=catdrop1]");
+                        catdrop1.empty().append('<option selected="selected" value="0">Please select</option>');
+                        $.each(r.d, function () {
+                            catdrop1.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                    }
+                });
+
+
+
+            });
+
+        });
+    //    $(document).ready(function () {
+    //        let selectedItems = {}; // Object to store selected items
+
+    //        $('#catdrop1').change(function () {
+    //            var search = $(this).val();
+
+    //            $.ajax({
+    //                url: 'order.aspx/orderlist',
+    //                data: JSON.stringify({ 'search': search }),
+    //                dataType: "json",
+    //                type: 'POST',
+    //                contentType: "application/json",
+    //                success: function (response) {
+    //                    const data = response.d;
+
+    //                    const container = $('#orderslist1');
+    //                    container.empty();
+
+    //                    data.forEach(item => {
+
+
+    //                        // Check if item is already selected
+    //                        const isChecked = selectedItems[item.ItemID] ? 'checked' : '';
+    //                        const itemHtml = `
+    //    <div class="col-lg-4 col-sm-4">
+    //        <div class="productset flex-fill">
+    //            <div class="productsetcontent">
+    //                <input type="checkbox" class="item-checkbox"
+    //                    data-item-id="${item.ItemID}"
+    //                    data-item-name="${item.ItemName}"
+    //                    data-item-quantity="${item.QuantityRemaining}"
+    //                    data-item-price="${item.Price || '0'}"
+    //                   data-stock-id="${item.StockID}"
+    //                          data-order-id="${item.OrderID}"
+    //                    data-order-item-id="${item.OrderItemID || ''}" ${isChecked} />
+    //           <h3>${item.ItemName}</h3>
+    //                <h4>${item.QuantityRemaining}</h4>
+    //                <h4>${item.Price || 'N/A'}</h4>
+    //            </div>
+    //        </div>
+    //    </div>
+    //`;
+    //                        container.append(itemHtml);
+    //                    });
+
+    //                    $('.item-checkbox').change(function () {
+    //                        const itemID = $(this).data('item-id');
+    //                        const itemName = $(this).data('item-name');
+    //                        const stockID = $(this).data('stock-id');
+    //                        const orderItemID = $(this).data('order-item-id');
+    //                        const orderID = $(this).data('order-id'); // Corrected here
+
+    //                        if ($(this).is(':checked')) {
+    //                            selectedItems[itemID] = {
+    //                                name: itemName,
+    //                                stockID: stockID || null,
+    //                                orderID: orderID || null, // Corrected here
+    //                                orderItemID: orderItemID || null,
+    //                                maxQuantity: $(this).data('item-quantity'),
+    //                                price: parseFloat($(this).data('item-price')),
+    //                                quantity: 1 // default quantity
+    //                            };
+    //                        } else {
+    //                            delete selectedItems[itemID];
+    //                        }
+    //                        updateSelectedItems();
+    //                    });
+
+
+
+    //                },
+    //                error: function (response) {
+    //                    alert(response.responseText);
+    //                }
+    //            });
+    //        });
+
+    //        function updateSelectedItems() {
+    //            const selectedItemsContainer = $('#selectedItemsList1');
+    //            selectedItemsContainer.empty(); // Clears previous selection to prevent duplicates
+
+    //            let overallTotalPrice = 0;
+
+
+
+
+    //            for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
+    //                const { name, stockID, OrderItemID, OrderID, maxQuantity, price, quantity } = itemDetails;
+
+    //                const selectedItemHtml = `
+    //            <div class="selected-item">
+    //                <h5>${name}</h5>
+
+    //                <div>
+    //                    Quantity: <input type="number" class="quantity-input" value="${quantity}" min="1" max="${maxQuantity}" data-item-id="${itemID}" />
+    //                    Price per unit: $<span class="price">${price.toFixed(2)}</span>
+    //                    <button class="increment-btn">+</button>
+
+    //                    <button class="decrement-btn">-</button>
+    //                    <span class="total-price">Total: $${(quantity * price).toFixed(2)}</span>
+    //                    <button class="remove-item btn btn-danger">Remove</button>
+    //                </div>
+    //            </div>
+    //        `;
+
+    //                selectedItemsContainer.append(selectedItemHtml);
+    //                overallTotalPrice += quantity * price;
+    //            }
+
+    //            $('#totalPrice1').text(overallTotalPrice.toFixed(2));
+
+    //            attachEventHandlers();
+    //        }
+
+    //        function attachEventHandlers() {
+    //            $('.quantity-input').change(function () {
+    //                const itemID = $(this).data('item-id');
+    //                const newQuantity = parseInt($(this).val());
+    //                selectedItems[itemID].quantity = newQuantity;
+    //                updateTotalPrice($(this).parent());
+    //                updateOverallTotalPrice();
+    //            });
+
+    //            $('.increment-btn').click(function (e) {
+    //                e.preventDefault();
+    //                const quantityInput = $(this).siblings('.quantity-input');
+    //                const maxQuantity = parseInt(quantityInput.attr('max'));
+    //                const currentQuantity = parseInt(quantityInput.val());
+    //                const newQuantity = Math.min(currentQuantity + 1, maxQuantity);
+    //                quantityInput.val(newQuantity);
+    //                const itemID = quantityInput.data('item-id');
+    //                selectedItems[itemID].quantity = newQuantity;
+    //                updateTotalPrice($(this).parent());
+    //                updateOverallTotalPrice();
+    //            });
+
+    //            $('.decrement-btn').click(function (e) {
+    //                e.preventDefault();
+    //                const quantityInput = $(this).siblings('.quantity-input');
+    //                const currentQuantity = parseInt(quantityInput.val());
+    //                if (currentQuantity > 1) {
+    //                    quantityInput.val(currentQuantity - 1);
+    //                    const itemID = quantityInput.data('item-id');
+    //                    selectedItems[itemID].quantity = currentQuantity - 1;
+    //                    updateTotalPrice($(this).parent());
+    //                    updateOverallTotalPrice();
+    //                }
+    //            });
+
+    //            $('.remove-item').click(function (e) {
+    //                e.preventDefault();
+    //                const itemID = $(this).siblings('.quantity-input').data('item-id');
+    //                $(this).closest('.selected-item').remove();
+    //                delete selectedItems[itemID];
+    //                updateOverallTotalPrice();
+    //                $(`.item-checkbox[data-item-id="${itemID}"]`).prop('checked', false);
+    //            });
+    //        }
+
+    //        function updateTotalPrice(parentElement) {
+    //            const quantity = parseInt(parentElement.find('.quantity-input').val());
+    //            const pricePerUnit = parseFloat(parentElement.find('.price').text());
+    //            const totalPrice = (quantity * pricePerUnit).toFixed(2);
+    //            parentElement.find('.total-price').text(`Total: $${totalPrice}`);
+    //        }
+
+    //        function updateOverallTotalPrice() {
+    //            let total = 0;
+    //            $('#selectedItemsList1 .selected-item').each(function () {
+    //                const totalPrice = parseFloat($(this).find('.total-price').text().replace('Total: $', ''));
+    //                total += totalPrice;
+    //            });
+    //            $('#totalPrice1').text(total.toFixed(2));
+    //        }
+    //        $('#clearSelectionBtn').click(function (e) {
+    //            e.preventDefault(); // Prevent default button action
+    //            $('#selectedItemsList1').empty();
+    //            $('#totalPrice1').text('0.00');
+    //            selectedItems = {}; // Clear selected items object
+    //            $('.item-checkbox').prop('checked', false);
+    //        });
+    //        $('#takeOrderBtn').click(function (e) {
+    //            e.preventDefault(); // Prevent page refresh
+    //            console.log(selectedItems);
+    //            const orderData = [];
+    //            const customerId = $('#customerID').val() || null; // Get CustomerID or null if empty
+    //            const employeeId = $('#employeeID').val() || null; // Get EmployeeID or null if empty
+    //            const orderin = $('#orderin').val() || null; // Get BookingID or null if empty
+    //            const TotalAmount = $('#totalPrice1').text() || null;
+    //            alert(TotalAmount);
+    //            for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
+    //                orderData.push({
+    //                    ItemID: itemID,
+    //                    OrderItemID: itemDetails.OrderItemID || null, // Ensure OrderItemID is passed
+    //                    orderID: itemDetails.orderID,
+    //                    StockID: itemDetails.StockID, // Include StockID
+    //                    Quantity: itemDetails.quantity,
+    //                    SubTotalAmount: (itemDetails.quantity * itemDetails.price).toFixed(2),
+    //                    orderin: orderin,
+    //                    TotalAmount: TotalAmount
+    //                });
+    //            }
+    //            console.log(orderData);
+    //            $.ajax({
+    //                url: 'order.aspx/takeOrder7',
+    //                data: JSON.stringify({
+    //                    orders: orderData,
+    //                }),
+    //                dataType: "json",
+    //                type: 'POST',
+    //                contentType: "application/json",
+    //                success: function (response) {
+    //                    alert(response.d); // Display the success message from the server
+    //                },
+    //                error: function (response) {
+    //                    alert('Error placing the order: ' + response.responseText);
+    //                }
+    //            });
+    //        });
+
+
+
+
+
+
+
+    //        $("#todaystocktbl").on("click", ".edit-button", function (event) {
+    //            event.preventDefault(); // Prevent default behavior
+
+    //            var row = $(this).closest("tr");
+    //            var id = $(this).data("id");
+
+    //            var orderid = row.find("td:nth-child(1)").text();
+    //            $("#orderin").val(orderid);
+
+
+    //            $.ajax({
+    //                url: 'order.aspx/updateorder',
+    //                data: JSON.stringify({ 'id': id }),
+    //                dataType: "json",
+    //                type: 'POST',
+    //                contentType: "application/json",
+    //                success: function (response) {
+    //                    const data = response.d;
+    //                    console.log(data);
+
+    //                    const selectedItemsContainer = $('#selectedItemsList1');
+    //                    let overallTotalPrice = parseFloat($('#totalPrice1').text()) || 0;
+
+    //                    data.forEach(item => {
+    //                        const price = parseFloat(item.Price); // Convert Price to a number
+
+    //                        if (isNaN(price)) {
+    //                            console.error(`Invalid price for item ${item.ItemName}`);
+    //                            return; // Skip this item if the price is not valid
+    //                        }
+
+    //                        // Check if the item already exists in the list
+    //                        const existingItemElement = selectedItemsContainer.find(`.quantity-input[data-item-id="${item.ItemID}"]`);
+    //                        if (existingItemElement.length > 0) {
+    //                            // Update the quantity and total price for the existing item
+    //                            existingItemElement.empty();
+    //                            const newQuantity = parseInt(existingItemElement.val()) + item.Quantity;
+    //                            existingItemElement.val(newQuantity);
+    //                            const parentElement = existingItemElement.parent();
+    //                            selectedItems[item.ItemID].quantity = newQuantity;
+    //                            updateTotalPrice(parentElement);
+    //                        } else {
+    //                            // Append new item
+    //                            selectedItems[item.ItemID] = {
+    //                                name: item.ItemName,
+    //                                maxQuantity: item.QuantityRemaining, // This could be your saved quantity or max available
+    //                                price: price,
+    //                                quantity: item.Quantity,
+    //                                OrderItemID: item.OrderItemID, // Assign OrderItemID here
+    //                                StockID: item.StockID,
+    //                                OrderID: item.OrderID
+    //                            };
+
+    //                            console.log(selectedItems);
+
+    //                            const selectedItemHtml = `
+    //            <div class="selected-item">
+    //                <h5>${item.ItemName}</h5>
+    //                <div>
+    //                    Quantity: <input type="number" class="quantity-input" value="${item.Quantity}" min="1" max="${item.QuantityRemaining}" data-item-id="${item.ItemID}" />
+    //                    Price per unit: $<span class="price">${price.toFixed(2)}</span>
+    //                    <button class="increment-btn">+</button>
+    //                    <button class="decrement-btn">-</button>
+    //                    <span class="total-price">Total: $${(item.Quantity * price).toFixed(2)}</span>
+    //                    <button class="remove-item btn btn-danger">Remove</button>
+    //                </div>
+    //            </div>
+    //            `;
+    //                            console.log(selectedItems);
+    //                            selectedItemsContainer.append(selectedItemHtml);
+    //                            overallTotalPrice += item.Quantity * price;
+    //                        }
+    //                    });
+
+    //                    $('#totalPrice1').text(overallTotalPrice.toFixed(2));
+
+    //                    // Re-attach event handlers as done before
+    //                    attachEventHandlers();
+    //                },
+    //                error: function (response) {
+    //                    alert(response.responseText);
+    //                }
+    //            });
+
+    //            $('#catmodal').modal('show');
+    //        });
+    //    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $(document).ready(function () {
+            let selectedItems = {}; // Object to store selected items
+
+            $('#catdrop1').change(function () {
+                const search = $(this).val();
+
+                $.ajax({
+                    url: 'order.aspx/orderlist',
+                    data: JSON.stringify({ 'search': search }),
+                    dataType: "json",
+                    type: 'POST',
+                    contentType: "application/json",
+                    success: function (response) {
+                        const data = response.d;
+                        const container = $('#orderslist1');
+                        container.empty();
+
+                        data.forEach(item => {
+                            const isChecked = selectedItems[item.ItemID] ? 'checked' : '';
+                            const itemHtml = `
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="productset flex-fill">
+                                <div class="productsetcontent">
+                                    <input type="checkbox" class="item-checkbox" 
+                                        data-item-id="${item.ItemID}" 
+                                        data-item-name="${item.ItemName}" 
+                                        data-item-quantity="${item.QuantityRemaining}" 
+                                        data-item-price="${item.Price || '0'}" 
+                                        data-stock-id="${item.StockID}" 
+                                        data-order-id="${item.OrderID}" 
+                                        data-order-item-id="${item.OrderItemID || ''}" ${isChecked} />
+                                    <h3>${item.ItemName}</h3>
+                                    <h4>${item.QuantityRemaining}</h4>
+                                    <h4>${item.Price || 'N/A'}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                            container.append(itemHtml);
+                        });
+
+                        attachCheckboxChangeHandlers();
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+
+            function attachCheckboxChangeHandlers() {
+                $('.item-checkbox').change(function () {
+                    const itemID = $(this).data('item-id');
+                    const itemName = $(this).data('item-name');
+                    const stockID = $(this).data('stock-id');
+                    const orderItemID = $(this).data('order-item-id');
+                    const orderID = $(this).data('order-id');
+                    const maxQuantity = $(this).data('item-quantity');
+                    const price = parseFloat($(this).data('item-price'));
+
+                    if ($(this).is(':checked')) {
+                        selectedItems[itemID] = {
+                            name: itemName,
+                            stockID: stockID || null,
+                            orderID: orderID || null,
+                            orderItemID: orderItemID || null,
+                            maxQuantity: maxQuantity,
+                            price: price,
+                            quantity: 1 // default quantity
+                        };
+                    } else {
+                        delete selectedItems[itemID];
+                    }
+                    updateSelectedItems();
+                });
+            }
+
+            function updateSelectedItems() {
+                const selectedItemsContainer = $('#selectedItemsList1');
+                selectedItemsContainer.empty(); // Clears previous selection to prevent duplicates
+
+                let overallTotalPrice = 0;
+
+                for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
+                    const { name, stockID, orderItemID, orderID, maxQuantity, price, quantity } = itemDetails;
+
+                    const selectedItemHtml = `
+                <div class="selected-item">
+                    <h5>${name}</h5>
+                    <div>
+                        Quantity: <input type="number" class="quantity-input" value="${quantity}" min="1" max="${maxQuantity}" data-item-id="${itemID}" />
+                        Price per unit: $<span class="price">${price.toFixed(2)}</span>
+                        <button class="increment-btn">+</button>
+                        <button class="decrement-btn">-</button>
+                        <span class="total-price">Total: $${(quantity * price).toFixed(2)}</span>
+                        <button class="remove-item btn btn-danger">Remove</button>
+                    </div>
+                </div>
+            `;
+
+                    selectedItemsContainer.append(selectedItemHtml);
+                    overallTotalPrice += quantity * price;
+                }
+
+                $('#totalPrice1').text(overallTotalPrice.toFixed(2));
+                attachEventHandlers();
+            }
+
+            function attachEventHandlers() {
+                $('.quantity-input').change(function () {
+                    const itemID = $(this).data('item-id');
+                    const newQuantity = parseInt($(this).val());
+                    selectedItems[itemID].quantity = newQuantity;
+                    updateTotalPrice($(this).parent());
+                    updateOverallTotalPrice();
+                });
+
+                $('.increment-btn').click(function (e) {
+                    e.preventDefault();
+                    const quantityInput = $(this).siblings('.quantity-input');
+                    const maxQuantity = parseInt(quantityInput.attr('max'));
+                    const currentQuantity = parseInt(quantityInput.val());
+                    const newQuantity = Math.min(currentQuantity + 1, maxQuantity);
+                    quantityInput.val(newQuantity);
+                    const itemID = quantityInput.data('item-id');
+                    selectedItems[itemID].quantity = newQuantity;
+                    updateTotalPrice($(this).parent());
+                    updateOverallTotalPrice();
+                });
+
+                $('.decrement-btn').click(function (e) {
+                    e.preventDefault();
+                    const quantityInput = $(this).siblings('.quantity-input');
+                    const currentQuantity = parseInt(quantityInput.val());
+                    if (currentQuantity > 1) {
+                        quantityInput.val(currentQuantity - 1);
+                        const itemID = quantityInput.data('item-id');
+                        selectedItems[itemID].quantity = currentQuantity - 1;
+                        updateTotalPrice($(this).parent());
+                        updateOverallTotalPrice();
+                    }
+                });
+
+                $('.remove-item').click(function (e) {
+                    e.preventDefault();
+                    const itemID = $(this).siblings('.quantity-input').data('item-id');
+                    $(this).closest('.selected-item').remove();
+                    delete selectedItems[itemID];
+                    updateOverallTotalPrice();
+                    $(`.item-checkbox[data-item-id="${itemID}"]`).prop('checked', false);
+                });
+            }
+
+            function updateTotalPrice(parentElement) {
+                const quantity = parseInt(parentElement.find('.quantity-input').val());
+                const pricePerUnit = parseFloat(parentElement.find('.price').text());
+                const totalPrice = (quantity * pricePerUnit).toFixed(2);
+                parentElement.find('.total-price').text(`Total: $${totalPrice}`);
+            }
+
+            function updateOverallTotalPrice() {
+                let total = 0;
+                $('#selectedItemsList1 .selected-item').each(function () {
+                    const totalPrice = parseFloat($(this).find('.total-price').text().replace('Total: $', ''));
+                    total += totalPrice;
+                });
+                $('#totalPrice1').text(total.toFixed(2));
+            }
+
+            $('#clearSelectionBtn').click(function (e) {
+                e.preventDefault(); // Prevent default button action
+                $('#selectedItemsList1').empty();
+                $('#totalPrice1').text('0.00');
+                selectedItems = {}; // Clear selected items object
+                $('.item-checkbox').prop('checked', false);
+            });
+
+            $('#takeOrderBtn').click(function (e) {
+                e.preventDefault(); // Prevent page refresh
+                console.log(selectedItems);
+
+                const orderData = [];
+                const customerId = $('#customerID').val() || null; // Get CustomerID or null if empty
+                const employeeId = $('#employeeID').val() || null; // Get EmployeeID or null if empty
+                const orderin = $('#orderin').val() || null; // Get BookingID or null if empty
+                const TotalAmount = $('#totalPrice1').text() || null;
+
+                alert(TotalAmount);
+
+                for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
+                    orderData.push({
+                        ItemID: itemID,
+                        OrderItemID: itemDetails.orderItemID || null, // Ensure OrderItemID is passed
+                        orderID: itemDetails.orderID,
+                        StockID: itemDetails.stockID, // Include StockID
+                        Quantity: itemDetails.quantity,
+                        SubTotalAmount: (itemDetails.quantity * itemDetails.price).toFixed(2),
+                        orderin: orderin,
+                        TotalAmount: TotalAmount
+                    });
+                }
+                console.log(orderData);
+
+                $.ajax({
+                    url: 'order.aspx/takeorder',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ orderData: orderData, customerId: customerId, employeeId: employeeId }),
+                    success: function (response) {
+                        console.log('Order placed successfully.');
+                    },
+                    error: function (error) {
+                        console.log('Error placing order:', error);
+                    }
+                });
+            });
+            $("#todaystocktbl").on("click", ".edit-button", function (event) {
+                event.preventDefault(); // Prevent default behavior
+
+                var row = $(this).closest("tr");
+                var id = $(this).data("id");
+
+                var orderid = row.find("td:nth-child(1)").text();
+                $("#orderin").val(orderid);
+
+                $('#totalPrice1').empty();
+                $.ajax({
+                    url: 'order.aspx/updateorder',
+                    data: JSON.stringify({ 'id': id }),
+                    dataType: "json",
+                    type: 'POST',
+                    contentType: "application/json",
+                    success: function (response) {
+                        const data = response.d;
+                        console.log(data);
+
+                        const selectedItemsContainer = $('#selectedItemsList1');
+                        selectedItemsContainer.empty();
+                        let overallTotalPrice = parseFloat($('#totalPrice1').text()) || 0;
+
+                        data.forEach(item => {
+                            const price = parseFloat(item.Price); // Convert Price to a number
+
+                            if (isNaN(price)) {
+                                console.error(`Invalid price for item ${item.ItemName}`);
+                                return; // Skip this item if the price is not valid
+                            }
+
+                            // Check if the item already exists in the list
+                            const existingItemElement = selectedItemsContainer.find(`.quantity-input[data-item-id="${item.ItemID}"]`);
+                            if (existingItemElement.length > 0) {
+                                // Update the quantity and total price for the existing item
+                                existingItemElement.empty();
+                                const newQuantity = parseInt(existingItemElement.val()) + item.Quantity;
+                                existingItemElement.val(newQuantity);
+                                const parentElement = existingItemElement.parent();
+                                selectedItems[item.ItemID].quantity = newQuantity;
+                                updateTotalPrice(parentElement);
+                            } else {
+                                // Append new item
+                                selectedItems[item.ItemID] = {
+                                    name: item.ItemName,
+                                    maxQuantity: item.QuantityRemaining, // This could be your saved quantity or max available
+                                    price: price,
+                                    quantity: item.Quantity,
+                                    OrderItemID: item.OrderItemID, // Assign OrderItemID here
+                                    StockID: item.StockID,
+                                    OrderID: item.OrderID
+                                };
+
+                                console.log(selectedItems);
+
+                                const selectedItemHtml = `
+                    <div class="selected-item">
+                        <h5>${item.ItemName}</h5>
+                        <div>
+                            Quantity: <input type="number" class="quantity-input" value="${item.Quantity}" min="1" max="${item.QuantityRemaining}" data-item-id="${item.ItemID}" />
+                            Price per unit: $<span class="price">${price.toFixed(2)}</span>
+                            <button class="increment-btn">+</button>
+                            <button class="decrement-btn">-</button>
+                            <span class="total-price">Total: $${(item.Quantity * price).toFixed(2)}</span>
+                            <button class="remove-item btn btn-danger">Remove</button>
+                        </div>
+                    </div>
+                    `;
+                                console.log(selectedItems);
+                                selectedItemsContainer.append(selectedItemHtml);
+                                overallTotalPrice += item.Quantity * price;
+                            }
+                        });
+
+                        $('#totalPrice1').text(overallTotalPrice.toFixed(2));
+
+                        // Re-attach event handlers as done before
+                        attachEventHandlers();
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+                $('#catmodal').modal('show');
+            });
+        });
+
+
+       
+    </script>
+</asp:Content>
