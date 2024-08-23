@@ -189,7 +189,7 @@
     <th>OrderDateTime</th>
 <th>CustomerName</th>
         <th>EmployeeName</th>
-<th>TotalBookingAmount</th>
+<th>CreditAmount</th>
     <th>TotalAmount</th>
 <th>TotalCombinedAmount</th>
 
@@ -318,7 +318,7 @@
     <th>ItemName</th>
 <th>CustomerName</th>
         <th>EmployeeName</th>
-<th>TotalBookingAmount</th>
+<th>CreditAmount</th>
        <th>SubTotalAmount</th>
     <th>Quantity</th>
 <th>OrderDateTime</th>
@@ -412,7 +412,7 @@
 <tr>
 
     <th>order date </th>
-<th>booking</th>
+<th>totalcredits</th>
         <th>amount </th>
 <th>total amount</th>
 
@@ -612,7 +612,7 @@
 
                     for (var i = 0; i < response.d.length; i++) {
                         var OrderDate = response.d[i].OrderDate;
-                        var TotalBookingAmountPerDay = response.d[i].TotalBookingAmountPerDay;
+                        var totalcredits = response.d[i].totalcredits;
                         var TotalAmountPerDay = response.d[i].TotalAmountPerDay;
                         var TotalCombinedAmountPerDay = response.d[i].TotalCombinedAmountPerDay;
               
@@ -623,7 +623,7 @@
                         $("#todaystocktbl tbody").append(
                             "<tr>" +
                             "<td>" + OrderDate + "</td>" +
-                            "<td>" + TotalBookingAmountPerDay + "</td>" +
+                            "<td>" + totalcredits + "</td>" +
                             "<td>" + TotalAmountPerDay + "</td>" +
                             "<td>" + TotalCombinedAmountPerDay + "</td>" +
               
@@ -661,7 +661,7 @@
                         var CustomerName = response.d[i].CustomerName;
                         var EmployeeName = response.d[i].EmployeeName;
                         
-                        var TotalBookingAmount = response.d[i].TotalBookingAmount;
+                        var CreditAmount = response.d[i].CreditAmount;
                         var TotalAmount = response.d[i].TotalAmount;
                         var TotalCombinedAmount = response.d[i].TotalCombinedAmount;
 
@@ -678,7 +678,7 @@
                             "<td>" + OrderDateTime + "</td>" +
                             "<td>" + CustomerName + "</td>" +
                             "<td>" + EmployeeName + "</td>" +
-                            "<td>" + TotalBookingAmount + "</td>" +
+                            "<td>" + CreditAmount + "</td>" +
                             "<td>" + TotalAmount + "</td>" +
                             "<td>" + TotalCombinedAmount + "</td>" +
                                  "</tr>"
@@ -719,7 +719,7 @@
                         var CustomerName = response.d[i].CustomerName;
                         var EmployeeName = response.d[i].EmployeeName;
 
-                        var TotalBookingAmount = response.d[i].TotalBookingAmount;
+                        var CreditAmount = response.d[i].CreditAmount;
                         var TotalAmount = response.d[i].TotalAmount;
                         var TotalCombinedAmount = response.d[i].TotalCombinedAmount;
                         var OrderID = response.d[i].OrderID;
@@ -736,7 +736,7 @@
                             "<td>" + OrderDateTime + "</td>" +
                             "<td>" + CustomerName + "</td>" +
                             "<td>" + EmployeeName + "</td>" +
-                            "<td>" + TotalBookingAmount + "</td>" +
+                            "<td>" + CreditAmount + "</td>" +
                             "<td>" + TotalAmount + "</td>" +
                             "<td>" + TotalCombinedAmount + "</td>" +
                             "<td>" +

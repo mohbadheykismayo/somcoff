@@ -20,9 +20,9 @@ namespace somcoffe
         public class dailyorderreport
         {
             public string OrderDate;
-            public string TotalBookingAmountPerDay;
-            public string TotalAmountPerDay;
             public string TotalCombinedAmountPerDay;
+            public string TotalAmountPerDay;
+            public string totalcredits;
 
         }
         [WebMethod]
@@ -35,19 +35,16 @@ namespace somcoffe
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
-       SELECT 
+   
+SELECT 
     CAST(Orders.OrderDateTime AS DATE) AS OrderDate, 
-    SUM(COALESCE(Bookings.TotalBookingAmount, 0)) AS TotalBookingAmountPerDay, 
+    SUM(COALESCE(Credits.CreditAmount, 0)) AS TotalCredits, 
     SUM(COALESCE(Orders.TotalAmount, 0)) AS TotalAmountPerDay,
-    SUM(COALESCE(Bookings.TotalBookingAmount, 0) + COALESCE(Orders.TotalAmount, 0)) AS TotalCombinedAmountPerDay
+    SUM(COALESCE(Orders.TotalAmount, 0)) - SUM(COALESCE(Credits.CreditAmount, 0)) AS TotalCombinedAmountPerDay
 FROM 
     Orders
 LEFT JOIN 
-    Customers ON Orders.CustomerID = Customers.CustomerID
-LEFT JOIN 
-    Employees ON Orders.EmployeeID = Employees.EmployeeID
-LEFT JOIN 
-    Bookings ON Orders.BookingID = Bookings.BookingID
+    Credits ON Orders.OrderID = Credits.OrderID
 GROUP BY 
     CAST(Orders.OrderDateTime AS DATE)
 ORDER BY 
@@ -59,7 +56,7 @@ ORDER BY
                 {
                     dailyorderreport field = new dailyorderreport();
                     field.OrderDate = dr["OrderDate"].ToString();
-                    field.TotalBookingAmountPerDay = dr["TotalBookingAmountPerDay"].ToString();
+                    field.totalcredits = dr["TotalCredits"].ToString();
 
 
                     field.TotalAmountPerDay = dr["TotalAmountPerDay"].ToString();
@@ -82,7 +79,7 @@ ORDER BY
             public string CustomerName;
             public string EmployeeName;
      
-            public string TotalBookingAmount;
+            public string CreditAmount;
             public string TotalAmount;
             public string TotalCombinedAmount;
             public string OrderID;
@@ -108,21 +105,26 @@ ORDER BY
                 SqlCommand cmd = new SqlCommand(@"  
 
 
+
+		
 	SELECT 
     Orders.OrderDateTime, 
     Customers.CustomerName, 
     Employees.EmployeeName, 
-    Bookings.TotalBookingAmount, 
+Credits.CreditAmount,
     Orders.TotalAmount,
-    COALESCE(Bookings.TotalBookingAmount, 0) + COALESCE(Orders.TotalAmount, 0) AS TotalCombinedAmount
+COALESCE(Orders.TotalAmount, 0) - COALESCE(Credits.CreditAmount, 0) AS TotalCombinedAmount
 FROM 
     Orders
 LEFT JOIN 
     Customers ON Orders.CustomerID = Customers.CustomerID
+		LEFT JOIN 
+    Credits ON Customers.CustomerID = Credits.CustomerID
 LEFT JOIN 
     Employees ON Orders.EmployeeID = Employees.EmployeeID
 LEFT JOIN 
     Bookings ON Orders.BookingID = Bookings.BookingID;
+
         ", con);
 
                 SqlDataReader dr = cmd.ExecuteReader();
@@ -135,7 +137,7 @@ LEFT JOIN
 
                     field.EmployeeName = dr["EmployeeName"].ToString();
 
-                    field.TotalBookingAmount = dr["TotalBookingAmount"].ToString();
+                    field.CreditAmount = dr["CreditAmount"].ToString();
 
                     field.TotalAmount = dr["TotalAmount"].ToString();
                     field.TotalCombinedAmount = dr["TotalCombinedAmount"].ToString();
@@ -163,22 +165,25 @@ LEFT JOIN
                 SqlCommand cmd = new SqlCommand(@"  
 
 
+
+		
 	SELECT 
     Orders.OrderID, 
     Orders.OrderDateTime, 
     Customers.CustomerName, 
     Employees.EmployeeName, 
-    Bookings.TotalBookingAmount, 
-    Orders.TotalAmount,
-    COALESCE(Bookings.TotalBookingAmount, 0) + COALESCE(Orders.TotalAmount, 0) AS TotalCombinedAmount
+    COALESCE(Credits.CreditAmount, 0) AS CreditAmount,
+    COALESCE(Orders.TotalAmount, 0) AS TotalAmount,
+    COALESCE(Orders.TotalAmount, 0) - COALESCE(Credits.CreditAmount, 0) AS TotalCombinedAmount
 FROM 
     Orders
 LEFT JOIN 
     Customers ON Orders.CustomerID = Customers.CustomerID
 LEFT JOIN 
-    Employees ON Orders.EmployeeID = Employees.EmployeeID
+    Credits ON Orders.OrderID = Credits.OrderID
 LEFT JOIN 
-    Bookings ON Orders.BookingID = Bookings.BookingID
+    Employees ON Orders.EmployeeID = Employees.EmployeeID
+
 WHERE 
     CAST(Orders.OrderDateTime AS DATE) = @id;
         ", con);
@@ -194,7 +199,7 @@ WHERE
 
                     field.EmployeeName = dr["EmployeeName"].ToString();
 
-                    field.TotalBookingAmount = dr["TotalBookingAmount"].ToString();
+                    field.CreditAmount = dr["CreditAmount"].ToString();
 
                     field.TotalAmount = dr["TotalAmount"].ToString();
                     field.TotalCombinedAmount = dr["TotalCombinedAmount"].ToString();
@@ -224,15 +229,14 @@ WHERE
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
 
-
 	SELECT 
 	Items.ItemName,
 	Order_Items.Quantity,
 		Order_Items.SubTotalAmount,
     Orders.OrderDateTime, 
     Customers.CustomerName, 
-    Employees.EmployeeName, 
-    Bookings.TotalBookingAmount
+    Employees.EmployeeName
+
  
 FROM 
     Orders
@@ -240,10 +244,10 @@ LEFT JOIN
     Customers ON Orders.CustomerID = Customers.CustomerID
 LEFT JOIN 
     Employees ON Orders.EmployeeID = Employees.EmployeeID
-LEFT JOIN 
-    Bookings ON Orders.BookingID = Bookings.BookingID
+
 	LEFT JOIN  Order_Items ON Orders.OrderID = Order_Items.OrderID
 		LEFT JOIN  Items ON Order_Items.ItemID = Items.ItemID
+
 WHERE  Orders.OrderID = @id
         ", con);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -263,7 +267,7 @@ WHERE  Orders.OrderID = @id
                     field.CustomerName = dr["CustomerName"].ToString();
                     field.EmployeeName = dr["EmployeeName"].ToString();
 
-                    field.TotalBookingAmount = dr["TotalBookingAmount"].ToString();
+              
                     details.Add(field);
                 }
             } // Connection will be automatically closed here

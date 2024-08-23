@@ -2,14 +2,122 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    
+    <!-- Modal -->
+<div class="modal fade" id="catmodal3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel3">Customer Operations</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+          <div class="page-header">
+<div class="page-title">
+<h4>Add Customer</h4>
+
+</div>
+</div>
+
+<div class="card">
+<div class="card-body">
+<div class="row">
+    <div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label> Customer </label>
+<select class="select" id="custid">
+
+</select>
+
+</div>
+</div>
+    <div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label> Room</label>
+<select class="select" id="roomid">
+
+</select>
+
+</div>
+</div>
+
+
+        <div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label> Booking Date</label>
+    <input  type="datetime-local" id="date" class="form-control"/>
+</div>
+</div>
+
+<div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label>Duration </label>
+<input type="text" id="duration">
+        <small id="duration1" class="text-danger"></small>
+</div>
+</div>
+
+
+  
+  
+<div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label>Amount</label>
+<input type="text" class="form-control" id="price">
+        <small id="price1" class="text-danger"></small>
+</div>
+</div>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="col-lg-12">
+        <a href="javascript:void(0);" id="deletebtn2" class="btn btn-submit me-2" onclick="deletecategory()">delete</a>
+    <a href="javascript:void(0);" id="editbtn2" class="btn btn-submit me-2" onclick="updatecategory()">edit</a>
+<a href="javascript:void(0);" id="submitbtn2" class="btn btn-submit me-2" onclick="submitbooking()">Submit</a>
+<a href="categorylist.html" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
+</div>
+</div>
+</div>
+</div>
+
+      </div>
+     <%-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>--%>
+    </div>
+  </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="catmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Item Operations</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Customer Operations</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -88,11 +196,102 @@
   </div>
 </div>
 
+    <!-- Modal -->
+<div class="modal fade" id="catmodal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel1">Rooms Operations</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+          <div class="page-header">
+<div class="page-title">
+<h4>Add Rooms</h4>
+
+</div>
+</div>
+
+<div class="card">
+<div class="card-body">
+<div class="row">
+
+<div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label>Room name</label>
+<input type="text" id="room">
+        <small id="room1" class="text-danger"></small>
+</div>
+</div>
+
+    <div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label>Capacity</label>
+<input type="text" id="capa">
+        <small id="capa1" class="text-danger"></small>
+</div>
+</div>
+
+  
+  
+<div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label>Price</label>
+<input type="text" class="form-control" id="amount">
+        <small id="amount1" class="text-danger"></small>
+</div>
+</div>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="col-lg-12">
+        <a href="javascript:void(0);" id="deletebtn1" class="btn btn-submit me-2" onclick="deletecategory()">delete</a>
+    <a href="javascript:void(0);" id="editbtn1" class="btn btn-submit me-2" onclick="updatecategory()">edit</a>
+<a href="javascript:void(0);" id="submitbtn1" class="btn btn-submit me-2" onclick="submitroom()">Submit</a>
+<a href="categorylist.html" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
+</div>
+</div>
+</div>
+</div>
+
+      </div>
+     <%-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>--%>
+    </div>
+  </div>
+</div>
+
     <div class="row">
     <div class="col-6">
         <div class="page-header">
 <div class="page-title">
-<h4>Items list</h4>
+<h4>Customers list</h4>
 
 </div>
 <div class="page-btn">
@@ -186,16 +385,408 @@
 </div>
 </div>
     </div>
+
+
+
+
+
+            <div class="col-6">
+        <div class="page-header">
+<div class="page-title">
+<h4>Rooms list</h4>
+
+</div>
+<div class="page-btn">
+<a href="#" class="btn btn-added" onclick="callmodal1()">
+<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Rooms
+</a>
+</div>
+</div>
+
+<div class="card">
+<div class="card-body">
+<div class="table-top">
+<div class="search-set">
+<div class="search-path">
+<a class="btn btn-filter" id="filter_search1">
+<img src="assets/img/icons/filter.svg" alt="img">
+<span><img src="assets/img/icons/closes.svg" alt="img"></span>
+</a>
+</div>
+<div class="search-input">
+<a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+</div>
+</div>
+<div class="wordset">
+<ul>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+</li>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
+</li>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
+</li>
+</ul>
+</div>
+</div>
+
+<div class="card" id="filter_inputs1">
+<div class="card-body pb-0">
+<div class="row">
+<div class="col-lg-2 col-sm-6 col-12">
+<div class="form-group">
+<select class="select">
+<option>Choose Category</option>
+<option>Computers</option>
+</select>
+</div>
+</div>
+<div class="col-lg-2 col-sm-6 col-12">
+<div class="form-group">
+<select class="select">
+<option>Choose Sub Category</option>
+<option>Fruits</option>
+</select>
+</div>
+</div>
+<div class="col-lg-2 col-sm-6 col-12">
+<div class="form-group">
+<select class="select">
+<option>Choose Sub Brand</option>
+<option>Iphone</option>
+</select>
+</div>
+</div>
+<div class="col-lg-1 col-sm-6 col-12 ms-auto">
+<div class="form-group">
+<a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img"></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="table-responsive">
+<table class="table  " id="datatable1">
+<thead>
+<tr>
+
+    <th>Room Name</th>
+<th>Capacity</th>
+    <th>Price</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+
+</tbody>
+</table>
+</div>
+</div>
+</div>
+    </div>
         </div>
     
 
+    <div class="row">
+        <div class="col-6">
+        <div class="page-header">
+<div class="page-title">
+<h4>Booking list</h4>
 
+</div>
+<div class="page-btn">
+<a href="#" class="btn btn-added" onclick="callmodal3()">
+<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Booking 
+</a>
+</div>
+</div>
+
+<div class="card">
+<div class="card-body">
+<div class="table-top">
+<div class="search-set">
+<div class="search-path">
+<a class="btn btn-filter" id="filter_search3">
+<img src="assets/img/icons/filter.svg" alt="img">
+<span><img src="assets/img/icons/closes.svg" alt="img"></span>
+</a>
+</div>
+<div class="search-input">
+<a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+</div>
+</div>
+<div class="wordset">
+<ul>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+</li>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
+</li>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+<div class="table-responsive">
+<table class="table  " id="datatable3">
+<thead>
+<tr>
+
+    <th>Customer Name</th>
+<th>Room Name</th>
+
+        <th>BookingDateTime</th>
+<th>Duration</th>
+
+
+        <th>TotalBookingAmount</th>
+<th>Number</th>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+
+</tbody>
+</table>
+</div>
+</div>
+</div>
+    </div>
+    </div>
 
 
     <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/dataTables.bootstrap4.min.js"></script>
     <script>
+
+        $(document).ready(function () {
+
+
+
+            $(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "add_details.aspx/getcust",
+                    data: '{}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var itemdrop = $("[id*=custid]");
+                        itemdrop.empty().append('<option selected="selected" value="0">Please select</option>');
+                        $.each(r.d, function () {
+                            itemdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                    }
+                });
+
+
+
+            });
+
+        });
+
+        $(document).ready(function () {
+
+
+
+            $(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "add_details.aspx/getroom",
+                    data: '{}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var itemdrop = $("[id*=roomid]");
+                        itemdrop.empty().append('<option selected="selected" value="0">Please select</option>');
+                        $.each(r.d, function () {
+                            itemdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                    }
+                });
+
+
+
+            });
+
+        });
+
+
+        function submitbooking() {
+            // Clear previous error messages
+            document.getElementById('duration1').textContent = "";
+            document.getElementById('price1').textContent = "";
+            document.getElementById('amount1').textContent = "";
+
+            var price = $("#price").val();
+            var duration = $("#duration").val();
+            var date = $("#date").val();
+            var custid = $("#custid").val();
+            var roomid = $("#roomid").val();
+            // Validate the form values
+            let isValid = true;
+
+            // Uncomment and adjust validation as necessary
+            if (duration.trim() === "") {
+                document.getElementById('duration1').textContent = "Please select an item.";
+                isValid = false;
+            }
+            if (price.trim() === "") {
+                document.getElementById('price1').textContent = "Please enter a valid date.";
+                isValid = false;
+            }
+
+            // If all validations pass, proceed with AJAX call
+            if (isValid) {
+                $.ajax({
+                    url: 'add_details.aspx/submitbooking',
+                    data: JSON.stringify({ 'price': price, 'duration': duration, 'date': date, 'custid': custid, 'roomid': roomid }),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (response) {
+                        console.log(response);
+                        if (response.d === 'true') {
+                            Swal.fire(
+                                'Successfully Saved!',
+                                'You added a new Stock!',
+                                'success'
+                            );
+                            $('#stockmodal').modal('hide');
+                            clearInputFields();
+                            displaystock();
+                        } else {
+                            // Handle errors in the response
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data Insertion Failed',
+                                text: 'There was an error while inserting the stock data: ' + response.d,
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'AJAX Error',
+                            text: 'An error occurred during the AJAX request: ' + response.responseText,
+                        });
+                    }
+                });
+            }
+
+            function clearInputFields() {
+                // Clear the input fields
+                $("#itemdrop").val('');
+                $("#date").val('');
+                $("#qtya").val('');
+            }
+        }
+
+
+
+
+
+        function submitroom() {
+            // Clear previous error messages
+            document.getElementById('room1').textContent = "";
+            document.getElementById('capa1').textContent = "";
+            document.getElementById('amount1').textContent = "";
+
+            var room = $("#room").val();
+            var capa = $("#capa").val();
+            var amount = $("#amount").val();
+
+            // Validate the form values
+            let isValid = true;
+
+            // Uncomment and adjust validation as necessary
+            if (room.trim() === "") {
+                document.getElementById('room1').textContent = "Please select an item.";
+                isValid = false;
+            }
+            if (capa.trim() === "") {
+                document.getElementById('capa1').textContent = "Please enter a valid date.";
+                isValid = false;
+            }
+
+            if (amount.trim() === "") {
+                document.getElementById('amount1').textContent = "Please enter a valid date.";
+                isValid = false;
+            }
+            // If all validations pass, proceed with AJAX call
+            if (isValid) {
+                $.ajax({
+                    url: 'add_details.aspx/submitroom',
+                    data: JSON.stringify({ 'room': room, 'capa': capa, 'amount': amount }),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (response) {
+                        console.log(response);
+                        if (response.d === 'true') {
+                            Swal.fire(
+                                'Successfully Saved!',
+                                'You added a new Stock!',
+                                'success'
+                            );
+                            $('#stockmodal').modal('hide');
+                            clearInputFields();
+                            displaystock();
+                        } else {
+                            // Handle errors in the response
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data Insertion Failed',
+                                text: 'There was an error while inserting the stock data: ' + response.d,
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'AJAX Error',
+                            text: 'An error occurred during the AJAX request: ' + response.responseText,
+                        });
+                    }
+                });
+            }
+
+            function clearInputFields() {
+                // Clear the input fields
+                $("#itemdrop").val('');
+                $("#date").val('');
+                $("#qtya").val('');
+            }
+        }
+
+
         function submitstock() {
             // Clear previous error messages
             document.getElementById('custname1').textContent = "";
@@ -271,6 +862,25 @@
             $('#catmodal').modal('show');
 
         }
+        function callmodal1() {
+            document.getElementById('submitbtn1').style.display = 'inline-block';
+            document.getElementById('editbtn1').style.display = 'none';
+            document.getElementById('deletebtn1').style.display = 'none';
+            /*  $("#catname").val('');*/
+            $('#catmodal1').modal('show');
+
+        }
+
+        function callmodal3() {
+            document.getElementById('submitbtn2').style.display = 'inline-block';
+            document.getElementById('editbtn2').style.display = 'none';
+            document.getElementById('deletebtn2').style.display = 'none';
+            /*  $("#catname").val('');*/
+            $('#catmodal3').modal('show');
+
+        }
+
+
         displaycustomer();
         function displaycustomer() {
             $.ajax({
@@ -317,5 +927,114 @@
             });
         }
 
+
+
+
+
+        displayrooms();
+        function displayrooms() {
+            $.ajax({
+                url: 'add_details.aspx/displayrooms',
+                dataType: "json",
+                type: 'POST',
+                contentType: "application/json",
+                success: function (response) {
+                    console.log(response)
+
+
+                    $("#datatable1 tbody").empty();
+
+                    for (var i = 0; i < response.d.length; i++) {
+                        var RoomName = response.d[i].RoomName;
+                        var Capacity = response.d[i].Capacity;
+                        var PricePerHour = response.d[i].PricePerHour;
+
+                        var RoomID = response.d[i].RoomID;
+
+                        
+
+
+
+
+                        $("#datatable1 tbody").append(
+                            "<tr>" +
+                            "<td>" + RoomName + "</td>" +
+                            "<td>" + Capacity + "</td>" +
+                            "<td>" + PricePerHour + "</td>" +
+                            "<td>" +
+                            '<a class="me-3 edit-button" data-id="' + RoomID + '">' +
+                            '<img src="assets/img/icons/edit.svg" alt="Edit">' +
+                            '</a>' +
+                            '<a class="me-3 delete-btn" data-id="' + RoomID + '">' +
+                            '<img src="assets/img/icons/delete.svg" alt="Delete">' +
+                            '</a>' +
+                            "</td>" +
+                            "</tr>"
+                        );
+                    }
+
+
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+
+
+
+
+        displaybooking();
+        function displaybooking() {
+            $.ajax({
+                url: 'add_details.aspx/displaybooking',
+                dataType: "json",
+                type: 'POST',
+                contentType: "application/json",
+                success: function (response) {
+                    console.log(response)
+
+
+                    $("#datatable3 tbody").empty();
+
+                    for (var i = 0; i < response.d.length; i++) {
+                        var BookingID = response.d[i].BookingID;
+                        var CustomerName = response.d[i].CustomerName;
+                        var RoomName = response.d[i].RoomName;
+                        var BookingDateTime = response.d[i].BookingDateTime;
+
+                        var Duration = response.d[i].Duration;
+                        var TotalBookingAmount = response.d[i].TotalBookingAmount;
+
+
+
+
+                        $("#datatable3 tbody").append(
+                            "<tr>" +
+               
+                            "<td>" + CustomerName + "</td>" +
+                            "<td>" + RoomName + "</td>" +
+                          "<td>" + BookingDateTime + "</td>" +
+                            "<td>" + Duration + "</td>" +
+                            "<td>" + TotalBookingAmount + "</td>" +
+                            "<td>" +
+                            '<a class="me-3 edit-button" data-id="' + BookingID + '">' +
+                            '<img src="assets/img/icons/edit.svg" alt="Edit">' +
+                            '</a>' +
+                            '<a class="me-3 delete-btn" data-id="' + BookingID + '">' +
+                            '<img src="assets/img/icons/delete.svg" alt="Delete">' +
+                            '</a>' +
+                            "</td>" +
+                            "</tr>"
+                        );
+                    }
+
+
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
     </script>
 </asp:Content>

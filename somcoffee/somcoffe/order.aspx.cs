@@ -87,7 +87,7 @@ GROUP BY
         }
 
         [WebMethod]
-        public static string TakeOrder(List<OrderItem> order, int? customerId, int? employeeId, int? bookingId)
+        public static string TakeOrder(List<OrderItem> order, int? customerId, int? amountPaid, int? employeeId, int? bookingId)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
             int orderId = 0;
@@ -115,6 +115,42 @@ GROUP BY
 
                     orderId = (int)cmd.ExecuteScalar();
                 }
+
+
+
+
+
+
+
+
+
+                // Insert the credits i
+                using (SqlCommand cmd1 = new SqlCommand(@"INSERT INTO Credits (CustomerID, CreditAmount, IssuedByEmployeeID , OrderID)
+                                                   VALUES (@CustomerID,@creditamount, @EmployeeID , @OrderID)", conn))
+                {
+                    cmd1.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
+                    cmd1.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
+                    cmd1.Parameters.AddWithValue("@creditamount", amountPaid.HasValue ? (object)amountPaid.Value : DBNull.Value);
+                    cmd1.Parameters.AddWithValue("@OrderID", orderId);
+
+
+                    cmd1.ExecuteScalar();
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 // Insert each item into the Order_Items table and update Item_Stock
                 foreach (var item in order)

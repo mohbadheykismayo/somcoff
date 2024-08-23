@@ -95,6 +95,27 @@
 <!-- Total Price -->
 <div>Total Price: $<span id="totalPrice">0.00</span></div>
 
+        <div>
+    <input type="checkbox" id="isCreditOrder" /> Credit Order
+</div>
+<div id="creditDetails" style="display: none;">
+    <label for="customerID">Customer:</label>
+    <select class="form-control" id="customerID">
+        <option value="">Select Customer</option>
+        <!-- Add customer options here -->
+    </select>
+    
+    <label for="employeeID">Employee:</label>
+    <select class="form-control" id="employeeID">
+        <option value="">Select Employee</option>
+        <!-- Add employee options here -->
+    </select>
+    
+    <label for="amountPaid">Amount Paid:</label>
+    <input class="form-control" type="number" id="amountPaid" min="0" step="0.01" value="0.00" />
+</div>
+
+        <br />
 <!-- Clear Button -->
 <button id="clearSelection" class="btn btn-danger">Clear All Selections</button>
 <button id="takeOrder" class="btn btn-success">Take Order</button>
@@ -486,6 +507,16 @@
                 $('.item-checkbox').prop('checked', false);
             });
 
+
+            // Toggle visibility of credit order details
+            $('#isCreditOrder').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#creditDetails').show();
+                } else {
+                    $('#creditDetails').hide();
+                }
+            });
+
             $('#takeOrder').click(function (e) {
                 e.preventDefault(); // Prevent page refresh
 
@@ -493,6 +524,9 @@
                 const customerId = $('#customerID').val() || null; // Get CustomerID or null if empty
                 const employeeId = $('#employeeID').val() || null; // Get EmployeeID or null if empty
                 const bookingId = $('#bookingID').val() || null; // Get BookingID or null if empty
+                const isCreditOrder = $('#isCreditOrder').is(':checked'); // Check if order is credit
+                const amountPaid = $('#amountPaid').val() || 0; // Get amount paid or 0 if empty
+
 
                 for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
                     orderData.push({
@@ -502,15 +536,25 @@
                         SubTotalAmount: (itemDetails.quantity * itemDetails.price).toFixed(2)
                     });
                 }
+                // Prepare the data object to be sent to the server
+                let dataToSend = {
+                    order: orderData,
+                    customerId: customerId,
+                    employeeId: employeeId,
+                    bookingId: bookingId
+                };
+
+                if (isCreditOrder) {
+                    // If credit order is checked, add additional data
+                    dataToSend.isCreditOrder = isCreditOrder;
+                    dataToSend.amountPaid = amountPaid;
+                }
+
                 console.log(orderData);
+                console.log(dataToSend);
                 $.ajax({
                     url: 'order.aspx/takeOrder',
-                    data: JSON.stringify({
-                        order: orderData,
-                        customerId: customerId,
-                        employeeId: employeeId,
-                        bookingId: bookingId
-                    }),
+                    data: JSON.stringify(dataToSend),
                     dataType: "json",
                     type: 'POST',
                     contentType: "application/json",
@@ -899,7 +943,33 @@
 
 
 
+        $(document).ready(function () {
 
+
+
+            $(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "add_details.aspx/getcust",
+                    data: '{}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var itemdrop = $("[id*=customerID]");
+                        itemdrop.empty().append('<option selected="selected" value="0">Please select</option>');
+                        $.each(r.d, function () {
+                            itemdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                    }
+                });
+
+
+
+            });
+
+        });
 
 
 
