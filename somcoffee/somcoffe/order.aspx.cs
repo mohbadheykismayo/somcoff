@@ -86,8 +86,93 @@ GROUP BY
             return details.ToArray();
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
         [WebMethod]
-        public static string TakeOrder(List<OrderItem> order, int? customerId, int? amountPaid, int? employeeId, int? bookingId)
+        public static orderslist[] drinkdrop(string search)
+        {
+            List<orderslist> details = new List<orderslist>();
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand(@" 	
+
+		 SELECT 
+    Items.ItemName,
+    MAX(Items.ItemID) AS ItemID,
+    MAX(Item_Stock.StockID) AS  StockID,
+    MAX(Items.Price) AS Price,
+    MAX(Item_Stock.StockDate) AS StockDate,
+    SUM(Item_Stock.QuantitySold) AS QuantitySold,
+    SUM(Item_Stock.QuantityRemaining) AS QuantityRemaining
+FROM 
+    Item_Stock
+INNER JOIN 
+    Items ON Items.ItemID = Item_Stock.ItemID
+	WHERE 
+Items.Section = @search   AND CAST(Item_Stock.StockDate AS DATE) = CAST(GETDATE() AS DATE)
+GROUP BY 
+    Items.ItemName
+
+", con);
+                cmd.Parameters.AddWithValue("@search", search);
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        orderslist field = new orderslist();
+                        field.ItemName = dr["ItemName"].ToString();
+                        field.QuantitySold = dr["QuantitySold"].ToString();
+                        field.QuantityRemaining = dr["QuantityRemaining"].ToString();
+                        field.Price = dr["Price"].ToString();
+                        field.ItemID = dr["ItemID"].ToString();
+                        field.StockID = dr["StockID"].ToString();
+
+
+
+
+
+
+                        details.Add(field);
+                    }
+                }
+            }
+
+            return details.ToArray();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [WebMethod]
+        public static string TakeOrder(List<OrderItem> order, int? customerId, int? amountPaid, int? employeeId)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
             int orderId = 0;
@@ -104,13 +189,13 @@ GROUP BY
                 }
 
                 // Insert the order into the Orders table
-                using (SqlCommand cmd = new SqlCommand(@"INSERT INTO Orders (CustomerID, EmployeeID, BookingID, OrderDateTime, TotalAmount)
+                using (SqlCommand cmd = new SqlCommand(@"INSERT INTO Orders (CustomerID, EmployeeID, OrderDateTime, TotalAmount)
                                                     OUTPUT INSERTED.OrderID
-                                                    VALUES (@CustomerID, @EmployeeID, @BookingID, GETDATE(), @TotalAmount)", conn))
+                                                    VALUES (@CustomerID, @EmployeeID,  GETDATE(), @TotalAmount)", conn))
                 {
                     cmd.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@BookingID", bookingId.HasValue ? (object)bookingId.Value : DBNull.Value);
+           
                     cmd.Parameters.AddWithValue("@TotalAmount", totalAmount);
 
                     orderId = (int)cmd.ExecuteScalar();
@@ -122,22 +207,20 @@ GROUP BY
 
 
 
-
-
-                // Insert the credits i
-                using (SqlCommand cmd1 = new SqlCommand(@"INSERT INTO Credits (CustomerID, CreditAmount, IssuedByEmployeeID , OrderID)
-                                                   VALUES (@CustomerID,@creditamount, @EmployeeID , @OrderID)", conn))
+                // Check if employeeId is not null before executing the SQL command
+                if (customerId.HasValue)
                 {
-                    cmd1.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
-                    cmd1.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
-                    cmd1.Parameters.AddWithValue("@creditamount", amountPaid.HasValue ? (object)amountPaid.Value : DBNull.Value);
-                    cmd1.Parameters.AddWithValue("@OrderID", orderId);
+                    using (SqlCommand cmd1 = new SqlCommand(@"INSERT INTO Credits (CustomerID, CreditAmount, IssuedByEmployeeID, OrderID)
+                                              VALUES (@CustomerID, @creditamount, @EmployeeID, @OrderID)", conn))
+                    {
+                        cmd1.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
+                        cmd1.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)customerId.Value : DBNull.Value);
+                        cmd1.Parameters.AddWithValue("@creditamount", amountPaid.HasValue ? (object)amountPaid.Value : DBNull.Value);
+                        cmd1.Parameters.AddWithValue("@OrderID", orderId);
 
-
-                    cmd1.ExecuteScalar();
+                        cmd1.ExecuteScalar();
+                    }
                 }
-
-
 
 
 

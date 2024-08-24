@@ -368,11 +368,7 @@
 <h4>Total Daly reports</h4>
 
 </div>
-<div class="page-btn">
-<a href="#" class="btn btn-added" onclick="startnextday()">
-<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Start The Next Day
-</a>
-</div>
+
 </div>
 
 <div class="card">
@@ -436,11 +432,7 @@
 <h4>Stock Items Report</h4>
 
 </div>
-<div class="page-btn">
-<a href="#" class="btn btn-added" onclick="callmodal()">
-<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Items
-</a>
-</div>
+
 </div>
 
 <div class="card">
