@@ -66,7 +66,7 @@
     
     <label for="employeeID1">Employee:</label>
     <select class="form-control" id="employeeID1">
-        <option value="">Select Employee</option>
+   
         <!-- Add employee options here -->
     </select>
     
@@ -1661,7 +1661,33 @@
 
 
 
+        $(document).ready(function () {
 
+
+
+            $(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "order.aspx/getemployee",
+                    data: '{}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var itemdrop = $("[id*=employeeID1]");
+                        itemdrop.empty().append('<option selected="selected" value="0">Please select</option>');
+                        $.each(r.d, function () {
+                            itemdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                    }
+                });
+
+
+
+            });
+
+        });
 
 
         $(document).ready(function () {
@@ -1759,7 +1785,7 @@
                 $('.item-checkbox').change(function () {
                     const itemID = $(this).data('item-id');
                     const itemName = $(this).data('item-name');
-                    const stockID = $(this).data('stock-id');
+                    const StockID = $(this).data('stock-id');
                     const orderItemID = $(this).data('order-item-id');
                     const orderID = $(this).data('order-id');
                     const maxQuantity = $(this).data('item-quantity');
@@ -1769,7 +1795,7 @@
                     if ($(this).is(':checked')) {
                         selectedItems[itemID] = {
                             name: itemName,
-                            stockID: stockID || null,
+                            StockID: StockID || null,
                             orderID: orderID || null,
                             orderItemID: orderItemID || null,
                             maxQuantity: maxQuantity,
@@ -1790,7 +1816,7 @@
                 let overallTotalPrice = 0;
 
                 for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
-                    const { name, stockID, orderItemID, orderID, maxQuantity, price, quantity } = itemDetails;
+                    const { name, StockID, orderItemID, orderID, maxQuantity, price, quantity } = itemDetails;
 
                     const selectedItemHtml = `
                 <div class="selected-item">
@@ -1889,6 +1915,8 @@
                     $('#creditDetails1').hide();
                 }
             });
+
+     
             $('#takeOrderBtn').click(function (e) {
                 e.preventDefault(); // Prevent page refresh
                 console.log(selectedItems);
@@ -1898,14 +1926,14 @@
                 const employeeId = $('#employeeID1').val() || null; // Get EmployeeID or null if empty
                 const orderin = $('#orderin').val() || null; // Get BookingID or null if empty
                 const TotalAmount = $('#totalPrice1').text() || null;
-
+                const amountPaid = isCreditOrder ? parseFloat($('#amountPaid1').val()) || 0 : null;
 
                 for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
                     orderData.push({
                         ItemID: itemID,
                         OrderItemID: itemDetails.OrderItemID || null, // Ensure OrderItemID is passed
                         orderID: itemDetails.orderID,
-                        StockID: itemDetails.stockID, // Include StockID
+                        StockID: itemDetails.StockID, // Include StockID
                         Quantity: itemDetails.quantity,
                         SubTotalAmount: (itemDetails.quantity * itemDetails.price).toFixed(2),
                         orderin: orderin,
@@ -1915,12 +1943,13 @@
                 console.log(orderData);
          
                 $.ajax({
-                    url: 'order.aspx/takeorder0',
+                    url: 'order.aspx/takeorder7',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ orderData: orderData, customerId: customerId, employeeId: employeeId }),
+                    data: JSON.stringify({ orders: orderData, customerId: customerId, employeeId: employeeId, amountPaid: amountPaid }),
                     success: function (response) {
-                        console.log('Order placed successfully.');
+                    
+                        alert("Order placed successfully");
                     },
                     error: function (error) {
                         console.log('Error placing order:', error);
@@ -1946,7 +1975,7 @@
                         success: function (response) {
                             const data = response.d;
                        
-
+                            console.log(data);
                             const selectedItemsContainer = $('#selectedItemsList1');
                             selectedItemsContainer.empty();
                             let overallTotalPrice = parseFloat($('#totalPrice1').text()) || 0;
@@ -2017,6 +2046,7 @@
 
    
         });
+
 
 
 

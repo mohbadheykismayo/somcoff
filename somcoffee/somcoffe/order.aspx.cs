@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static somcoffe.add_details;
 using static somcoffe.items;
 
 namespace somcoffe
@@ -18,6 +20,38 @@ namespace somcoffe
         {
 
         }
+
+        [WebMethod]
+        public static List<ListItem> getemployee()
+        {
+            string query = "select EmployeeID,EmployeeName from Employees";
+            string constr = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    List<ListItem> customers = new List<ListItem>();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            customers.Add(new ListItem
+                            {
+                                Value = sdr["EmployeeID"].ToString(),
+                                Text = sdr["EmployeeName"].ToString()
+                            });
+                        }
+                    }
+                    con.Close();
+                    return customers;
+                }
+            }
+        }
+
+
         public class orderslist
         {
             public string ItemName;
@@ -416,15 +450,8 @@ AND CAST(Item_Stock.StockDate AS DATE) = CAST(GETDATE() AS DATE);
 
 
 
-
-
-
-
-
-
-
         [WebMethod]
-        public static string takeOrder7(OrderData[] orders)
+        public static string takeOrder7(OrderData[] orders, int? customerId, int? employeeId, int? amountPaid)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
@@ -435,120 +462,175 @@ AND CAST(Item_Stock.StockDate AS DATE) = CAST(GETDATE() AS DATE);
                     con.Open();
 
                     // Begin a transaction
-                    SqlTransaction transaction = con.BeginTransaction();
-
-                    try
+                    using (SqlTransaction transaction = con.BeginTransaction())
                     {
-                        foreach (var order in orders)
+                        try
                         {
-                            if (order.OrderItemID != null)
+                            foreach (var order in orders)
                             {
-                                // Get the previous quantity for the order item
-                                int previousQuantity;
-                                using (SqlCommand cmd = new SqlCommand(@"
-                                SELECT Quantity
-                                FROM Order_Items
-                                WHERE OrderItemID = @OrderItemID;", con, transaction))
+                                if (order.OrderItemID != null)
                                 {
-                                    cmd.Parameters.AddWithValue("@OrderItemID", order.OrderItemID);
-                                    previousQuantity = (int)cmd.ExecuteScalar();
+                                    // Get the previous quantity for the order item
+                                    int previousQuantity;
+                                    using (SqlCommand cmd = new SqlCommand(@"
+                            SELECT Quantity
+                            FROM Order_Items
+                            WHERE OrderItemID = @OrderItemID;", con, transaction))
+                                    {
+                                        cmd.Parameters.AddWithValue("@OrderItemID", order.OrderItemID);
+                                        previousQuantity = (int)cmd.ExecuteScalar();
+                                    }
+
+                                    // Calculate the difference in quantity
+                                    int quantityDifference = order.Quantity - previousQuantity;
+
+                                    // Update the order item
+                                    using (SqlCommand cmd = new SqlCommand(@"
+                            UPDATE Order_Items
+                            SET Quantity = @Quantity,
+                                SubTotalAmount = @SubTotalAmount
+                            WHERE OrderItemID = @OrderItemID;", con, transaction))
+                                    {
+                                        cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
+                                        cmd.Parameters.AddWithValue("@SubTotalAmount", order.SubTotalAmount);
+                                        cmd.Parameters.AddWithValue("@OrderItemID", order.OrderItemID);
+                                        cmd.ExecuteNonQuery();
+                                    }
+
+                                    // Update the stock based on the quantity difference
+                                    using (SqlCommand cmd = new SqlCommand(@"
+                            UPDATE Item_Stock
+                            SET QuantitySold = QuantitySold + @QuantityDifference,
+                                QuantityRemaining = QuantityRemaining - @QuantityDifference
+                            WHERE StockID = @StockID AND ItemID = @ItemID;", con, transaction))
+                                    {
+                                        cmd.Parameters.AddWithValue("@QuantityDifference", quantityDifference);
+                                        cmd.Parameters.AddWithValue("@StockID", order.StockID);
+                                        cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                }
+                                else
+                                {
+                                    // Insert new order item
+                                    using (SqlCommand cmd = new SqlCommand(@"
+                            INSERT INTO Order_Items (OrderID, ItemID, Quantity, SubTotalAmount)
+                            VALUES (@OrderID, @ItemID, @Quantity, @SubTotalAmount);", con, transaction))
+                                    {
+                                        cmd.Parameters.AddWithValue("@OrderID", order.orderin);
+                                        cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
+                                        cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
+                                        cmd.Parameters.AddWithValue("@SubTotalAmount", order.SubTotalAmount);
+                                        cmd.ExecuteNonQuery();
+                                    }
+
+                                    // Update stock for the new order item
+                                    using (SqlCommand cmd = new SqlCommand(@"
+                            UPDATE Item_Stock
+                            SET QuantitySold = QuantitySold + @Quantity,
+                                QuantityRemaining = QuantityRemaining - @Quantity
+                            WHERE StockID = @StockID AND ItemID = @ItemID;", con, transaction))
+                                    {
+                                        cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
+                                        cmd.Parameters.AddWithValue("@StockID", order.StockID);
+                                        cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
+                                        cmd.ExecuteNonQuery();
+                                    }
                                 }
 
-                                // Calculate the difference in quantity
-                                int quantityDifference = order.Quantity - previousQuantity;
+                        
 
-                                // Update the order item
-                                using (SqlCommand cmd = new SqlCommand(@"
-                                UPDATE Order_Items
-                                SET Quantity = @Quantity,
-                                    SubTotalAmount = @SubTotalAmount
-                                WHERE OrderItemID = @OrderItemID;", con, transaction))
+                                // Update customer credit if customerId is provided
+                                if (customerId.HasValue && employeeId.HasValue)
                                 {
-                                    cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
-                                    cmd.Parameters.AddWithValue("@SubTotalAmount", order.SubTotalAmount);
-                                    cmd.Parameters.AddWithValue("@OrderItemID", order.OrderItemID);
-                                    cmd.ExecuteNonQuery();
-                                }
+                                    // Update the order in the Orders table
+                                    using (SqlCommand cmd = new SqlCommand(@"
+                        UPDATE Orders 
+                        SET EmployeeID = @EmployeeID, 
+                            OrderDateTime = GETDATE(), 
+                            CustomerID = @CustomerID,
+                            TotalAmount = @TotalAmount
+                        WHERE OrderID = @OrderID;", con, transaction))
+                                    {
+                                        cmd.Parameters.AddWithValue("@OrderID", order.orderin);
+                                        cmd.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
+                                        cmd.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
+                                            cmd.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+                                        cmd.ExecuteNonQuery();
+                                    }
 
 
-                                // Update the order 
-                                using (SqlCommand cmd = new SqlCommand(@"
-                                UPDATE Orders
-                                SET TotalAmount = @TotalAmount
-                            
-                                WHERE OrderID = @OrderID;", con, transaction))
-                                {
-                               
-                                    cmd.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
-                                    cmd.Parameters.AddWithValue("@OrderID", order.orderin);
-                                    cmd.ExecuteNonQuery();
-                                }
-                                // Update the stock based on the quantity difference
-                                using (SqlCommand cmd = new SqlCommand(@"
-                                UPDATE Item_Stock
-                                SET QuantitySold = QuantitySold + @QuantityDifference,
-                                    QuantityRemaining = QuantityRemaining - @QuantityDifference
-                                WHERE StockID = @StockID ;", con, transaction))
-                                {
-                                    cmd.Parameters.AddWithValue("@QuantityDifference", quantityDifference);
-                                    cmd.Parameters.AddWithValue("@StockID", order.stockID);
-                                    cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
-                                    cmd.ExecuteNonQuery();
+
+
+
+
+
+
+
+
+
+                                    int creditID;
+                                    using (SqlCommand cmd = new SqlCommand(@"
+                            SELECT CreditID
+                            FROM Credits
+                            WHERE OrderID = @OrderID;", con, transaction))
+                                    {
+                                        cmd.Parameters.AddWithValue("@OrderID", order.orderin);
+                                        object result = cmd.ExecuteScalar();
+                                        creditID = result != null ? (int)result : 0;
+                                    }
+
+                                    if (creditID > 0)
+                                    {
+                                        using (SqlCommand cmd = new SqlCommand(@"
+                                UPDATE Credits 
+                                SET CreditAmount = @CreditAmount, 
+                                    IssuedByEmployeeID = @EmployeeID 
+                                WHERE CreditID = @CreditID;", con, transaction))
+                                        {
+                                            cmd.Parameters.AddWithValue("@CreditID", creditID);
+                                            cmd.Parameters.AddWithValue("@CreditAmount", amountPaid.HasValue ? (object)amountPaid.Value : DBNull.Value);
+                                            cmd.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 }
                             }
-                            else
-                            {
-                                // Insert new order item
-                                using (SqlCommand cmd = new SqlCommand(@"
-                                INSERT INTO Order_Items (OrderID, ItemID, Quantity, SubTotalAmount)
-                                VALUES (@OrderID, @ItemID, @Quantity, @SubTotalAmount);", con, transaction))
-                                {
-                                    cmd.Parameters.AddWithValue("@OrderID", order.orderin);
-                                    cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
-                                    cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
-                                    cmd.Parameters.AddWithValue("@SubTotalAmount", order.SubTotalAmount);
-                                    cmd.ExecuteNonQuery();
-                                }
 
-                                // Update the order 
-                                using (SqlCommand cmd = new SqlCommand(@"
-                                UPDATE Orders
-                                SET TotalAmount = @TotalAmount
-                            
-                                WHERE OrderID = @OrderID;", con, transaction))
-                                {
-
-                                    cmd.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
-                                    cmd.Parameters.AddWithValue("@OrderID", order.orderin);
-                                    cmd.ExecuteNonQuery();
-                                }
-                                // Update stock for the new order item
-                                using (SqlCommand cmd = new SqlCommand(@"
-                                UPDATE Item_Stock
-                                SET QuantitySold = QuantitySold + @Quantity,
-                                    QuantityRemaining = QuantityRemaining - @Quantity
-                                WHERE StockID = @StockID AND ItemID = @ItemID;", con, transaction))
-                                {
-                                    cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
-                                    cmd.Parameters.AddWithValue("@StockID", order.stockID);
-                                    cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
-                                    cmd.ExecuteNonQuery();
-                                }
-                            }
+                            // Commit the transaction after processing all items
+                            transaction.Commit();
+                            return "Order processed successfully!";
                         }
-
-                        // Commit the transaction after processing all items
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Rollback the transaction if an error occurs
-                        transaction.Rollback();
-                        return "Error: " + ex.Message;
+                        catch (Exception ex)
+                        {
+                            // Rollback the transaction if an error occurs
+                            transaction.Rollback();
+                            return "Error: " + ex.Message;
+                        }
                     }
                 }
-
-                return "Order processed successfully!";
             }
             catch (Exception ex)
             {
@@ -557,16 +639,238 @@ AND CAST(Item_Stock.StockDate AS DATE) = CAST(GETDATE() AS DATE);
         }
 
 
+
+
+
+
+
+        //[WebMethod]
+        //public static string takeOrder7(OrderData[] orders, int? customerId, int? employeeId , int? amountPaid)
+        //{
+        //    string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+        //    try
+        //    {
+        //        using (SqlConnection con = new SqlConnection(cs))
+        //        {
+        //            con.Open();
+
+        //            // Begin a transaction
+        //            SqlTransaction transaction = con.BeginTransaction();
+
+        //            try
+        //            {
+        //                foreach (var order in orders)
+        //                {
+        //                    if (order.OrderItemID != null)
+        //                    {
+        //                        // Get the previous quantity for the order item
+        //                        int previousQuantity;
+        //                        using (SqlCommand cmd = new SqlCommand(@"
+        //                        SELECT Quantity
+        //                        FROM Order_Items
+        //                        WHERE OrderItemID = @OrderItemID;", con, transaction))
+        //                        {
+        //                            cmd.Parameters.AddWithValue("@OrderItemID", order.OrderItemID);
+        //                            previousQuantity = (int)cmd.ExecuteScalar();
+        //                        }
+
+        //                        // Calculate the difference in quantity
+        //                        int quantityDifference = order.Quantity - previousQuantity;
+
+        //                        // Update the order item
+        //                        using (SqlCommand cmd = new SqlCommand(@"
+        //                        UPDATE Order_Items
+        //                        SET Quantity = @Quantity,
+        //                            SubTotalAmount = @SubTotalAmount
+        //                        WHERE OrderItemID = @OrderItemID;", con, transaction))
+        //                        {
+        //                            cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
+        //                            cmd.Parameters.AddWithValue("@SubTotalAmount", order.SubTotalAmount);
+        //                            cmd.Parameters.AddWithValue("@OrderItemID", order.OrderItemID);
+        //                            cmd.ExecuteNonQuery();
+        //                        }
+
+
+        //                        // Update the order 
+        //                        using (SqlCommand cmd = new SqlCommand(@"
+        //                        UPDATE Orders
+        //                        SET TotalAmount = @TotalAmount
+
+        //                        WHERE OrderID = @OrderID;", con, transaction))
+        //                        {
+
+        //                            cmd.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+        //                            cmd.Parameters.AddWithValue("@OrderID", order.orderin);
+        //                            cmd.ExecuteNonQuery();
+        //                        }
+        //                        // Update the stock based on the quantity difference
+        //                        using (SqlCommand cmd = new SqlCommand(@"
+        //                        UPDATE Item_Stock
+        //                        SET QuantitySold = QuantitySold + @QuantityDifference,
+        //                            QuantityRemaining = QuantityRemaining - @QuantityDifference
+        //                        WHERE StockID = @StockID ;", con, transaction))
+        //                        {
+        //                            cmd.Parameters.AddWithValue("@QuantityDifference", quantityDifference);
+        //                            cmd.Parameters.AddWithValue("@StockID", order.StockID);
+        //                            cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
+        //                            cmd.ExecuteNonQuery();
+        //                        }
+
+        //                        // Update the order in the Orders table
+        //                        using (SqlCommand cmd = new SqlCommand(@"UPDATE Orders 
+        //                                SET EmployeeID = @EmployeeID, 
+        //                                    OrderDateTime = GETDATE(), 
+        //                                    TotalAmount = @TotalAmount
+        //                                OUTPUT INSERTED.OrderID
+        //                                WHERE CustomerID = @CustomerID", con))
+        //                        {
+        //                            cmd.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
+        //                            cmd.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
+        //                            cmd.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+
+        //                            cmd.ExecuteScalar();
+        //                        }
+
+
+        //                        // Check if customerId is not null before executing the SQL command
+        //                        if (customerId.HasValue)
+        //                        {
+        //                            using (SqlCommand cmd1 = new SqlCommand(@"UPDATE Credits 
+        //        SET CreditAmount = @creditamount, 
+        //            IssuedByEmployeeID = @EmployeeID 
+        //        WHERE CustomerID = @CustomerID 
+        //        AND OrderID = @OrderID", con))
+        //                            {
+        //                                cmd1.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
+        //                                cmd1.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
+        //                                cmd1.Parameters.AddWithValue("@creditamount", amountPaid.HasValue ? (object)amountPaid.Value : DBNull.Value);
+        //                                cmd1.Parameters.AddWithValue("@OrderID",order.orderin);
+
+        //                                cmd1.ExecuteNonQuery();
+        //                            }
+        //                        }
+
+
+
+
+
+        //                    }
+        //                    else
+        //                    {
+        //                        // Insert new order item
+        //                        using (SqlCommand cmd = new SqlCommand(@"
+        //                        INSERT INTO Order_Items (OrderID, ItemID, Quantity, SubTotalAmount)
+        //                        VALUES (@OrderID, @ItemID, @Quantity, @SubTotalAmount);", con, transaction))
+        //                        {
+        //                            cmd.Parameters.AddWithValue("@OrderID", order.orderin);
+        //                            cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
+        //                            cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
+        //                            cmd.Parameters.AddWithValue("@SubTotalAmount", order.SubTotalAmount);
+        //                            cmd.ExecuteNonQuery();
+        //                        }
+
+        //                        // Update the order 
+        //                        using (SqlCommand cmd = new SqlCommand(@"
+        //                        UPDATE Orders
+        //                        SET TotalAmount = @TotalAmount
+
+        //                        WHERE OrderID = @OrderID;", con, transaction))
+        //                        {
+
+        //                            cmd.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+        //                            cmd.Parameters.AddWithValue("@OrderID", order.orderin);
+        //                            cmd.ExecuteNonQuery();
+        //                        }
+        //                        // Update stock for the new order item
+        //                        using (SqlCommand cmd = new SqlCommand(@"
+        //                        UPDATE Item_Stock
+        //                        SET QuantitySold = QuantitySold + @Quantity,
+        //                            QuantityRemaining = QuantityRemaining - @Quantity
+        //                        WHERE StockID = @StockID AND ItemID = @ItemID;", con, transaction))
+        //                        {
+        //                            cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
+        //                            cmd.Parameters.AddWithValue("@StockID", order.StockID);
+        //                            cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
+        //                            cmd.ExecuteNonQuery();
+        //                        }
+        //                    }
+
+
+        //                    // Update the order in the Orders table
+        //                    using (SqlCommand cmd = new SqlCommand(@"UPDATE Orders 
+        //                                SET EmployeeID = @EmployeeID, 
+        //                                    OrderDateTime = GETDATE(), 
+        //                                    TotalAmount = @TotalAmount
+        //                                OUTPUT INSERTED.OrderID
+        //                                WHERE CustomerID = @CustomerID", con))
+        //                    {
+        //                        cmd.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
+        //                        cmd.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
+        //                        cmd.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+
+        //                        cmd.ExecuteScalar();
+        //                    }
+
+
+
+
+        //                    // Check if customerId is not null before executing the SQL command
+        //                    if (customerId.HasValue)
+        //                    {
+        //                        using (SqlCommand cmd1 = new SqlCommand(@"UPDATE Credits 
+        //        SET CreditAmount = @creditamount, 
+        //            IssuedByEmployeeID = @EmployeeID 
+        //        WHERE CustomerID = @CustomerID 
+        //        AND OrderID = @OrderID", con))
+        //                        {
+        //                            cmd1.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
+        //                            cmd1.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
+        //                            cmd1.Parameters.AddWithValue("@creditamount", amountPaid.HasValue ? (object)amountPaid.Value : DBNull.Value);
+        //                            cmd1.Parameters.AddWithValue("@OrderID", order.orderin);
+
+        //                            cmd1.ExecuteNonQuery();
+        //                        }
+        //                    }
+
+
+
+        //                }
+
+        //                // Commit the transaction after processing all items
+        //                transaction.Commit();
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                // Rollback the transaction if an error occurs
+        //                transaction.Rollback();
+        //                return "Error: " + ex.Message;
+        //            }
+        //        }
+
+        //        return "Order processed successfully!";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return "Error: " + ex.Message;
+        //    }
+        //}
+
+
         public class OrderData
         {
             public int? OrderItemID { get; set; }
             public int orderin { get; set; }
             public int ItemID { get; set; }
-            public int stockID { get; set; }
+            public int StockID { get; set; }
             public int Quantity { get; set; }
             public decimal SubTotalAmount { get; set; }
             public decimal TotalAmount { get; set; }
-            
+            public int customerId { get; set; }
+            public int employeeId { get; set; }
+
+
+
         }
 
 
