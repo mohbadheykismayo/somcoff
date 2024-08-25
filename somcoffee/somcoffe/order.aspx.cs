@@ -21,6 +21,9 @@ namespace somcoffe
 
         }
 
+
+
+
         [WebMethod]
         public static List<ListItem> getemployee()
         {
@@ -63,7 +66,11 @@ namespace somcoffe
             public string OrderItemID;
             public string OrderID;
             public string Quantity;
-            
+            public string EmployeeName;
+            public string CreditAmount;
+            public string CustomerName;
+     
+
 
         }
         [WebMethod]
@@ -388,21 +395,28 @@ GROUP BY
 	 	
 SELECT 
     Order_Items.ItemID,
-	   Order_Items.OrderItemID,
+    Order_Items.OrderItemID,
     Order_Items.Quantity,
-	   Orders.OrderID,
+    Orders.OrderID,
     Order_Items.SubTotalAmount,
     Items.ItemName,
     Item_Stock.QuantitySold,
-   Item_Stock.QuantityRemaining,
-	Items.Price,
-	Item_Stock.StockID
+    Item_Stock.QuantityRemaining,
+    Items.Price,
+    Item_Stock.StockID,
+    Credits.CreditAmount,
+    Customers.CustomerName,
+    Employees.EmployeeName
 FROM Orders 
-INNER JOIN Order_Items ON Orders.OrderID = Order_Items.OrderID
-INNER JOIN Items ON Order_Items.ItemID = Items.ItemID
-INNER JOIN Item_Stock ON Items.ItemID = Item_Stock.ItemID
+LEFT JOIN Order_Items ON Orders.OrderID = Order_Items.OrderID
+LEFT JOIN Items ON Order_Items.ItemID = Items.ItemID
+LEFT JOIN Item_Stock ON Items.ItemID = Item_Stock.ItemID
+LEFT JOIN Credits ON Orders.OrderID = Credits.OrderID
+LEFT JOIN Customers ON Orders.CustomerID = Customers.CustomerID
+LEFT JOIN Employees ON Orders.EmployeeID = Employees.EmployeeID
 WHERE Order_Items.OrderID = @id
 AND CAST(Item_Stock.StockDate AS DATE) = CAST(GETDATE() AS DATE);
+
 ", con);
                 cmd.Parameters.AddWithValue("@id", id);
 
@@ -420,8 +434,10 @@ AND CAST(Item_Stock.StockDate AS DATE) = CAST(GETDATE() AS DATE);
                         field.OrderItemID = dr["OrderItemID"].ToString();
                         field.OrderID = dr["OrderID"].ToString();
                         field.Quantity = dr["Quantity"].ToString();
+                        field.EmployeeName = dr["EmployeeName"].ToString();
+                        field.CreditAmount = dr["CreditAmount"].ToString();
+                        field.CustomerName = dr["CustomerName"].ToString();
                         
-
 
 
 

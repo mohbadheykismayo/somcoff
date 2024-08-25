@@ -162,7 +162,9 @@
         <br />
 <!-- Clear Button -->
 <button id="clearSelection" class="btn btn-danger">Clear All Selections</button>
-<button id="takeOrder" class="btn btn-success">Take Order</button>
+<button id="takeOrder" class="btn btn-success" style="display: none;">Take Order</button>
+
+
 
 
         <br />
@@ -696,7 +698,7 @@
 
         $(document).ready(function () {
             let selectedItems = {}; // Object to store selected items
-
+            $('#takeOrder').hide();
             // Generic function to handle AJAX requests
             function handleAjaxRequest(url, dropdownSelector) {
                 const search = $(dropdownSelector).val();
@@ -744,8 +746,10 @@
                                 };
                             } else {
                                 delete selectedItems[itemID];
+                           
                             }
                             updateSelectedItems();
+                            toggleTakeOrderButton();
                         });
                     },
                     error: function (response) {
@@ -852,6 +856,13 @@
                 });
                 $('#totalPrice').text(total.toFixed(2));
             }
+            function toggleTakeOrderButton() {
+                if (Object.keys(selectedItems).length > 0) {
+                    $('#takeOrder').show();  // Show the button if there are selected items
+                } else {
+                    $('#takeOrder').hide();  // Hide the button if no items are selected
+                }
+            }
 
             $('#clearSelection').click(function (e) {
                 e.preventDefault(); // Prevent default button action
@@ -859,6 +870,7 @@
                 $('#totalPrice').text('0.00');
                 selectedItems = {}; // Clear selected items object
                 $('.item-checkbox').prop('checked', false);
+                toggleTakeOrderButton();
             });
 
             // Toggle visibility of credit order details
@@ -1658,7 +1670,33 @@
     //    });
 
 
+        $(document).ready(function () {
 
+
+
+            $(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "order.aspx/getemployee",
+                    data: '{}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var itemdrop = $("[id*=employeeID]");
+                        itemdrop.empty().append('<option selected="selected" value="0">Please select</option>');
+                        $.each(r.d, function () {
+                            itemdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                    }
+                });
+
+
+
+            });
+
+        });
 
 
         $(document).ready(function () {
@@ -1974,8 +2012,13 @@
                         contentType: "application/json",
                         success: function (response) {
                             const data = response.d;
-                       
+                      
+
                             console.log(data);
+                            document.getElementById('amountPaid1').value = data[0].CreditAmount;
+
+
+                       
                             const selectedItemsContainer = $('#selectedItemsList1');
                             selectedItemsContainer.empty();
                             let overallTotalPrice = parseFloat($('#totalPrice1').text()) || 0;

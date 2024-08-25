@@ -97,7 +97,7 @@ namespace somcoffe
         }
 
         [WebMethod]
-        public static string submititem(string itemname, string price, string section, string catdrop)
+        public static string submititem(string itemname, string price, string section,string id, string catdrop)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
@@ -131,7 +131,40 @@ namespace somcoffe
         }
 
 
-        
+        [WebMethod]
+        public static string updateitem(string itemname, string price, string section, string id, string catdrop)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+
+                    // Update the item in the Items table
+                    string catquery = "UPDATE Items SET ItemName = @itemname, CategoryID = @catdrop, Section = @section, Price = @price WHERE ItemID = @id;";
+                    using (SqlCommand cmd = new SqlCommand(catquery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@itemname", itemname);
+                        cmd.Parameters.AddWithValue("@price", price);
+                        cmd.Parameters.AddWithValue("@section", section);
+                        cmd.Parameters.AddWithValue("@catdrop", catdrop);
+                        cmd.Parameters.AddWithValue("@id", id);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                return "true";
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions and return the error message
+                return "Error in submititem method: " + ex.Message;
+            }
+        }
+
         public class itemstock
         {
             public string ItemName;
@@ -310,6 +343,62 @@ WHERE
                 return $"Error: {ex.Message}";
             }
         }
+
+
+
+
+
+
+
+        [WebMethod]
+        public static string updateitemstock(string id, string qty)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+
+               
+
+                    // Adjust the query to insert the parsed date
+                    string catquery = "UPDATE Item_Stock SET QuantityAvailable = @qtya WHERE StockID = @id;";
+
+
+                    using (SqlCommand cmd = new SqlCommand(catquery, con))
+                    {
+                 
+                        cmd.Parameters.AddWithValue("@qtya", qty);
+                        cmd.Parameters.AddWithValue("@id", id);  // Insert the parsed DateTime object
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                return "true";
+            }
+            catch (SqlException sqlEx)
+            {
+                return $"SQL Error: {sqlEx.Message}";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
