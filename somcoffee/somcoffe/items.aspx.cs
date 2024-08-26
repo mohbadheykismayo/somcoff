@@ -303,7 +303,7 @@ WHERE
         }
 
         [WebMethod]
-        public static string submitstock(string itemdrop, string qtya, string date)
+        public static string submitstock(string itemdrop, string qtya)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
@@ -313,20 +313,15 @@ WHERE
                 {
                     con.Open();
 
-                    // Parse the date string to DateTime format
-                    DateTime stockDate;
-                    if (!DateTime.TryParse(date, out stockDate))
-                    {
-                        return "Error: Invalid date format";
-                    }
+                
 
                     // Adjust the query to insert the parsed date
-                    string catquery = "INSERT INTO Item_Stock (ItemID, QuantityAvailable, StockDate, QuantityRemaining) VALUES (@itemdrop, @qtya, @stockDate, @qtya);";
+                    string catquery = "INSERT INTO Item_Stock (ItemID, QuantityAvailable, QuantityRemaining) VALUES (@itemdrop, @qtya, @qtya);";
                     using (SqlCommand cmd = new SqlCommand(catquery, con))
                     {
                         cmd.Parameters.AddWithValue("@itemdrop", itemdrop);
                         cmd.Parameters.AddWithValue("@qtya", qtya);
-                        cmd.Parameters.AddWithValue("@stockDate", stockDate);  // Insert the parsed DateTime object
+         // Insert the parsed DateTime object
 
                         cmd.ExecuteNonQuery();
                     }
