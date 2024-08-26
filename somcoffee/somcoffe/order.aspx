@@ -1728,6 +1728,14 @@
         });
 
 
+
+
+
+
+
+
+
+
         $(document).ready(function () {
 
 
@@ -1979,6 +1987,10 @@
                     });
                 }
                 console.log(orderData);
+                alert(customerId);
+                alert(employeeId);
+                alert(amountPaid
+);
          
                 $.ajax({
                     url: 'order.aspx/takeorder7',
@@ -2093,7 +2105,7 @@
 
 
 
-
+    
 
 
         //$(document).ready(function () {
@@ -2321,7 +2333,7 @@
         //        console.log(orderData);
 
         //        $.ajax({
-        //            url: 'order.aspx/takeorder',
+        //            url: 'order.aspx/takeorder7',
         //            type: 'POST',
         //            contentType: 'application/json',
         //            data: JSON.stringify({ orderData: orderData, customerId: customerId, employeeId: employeeId }),

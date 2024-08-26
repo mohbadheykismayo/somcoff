@@ -97,7 +97,7 @@ namespace somcoffe
         }
 
         [WebMethod]
-        public static string submititem(string itemname, string price, string section,string id, string catdrop)
+        public static string submititem(string itemname, string price, string section, string catdrop)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
