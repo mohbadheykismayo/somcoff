@@ -202,7 +202,49 @@ GROUP BY
 
 
 
+        [WebMethod]
+        public static string removeItem(string orderItemID, string quantity , string stockid)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+
+                    // Delete job from jobs table
+                    string jobQuery = "DELETE FROM Order_Items WHERE OrderItemID = @orderItemID";
+
+                    using (SqlCommand cmd = new SqlCommand(jobQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@orderItemID", orderItemID);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                    // Update Item_Stock table based on StockID and ItemID
+                    using (SqlCommand cmd1 = new SqlCommand(@"UPDATE Item_Stock 
+                                                        SET QuantityRemaining = QuantityRemaining + @Quantity ,
+                                                          QuantitySold = QuantitySold - @Quantity
+                                                        WHERE StockID = @stockid   ", con))
+                    {
+                        cmd1.Parameters.AddWithValue("@quantity", quantity);
+                        cmd1.Parameters.AddWithValue("@stockid", stockid);
+                        
+
+                        cmd1.ExecuteNonQuery();
+                    }
+
+                }
+
+                return "true";
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                throw new Exception("Lama Tuuri Karo");
+            }
+        }
 
 
 

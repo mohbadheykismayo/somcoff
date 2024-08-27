@@ -1884,6 +1884,11 @@
                 attachEventHandlers();
             }
 
+        
+
+
+
+
             function attachEventHandlers() {
                 $('.quantity-input').change(function () {
                     const itemID = $(this).data('item-id');
@@ -1919,13 +1924,42 @@
                     }
                 });
 
+
                 $('.remove-item').click(function (e) {
                     e.preventDefault();
+
+                    // Retrieve the quantity and orderItemID
                     const itemID = $(this).siblings('.quantity-input').data('item-id');
-                    $(this).closest('.selected-item').remove();
-                    delete selectedItems[itemID];
-                    updateOverallTotalPrice();
-                    $(`.item-checkbox[data-item-id="${itemID}"]`).prop('checked', false);
+                    const quantity = selectedItems[itemID].quantity;
+                    const orderItemID = selectedItems[itemID].OrderItemID;
+                    const stockid = selectedItems[itemID].StockID;
+                   
+                    // Perform an AJAX call to handle item removal
+                    $.ajax({
+                        url: 'order.aspx/removeItem', // Update the URL to your actual endpoint
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            orderItemID: orderItemID,
+                            quantity: quantity,
+                            stockid: stockid
+                        }),
+                        success: function (response) {
+                            // Handle the success response
+                            console.log('Item removed successfully:', response);
+
+                            // Remove the item from the UI
+                            $(this).closest('.selected-item').remove();
+                            delete selectedItems[itemID];
+                            updateOverallTotalPrice();
+
+                            // Uncheck the checkbox for the removed item
+                            $(`.item-checkbox[data-item-id="${itemID}"]`).prop('checked', false);
+                        }.bind(this), // Bind 'this' to the AJAX success callback
+                        error: function (error) {
+                            console.error('Error removing item:', error);
+                        }
+                    });
                 });
             }
 
