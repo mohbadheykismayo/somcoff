@@ -333,7 +333,11 @@ GROUP BY
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
   
-  select * from Orders
+
+
+
+SELECT * FROM Orders
+ORDER BY OrderDateTime DESC;
 
 
         ", con);

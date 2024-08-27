@@ -926,7 +926,7 @@
                     contentType: "application/json; charset=utf-8", // Add charset for proper encoding
                     success: function (response) {
                         alert(response.d); // Display the success message from the server
-
+                        displaytodaystock();
                         // Print the receipt
                         let printContent = `
                 <img src="assets/img/logo.png" alt="SomCoffe Logo"/>
@@ -1962,7 +1962,6 @@
                 }
             });
 
-     
             $('#takeOrderBtn').click(function (e) {
                 e.preventDefault(); // Prevent page refresh
                 console.log(selectedItems);
@@ -1971,8 +1970,8 @@
                 const customerId = $('#customerID1').val() || null; // Get CustomerID or null if empty
                 const employeeId = $('#employeeID1').val() || null; // Get EmployeeID or null if empty
                 const orderin = $('#orderin').val() || null; // Get BookingID or null if empty
-                const TotalAmount = $('#totalPrice1').text() || null;
-                const amountPaid = isCreditOrder ? parseFloat($('#amountPaid1').val()) || 0 : null;
+                const totalAmount = parseFloat($('#totalPrice1').text()) || null; // Convert to number
+                const amountPaid = isCreditOrder ? parseFloat($('#amountPaid1').val()) || 0 : null; // Convert to number
 
                 for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
                     orderData.push({
@@ -1983,29 +1982,99 @@
                         Quantity: itemDetails.quantity,
                         SubTotalAmount: (itemDetails.quantity * itemDetails.price).toFixed(2),
                         orderin: orderin,
-                        TotalAmount: TotalAmount
+                        TotalAmount: totalAmount
                     });
                 }
+
                 console.log(orderData);
-                alert(customerId);
-                alert(employeeId);
-                alert(amountPaid
-);
-         
+
                 $.ajax({
                     url: 'order.aspx/takeorder7',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ orders: orderData, customerId: customerId, employeeId: employeeId, amountPaid: amountPaid }),
+                    data: JSON.stringify({
+                        orders: orderData,
+                        customerId: customerId,
+                        employeeId: employeeId,
+                        amountPaid: amountPaid
+                    }),
                     success: function (response) {
-                    
                         alert("Order placed successfully");
+
+                        // Print the receipt
+                        let printContent = `
+<img src="assets/img/logo.png" alt="SomCoffe Logo"/>
+<h2>SomCoffe</h2>
+<h2>SomCoffe Kismayo, Somalia</h2>
+<h2>EVC: *712*0614020290*${totalAmount.toFixed(2)}#</h2>
+<h2>E-DAHAB: *712*0624020290*${totalAmount.toFixed(2)}#</h2>
+<hr>
+<p>Customer ID: ${customerId || 'N/A'}</p>
+<p>Employee ID: ${employeeId || 'N/A'}</p>
+<p>Booking ID: ${orderin || 'N/A'}</p>
+<p>Total Price: $${totalAmount.toFixed(2)}</p>
+<table cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>`;
+
+                        let receiptTotalPrice = 0;
+                        Object.values(selectedItems).forEach(itemDetails => {
+                            receiptTotalPrice += itemDetails.quantity * itemDetails.price;
+                            printContent += `
+    <tr>
+        <td>${itemDetails.name}</td>
+        <td>${itemDetails.quantity}</td>
+        <td>$${itemDetails.price.toFixed(2)}</td>
+        <td>$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
+    </tr>`;
+                        });
+
+                        printContent += `
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="3">Total Price</th>
+            <th>$${receiptTotalPrice.toFixed(2)}</th>
+        </tr>
+    </tfoot>
+</table>`;
+
+                        if (amountPaid > 0) {
+                            printContent += `
+<p>Amount Paid: $${amountPaid.toFixed(2)}</p>
+<p>Remaining Amount: $${(receiptTotalPrice - amountPaid).toFixed(2)}</p>`;
+                        }
+
+                        printContent += `
+<br><br><br>
+<h3>Thank you for your Order!</h3>
+<br>
+
+<hr>---Kismayoictsoutions-----</hr>
+`;
+
+                        const printWindow = window.open('', '', 'height=400,width=600');
+                        printWindow.document.write('<html><head><title>Order Receipt</title>');
+                        printWindow.document.write('</head><body>');
+                        printWindow.document.write(printContent);
+                        printWindow.document.write('</body></html>');
+                        printWindow.document.close();
+                        printWindow.focus();
+                        printWindow.print();
                     },
                     error: function (error) {
                         console.log('Error placing order:', error);
                     }
                 });
             });
+
             $("#todaystocktbl").on("click", ".edit-button", function (event) {
                     event.preventDefault(); // Prevent default behavior
 

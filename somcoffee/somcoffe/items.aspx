@@ -402,6 +402,8 @@
 <div class="col-lg-12">
         <a href="javascript:void(0);" id="deletebtn1" class="btn btn-submit me-2" onclick="deletecategory()">delete</a>
     <a href="javascript:void(0);" id="editbtn1" class="btn btn-submit me-2" onclick="updateitemstock()">edit</a>
+      <a href="javascript:void(0);" id="editbtn11" class="btn btn-submit me-2" onclick="updatetodaystock()">edit</a>
+    
 <a href="javascript:void(0);" id="submitbtn1" class="btn btn-submit me-2" onclick="submitstock()">Submit</a>
 <a href="categorylist.html" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
 </div>
@@ -747,9 +749,10 @@
                                     'You added a new Item!',
                                     'success'
                                 );
-                                $('#catmodal').modal('hide');
+                                $('#stockmodal').modal('hide');
                                 clearInputFields();
                                 datadisplay();
+                                displaystock();
 
                             } else {
                                 // Handle errors in the response
@@ -915,27 +918,239 @@
 
 
 
-            $("#datatable1").on("click", ".edit-button", function (event) {
+            //$("#datatable1").on("click", ".edit-button", function (event) {
+            //    event.preventDefault(); // Prevent default behavior
+
+            //    var row = $(this).closest("tr");
+            //    var id = $(this).data("id");
+
+ 
+            //    var qty = row.find("td:nth-child(3)").text();
+            //    $("#id1").val(id);
+             
+             
+            //    $("#qtya").val(qty);
+
+            //    document.getElementById('dropee').style.display = 'none';
+
+            //    document.getElementById('submitbtn1').style.display = 'none';
+            //    document.getElementById('editbtn1').style.display = 'inline-block';
+            //    document.getElementById('deletebtn1').style.display = 'none';
+
+            //    $('#stockmodal').modal('show');
+
+
+
+            //});
+
+
+
+
+
+
+
+
+
+
+
+
+            $("#datatable1").on("click", ".send-btn", function (event) {
                 event.preventDefault(); // Prevent default behavior
 
                 var row = $(this).closest("tr");
                 var id = $(this).data("id");
 
-                alert(id);
-             
-                var qty = row.find("td:nth-child(3)").text();
-                $("#id1").val(id);
-             
-             
-                $("#qtya").val(qty);
 
-                document.getElementById('dropee').style.display = 'none';
-                document.getElementById('datee').style.display = 'none';
-                document.getElementById('submitbtn1').style.display = 'none';
-                document.getElementById('editbtn1').style.display = 'inline-block';
-                document.getElementById('deletebtn1').style.display = 'none';
+     
+                // Clear previous error messages
 
-                $('#stockmodal').modal('show');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to start a new day stock?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, start it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Execute the AJAX request only if the user confirms
+                        $.ajax({
+                            url: 'items.aspx/startstockitem',
+                            data: "{'id':'" + id + "'}",
+                            contentType: 'application/json; charset=utf-8',
+                            dataType: 'json',
+                            type: 'POST',
+                            success: function (response) {
+                                console.log(response);
+                                if (response.d === 'true') {
+                                    Swal.fire(
+                                        'Successfully Started!',
+                                        'You Started a new Day Stock!',
+                                        'success'
+                                    );
+                                    $('#stockmodal').modal('hide');
+
+                                    displaytodaystock();
+                                } else {
+                                    // Handle errors in the response
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Data Insertion Failed',
+                                        text: 'There was an error while inserting the stock data: ' + response.d,
+                                    });
+                                }
+                            },
+                            error: function (response) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'AJAX Error',
+                                    text: 'An error occurred during the AJAX request: ' + response.responseText,
+                                });
+                            }
+                        });
+                    }
+                });
+
+
+
+            });
+
+
+
+
+            $("#datatable").on("click", ".delete-btn", function (event) {
+                event.preventDefault(); // Prevent default behavior
+
+                var row = $(this).closest("tr");
+                var id = $(this).data("id");
+
+
+
+                // Clear previous error messages
+
+                Swal.fire({
+                    title: 'Ma Hubtaa ?',
+                    text: "Ma Rabtaa Inaad Delete Gareeneyso ?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, start it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Execute the AJAX request only if the user confirms
+                        $.ajax({
+                            url: 'items.aspx/deleteitem',
+                            data: "{'id':'" + id + "'}",
+                            contentType: 'application/json; charset=utf-8',
+                            dataType: 'json',
+                            type: 'POST',
+                            success: function (response) {
+                                console.log(response);
+                                if (response.d === 'true') {
+                                    Swal.fire(
+                                        'Successfully Started!',
+                                        'You Started a new Day Stock!',
+                                        'success'
+                                    );
+                                    $('#stockmodal').modal('hide');
+
+                                    displaytodaystock();
+                                } else {
+                                    // Handle errors in the response
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Data Insertion Failed',
+                                        text: 'There was an error while inserting the stock data: ' + response.d,
+                                    });
+                                }
+                            },
+                            error: function (response) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lama Tuuri Karo Dalab Buu KU Maqanyahay',
+                                    text: 'An error occurred during the AJAX request: ',
+                                });
+                            }
+                        });
+                    }
+                });
+
+
+
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            $("#todaystocktbl").on("click", ".delete-btn", function (event) {
+                event.preventDefault(); // Prevent default behavior
+
+                var row = $(this).closest("tr");
+                var id = $(this).data("id");
+
+
+
+                // Clear previous error messages
+
+                Swal.fire({
+                    title: 'Ma Hubtaa ?',
+                    text: "Ma Rabtaa Inaad Delete Gareeneyso ?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, start it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Execute the AJAX request only if the user confirms
+                        $.ajax({
+                            url: 'items.aspx/deletetodaystock',
+                            data: "{'id':'" + id + "'}",
+                            contentType: 'application/json; charset=utf-8',
+                            dataType: 'json',
+                            type: 'POST',
+                            success: function (response) {
+                                console.log(response);
+                                if (response.d === 'true') {
+                                    Swal.fire(
+                                        'Successfully Started!',
+                                        'You Started a new Day Stock!',
+                                        'success'
+                                    );
+                                    $('#stockmodal').modal('hide');
+
+                                    displaytodaystock();
+                                } else {
+                                    // Handle errors in the response
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Data Insertion Failed',
+                                        text: 'There was an error while inserting the stock data: ' + response.d,
+                                    });
+                                }
+                            },
+                            error: function (response) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'AJAX Error',
+                                    text: 'An error occurred during the AJAX request: ' + response.responseText,
+                                });
+                            }
+                        });
+                    }
+                });
 
 
 
@@ -962,46 +1177,29 @@
 
 
 
+        //$("#datatable").on("click", ".delete-btn", function (event) {
+        //    event.preventDefault(); // Prevent default behavior
+
+        //    var row = $(this).closest("tr");
+        //    var id = $(this).data("id");
+
+
+        //    var name = row.find("td:nth-child(2)").text();
+
+        //    $("#id").val(id);
+        //    $("#catname").val(name);
+
+
+        //    document.getElementById('submitbtn').style.display = 'none';
+        //    document.getElementById('editbtn').style.display = 'none';
+
+        //    document.getElementById('deletebtn').style.display = 'inline-block';
+
+        //    $('#catmodal').modal('show');
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        $("#datatable").on("click", ".delete-btn", function (event) {
-            event.preventDefault(); // Prevent default behavior
-
-            var row = $(this).closest("tr");
-            var id = $(this).data("id");
-
-
-            var name = row.find("td:nth-child(2)").text();
-
-            $("#id").val(id);
-            $("#catname").val(name);
-
-
-            document.getElementById('submitbtn').style.display = 'none';
-            document.getElementById('editbtn').style.display = 'none';
-            document.getElementById('deletebtn').style.display = 'inline-block';
-
-            $('#catmodal').modal('show');
-
-
-
-        });
+        //});
         function callmodal() {
             document.getElementById('submitbtn').style.display = 'inline-block';
             document.getElementById('editbtn').style.display = 'none';
@@ -1012,16 +1210,121 @@
             }
 
             function callstockmodal() {
+                $('#stockmodal').modal('hide');
                 document.getElementById('submitbtn1').style.display = 'inline-block';
                 document.getElementById('editbtn1').style.display = 'none';
+                document.getElementById('editbtn11').style.display = 'none';
                 document.getElementById('deletebtn1').style.display = 'none';
                 /*  $("#catname").val('');*/
+
+         ;
                 $('#stockmodal').modal('show');
 
             }
 
 
 
+            function updatetodaystock() {
+                // Clear previous error messages
+                document.getElementById('itemname11').textContent = "";
+
+
+
+
+
+
+                var qty = $("#qtya").val();
+
+                var id = $("#id1").val();
+
+                // Validate the form values
+                let isValid = true;
+
+                if (qty.trim() === "") {
+                    document.getElementById('itemname11').textContent = "Please enter the  Item Name.";
+                    isValid = false;
+                }
+
+
+
+
+
+
+                // If all validations pass, proceed with AJAX call
+                if (isValid) {
+
+                    $.ajax({
+                        url: 'items.aspx/updatetodaystock',
+                        data: "{'id':'" + id + "', 'qty':'" + qty + "'}",
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (response) {
+                            console.log(response);
+                            if (response.d === 'true') {
+                                Swal.fire(
+                                    'Successfully Saved!',
+                                    'You added a new Item!',
+                                    'success'
+                                );
+                                $('#stockmodal').modal('hide');
+                                clearInputFields();
+                                datadisplay();
+                                displaystock();
+                                displaytodaystock();
+
+                            } else {
+                                // Handle errors in the response
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Data Insertion Failed',
+                                    text: 'There was an error while inserting the data.',
+                                });
+                            }
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+
+                }
+
+                function clearInputFields() {
+                    // Replace these lines with code to clear the input fields
+                    $("#catname").val('');
+
+                }
+            }
+
+
+
+            $("#todaystocktbl").on("click", ".edit-button", function (event) {
+                event.preventDefault(); // Prevent default behavior
+                $('#stockmodal').modal('hide');
+
+                var row = $(this).closest("tr");
+                var id = $(this).data("id");
+     
+
+             
+                var qty = row.find("td:nth-child(3)").text();
+                $("#id1").val(id);
+
+
+                $("#qtya").val(qty);
+
+                document.getElementById('dropee').style.display = 'none';
+
+                document.getElementById('submitbtn1').style.display = 'none';
+                document.getElementById('editbtn1').style.display = 'none';
+                document.getElementById('editbtn11').style.display = 'inline-block';
+                document.getElementById('deletebtn1').style.display = 'none';
+
+            
+                $('#stockmodal').modal('show');
+
+
+            });
             displaytodaystock();
             function displaytodaystock() {
                 $.ajax({
@@ -1036,7 +1339,10 @@
                         $("#todaystocktbl tbody").empty();
 
                         for (var i = 0; i < response.d.length; i++) {
-                            var id = response.d[i].ItemName;
+                            var id = response.d[i].StockID;
+                            var ItemName = response.d[i].ItemName;
+                            
+                            
                             var StockDate = response.d[i].StockDate;
                             var QuantityAvailable = response.d[i].QuantityAvailable;
                             var QuantitySold = response.d[i].QuantitySold;
@@ -1049,7 +1355,7 @@
 
                             $("#todaystocktbl tbody").append(
                                 "<tr>" +
-                                "<td>" + id + "</td>" +
+                                "<td>" + ItemName + "</td>" +
                                 "<td>" + StockDate + "</td>" +
                                 "<td>" + QuantityAvailable + "</td>" +
                                 "<td>" + QuantitySold + "</td>" +
@@ -1182,11 +1488,11 @@
                                 "<td>" + QuantitySold + "</td>" +
                                 "<td>" + QuantityRemaining + "</td>" +
                                 "<td>" +
-                                '<a class="me-3 edit-button" data-id="' + StockID + '">' +
-                                '<img src="assets/img/icons/edit.svg" alt="Edit">' +
-                                '</a>' +
-                                '<a class="me-3 delete-btn" data-id="' + StockID + '">' +
+                                                          '<a class="me-3 delete-btn" data-id="' + StockID + '">' +
                                 '<img src="assets/img/icons/delete.svg" alt="Delete">' +
+                                '</a>' +
+                                '<a class="me-3 -btn btn-success send-btn" data-id="' + StockID + '">' +
+                            '   <button class=" btn btn-success" >Send</button>  ' +
                                 '</a>' +
                                 "</td>" +
                                 "</tr>"
@@ -1200,6 +1506,22 @@
                     }
                 });
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             function startnextday() {
                 // Clear previous error messages

@@ -7,7 +7,7 @@
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content ">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel5">Individual Item Stock report</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel5">Reportka Alaabta ee maalin</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -56,15 +56,15 @@
 <table class="table  " id="dailystock">
 <thead>
 <tr>
-        <th>Item Name</th>
+        <th>Magaca</th>
 
-        <th>Section</th>
-        <th>Price</th>
-        <th>Stock Date</th>
-<th>Quantity Available </th>
-        <th>Quantity Sold</th>
-<th>Quantity Remaining </th>
-    <th>TotalSalesAmount</th>
+        <th>Qeybta</th>
+        <th>Lacagta</th>
+        <th>Waqtiga</th>
+<th>Inta La haystay</th>
+        <th>Inta La Gaday</th>
+<th>Inta Soo Hartay </th>
+    <th>Qiimaha Guud</th>
 
 
 
@@ -102,7 +102,7 @@
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content ">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Individual Day Order report</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Report ka Order da Maalinle</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -186,12 +186,12 @@
 <thead>
 <tr>
 
-    <th>OrderDateTime</th>
-<th>CustomerName</th>
-        <th>EmployeeName</th>
-<th>CreditAmount</th>
-    <th>TotalAmount</th>
-<th>TotalCombinedAmount</th>
+    <th>Waqriga</th>
+<th>Magaca Macmiilka</th>
+        <th>Magaca Shaqaalaha</th>
+<th>Deynta</th>
+    <th>Lacagta Laga Rabay</th>
+<th>Lacagta Ku Hartay</th>
 
 
 
@@ -231,7 +231,7 @@
   <div class="modal-dialog modal-xl">
     <div class="modal-content ">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel1"> Item report</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel1"> Report ka Order walbo Alaabteeda</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -315,13 +315,13 @@
 <thead>
 <tr>
 
-    <th>ItemName</th>
-<th>CustomerName</th>
-        <th>EmployeeName</th>
-<th>CreditAmount</th>
-       <th>SubTotalAmount</th>
-    <th>Quantity</th>
-<th>OrderDateTime</th>
+    <th>Magaca</th>
+<th>Magaca Macmiilka</th>
+        <th>Magaca Shaqaalaha</th>
+<th>Deynta</th>
+       <th>Lacagta</th>
+    <th>inta Xabo</th>
+<th>Waqtiga</th>
  
 
 
@@ -365,7 +365,7 @@
                 <div class="col-6">
                     <div class="page-header">
 <div class="page-title">
-<h4>Total Daly reports</h4>
+<h4>Report ka Maalin Walbo</h4>
 
 </div>
 
@@ -407,10 +407,10 @@
 <thead>
 <tr>
 
-    <th>order date </th>
-<th>totalcredits</th>
-        <th>amount </th>
-<th>total amount</th>
+    <th>Waqtiga </th>
+<th>Deynta Guud</th>
+        <th>Lacagta Guud </th>
+<th>Lacagta La Qabtay</th>
 
 
 </tr>
@@ -429,7 +429,7 @@
             <div class="col-6">
         <div class="page-header">
 <div class="page-title">
-<h4>Stock Items Report</h4>
+<h4>Reporka Alaabta Maalin Walbo</h4>
 
 </div>
 
@@ -505,10 +505,10 @@
 <thead>
 <tr>
 
-    <th>Stock Date</th>
-<th>Quantity Available </th>
-        <th>Quantity Sold</th>
-<th>Quantity Remaining </th>
+    <th>Waqtiga</th>
+<th>Inta La Haystay </th>
+        <th>Inta La Gaday</th>
+<th>Inta Soo Hartay</th>
 
 
 

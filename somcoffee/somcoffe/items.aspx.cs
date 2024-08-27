@@ -186,8 +186,20 @@ namespace somcoffe
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
-          select Items.ItemName,Item_Stock.StockID, Item_Stock.StockDate,Item_Stock.QuantityAvailable,Item_Stock.QuantitySold,Item_Stock.QuantityRemaining from Item_Stock
-	inner join Items  on Items.ItemID = Item_Stock.ItemID
+     SELECT 
+    Items.ItemName,
+    Item_Stock.StockID,
+    Item_Stock.StockDate,
+    Item_Stock.QuantityAvailable,
+    Item_Stock.QuantitySold,
+    Item_Stock.QuantityRemaining 
+FROM 
+    Item_Stock
+INNER JOIN 
+    Items ON Items.ItemID = Item_Stock.ItemID 
+WHERE 
+    Item_Stock.StockDate IS NULL;
+
 
         ", con);
 
@@ -214,6 +226,86 @@ namespace somcoffe
 
             return details.ToArray();
         }
+
+        [WebMethod]
+        public static string deletetodaystock(string id)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+
+                    // Delete job from jobs table
+                    string jobQuery = "DELETE FROM Item_Stock WHERE StockID = @id";
+
+                    using (SqlCommand cmd = new SqlCommand(jobQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@id", id);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                return "true";
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                throw new Exception("Error deleting job", ex);
+            }
+        }
+
+
+
+
+
+        [WebMethod]
+        public static string deleteitem(string id)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+
+                    // Delete job from jobs table
+                    string jobQuery = "DELETE FROM Items WHERE ItemID = @id";
+
+                    using (SqlCommand cmd = new SqlCommand(jobQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@id", id);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                return "true";
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                throw new Exception("Error deleting job", ex);
+            }
+        }
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
 
 
 
@@ -344,6 +436,46 @@ WHERE
 
 
 
+        [WebMethod]
+        public static string updatetodaystock(string id, string qty)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+
+
+
+                    // Adjust the query to insert the parsed date
+                    string catquery = "UPDATE Item_Stock SET QuantityAvailable = @qtya,QuantityRemaining = @qtya  WHERE StockID = @id;";
+
+
+                    using (SqlCommand cmd = new SqlCommand(catquery, con))
+                    {
+
+                        cmd.Parameters.AddWithValue("@qtya", qty);
+                        cmd.Parameters.AddWithValue("@id", id);  // Insert the parsed DateTime object
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                return "true";
+            }
+            catch (SqlException sqlEx)
+            {
+                return $"SQL Error: {sqlEx.Message}";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }
+
+
 
         [WebMethod]
         public static string updateitemstock(string id, string qty)
@@ -394,9 +526,49 @@ WHERE
 
 
 
+        
+
+        [WebMethod]
+        public static string startstockitem( string id)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
 
 
+                    // Adjust the query to insert the parsed date
+                    string catquery = "\r\n\r\n\r\n\r\nWITH AggregatedStock AS (\r\n    SELECT \r\n        Items.ItemID," +
+                        "                  \r\n        MAX(Items.Price) AS Price,     \r\n        MAX(Item_Stock.StockDate) AS StockDate,  \r\n  " +
+                        "      SUM(Item_Stock.QuantitySold) AS QuantitySold,\r\n        SUM(Item_Stock.QuantityRemaining) AS QuantityRemaining\r\n " +
+                        "   FROM \r\n        Item_Stock\r\n    INNER JOIN \r\n        Items ON Items.ItemID = Item_Stock.ItemID\r\n    WHERE\r\n    " +
+                        "    Item_Stock.StockID = @id       \r\n    GROUP BY \r\n        Items.ItemID\r\n)\r\n\r\n\r\nINSERT " +
+                        "INTO Item_Stock (ItemID, StockDate, QuantityAvailable, QuantitySold, QuantityRemaining)\r\nSELECT \r\n    ItemID,\r\n    GETDATE(),     " +
+                        "       \r\n    0,                 \r\n    0,            \r\n    0       \r\nFROM \r\n    AggregatedStock;";
+                  
+                    
+                    using (SqlCommand cmd = new SqlCommand(catquery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@id", id);
 
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                return "true";
+            }
+            catch (SqlException sqlEx)
+            {
+                return $"SQL Error: {sqlEx.Message}";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }
 
 
         [WebMethod]
@@ -412,17 +584,12 @@ WHERE
 
 
                     // Adjust the query to insert the parsed date
-                    string catquery = "\r\n\r\n\r\n-- First, we need to get the aggregated results from the SELECT query\r\n-- We will use these results to update the Item_Stock table\r\n\r\n" +
-                        "-- Aggregated results query\r\nWITH AggregatedStock AS (\r\n    SELECT \r\n        Items.ItemID,       -- Include ItemID to match with the INSERT\r\n        MAX(Items.Price) AS Price,\r\n  " +
-                        "      MAX(Item_Stock.StockDate) AS StockDate,\r\n   " +
-                        "     SUM(Item_Stock.QuantitySold) AS QuantitySold,\r\n   " +
-                        "     SUM(Item_Stock.QuantityRemaining) AS QuantityRemaining\r\n    FROM \r\n     " +
-                        "   Item_Stock\r\n    INNER JOIN \r\n        Items ON Items.ItemID = Item_Stock.ItemID\r\n   " +
-                        " GROUP BY \r\n        Items.ItemID\r\n)\r\n\r\n" +
-                        "-- Use the aggregated results to insert into the Item_Stock table\r\n" +
-                        "INSERT INTO Item_Stock (ItemID, StockDate, QuantityAvailable, QuantitySold, QuantityRemaining)\r\nSELECT \r\n    ItemID,\r\n    GETDATE(),      " +
-                        "      -- Set StockDate to the current date and time\r\n    0,                   -- Reset QuantityAvailable to 0\r\n    QuantitySold,        -- Use aggregated QuantitySold\r\n " +
-                        "   QuantityRemaining    -- Use aggregated QuantityRemaining\r\nFROM \r\n    AggregatedStock;\r\n\r\n\r\n";
+                    string catquery = "WITH AggregatedStock AS (\r\n    SELECT \r\n        Items.ItemID,      " +
+                        " \r\n        MAX(Items.Price) AS Price,\r\n        MAX(Item_Stock.StockDate) AS StockDate,\r\n    " +
+                        "    SUM(Item_Stock.QuantitySold) AS QuantitySold,\r\n        SUM(Item_Stock.QuantityRemaining) AS QuantityRemaining\r\n   " +
+                        " FROM \r\n        Item_Stock\r\n    INNER JOIN \r\n        Items ON Items.ItemID = Item_Stock.ItemID\r\n    GROUP BY \r\n   " +
+                        "     Items.ItemID\r\n)\r\n\r\n\r\nINSERT INTO Item_Stock (ItemID, StockDate, QuantityAvailable, QuantitySold, QuantityRemaining)\r\nSELECT \r\n    ItemID,\r\n    GETDATE(),     " +
+                        "     \r\n    0,                 \r\n    0,      \r\n    0   \r\nFROM \r\n    AggregatedStock;\r\n";
                     using (SqlCommand cmd = new SqlCommand(catquery, con))
                     {
            

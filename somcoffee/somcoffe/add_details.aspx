@@ -22,6 +22,7 @@
 <div class="card">
 <div class="card-body">
 <div class="row">
+     <input id="id1" style="display:none"/>
     <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
 <label> Customer </label>
@@ -95,7 +96,7 @@
 
 <div class="col-lg-12">
         <a href="javascript:void(0);" id="deletebtn2" class="btn btn-submit me-2" onclick="deletecategory()">delete</a>
-    <a href="javascript:void(0);" id="editbtn2" class="btn btn-submit me-2" onclick="updatecategory()">edit</a>
+    <a href="javascript:void(0);" id="editbtn2" class="btn btn-submit me-2" onclick="updatebooking()">edit</a>
 <a href="javascript:void(0);" id="submitbtn2" class="btn btn-submit me-2" onclick="submitbooking()">Submit</a>
 <a href="categorylist.html" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
 </div>
@@ -132,7 +133,7 @@
 <div class="card">
 <div class="card-body">
 <div class="row">
-
+        <input id="id" style="display:none"/>
 <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
 <label>customer name</label>
@@ -179,7 +180,7 @@
 
 <div class="col-lg-12">
         <a href="javascript:void(0);" id="deletebtn" class="btn btn-submit me-2" onclick="deletecategory()">delete</a>
-    <a href="javascript:void(0);" id="editbtn" class="btn btn-submit me-2" onclick="updatecategory()">edit</a>
+    <a href="javascript:void(0);" id="editbtn" class="btn btn-submit me-2" onclick="updateitem()">edit</a>
 <a href="javascript:void(0);" id="submitbtn" class="btn btn-submit me-2" onclick="submitstock()">Submit</a>
 <a href="categorylist.html" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
 </div>
@@ -270,7 +271,7 @@
 
 <div class="col-lg-12">
         <a href="javascript:void(0);" id="deletebtn1" class="btn btn-submit me-2" onclick="deletecategory()">delete</a>
-    <a href="javascript:void(0);" id="editbtn1" class="btn btn-submit me-2" onclick="updatecategory()">edit</a>
+    <a href="javascript:void(0);" id="editbtn1" class="btn btn-submit me-2" onclick="updaterooms()">edit</a>
 <a href="javascript:void(0);" id="submitbtn1" class="btn btn-submit me-2" onclick="submitroom()">Submit</a>
 <a href="categorylist.html" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
 </div>
@@ -794,7 +795,7 @@
 
             var custname = $("#custname").val();
             var number = $("#number").val();
-        
+
             // Validate the form values
             let isValid = true;
 
@@ -807,7 +808,7 @@
                 document.getElementById('number1').textContent = "Please enter a valid date.";
                 isValid = false;
             }
-          
+
 
             // If all validations pass, proceed with AJAX call
             if (isValid) {
@@ -898,7 +899,7 @@
                         var CustomerID = response.d[i].CustomerID;
                         var CustomerName = response.d[i].CustomerName;
                         var ContactInfo = response.d[i].ContactInfo;
-             
+
 
 
 
@@ -906,7 +907,7 @@
                             "<tr>" +
                             "<td>" + CustomerName + "</td>" +
                             "<td>" + ContactInfo + "</td>" +
-              
+
                             "<td>" +
                             '<a class="me-3 edit-button" data-id="' + CustomerID + '">' +
                             '<img src="assets/img/icons/edit.svg" alt="Edit">' +
@@ -951,7 +952,7 @@
 
                         var RoomID = response.d[i].RoomID;
 
-                        
+
 
 
 
@@ -982,6 +983,328 @@
         }
 
 
+        $("#datatable").on("click", ".edit-button", function (event) {
+            event.preventDefault(); // Prevent default behavior
+
+            var row = $(this).closest("tr");
+            var id = $(this).data("id");
+
+
+            var name = row.find("td:nth-child(1)").text();
+            var number = row.find("td:nth-child(2)").text();
+
+            $("#id").val(id);
+            $("#custname").val(name);
+
+            $("#number").val(number);
+
+            document.getElementById('submitbtn').style.display = 'none';
+            document.getElementById('editbtn').style.display = 'inline-block';
+            document.getElementById('deletebtn').style.display = 'none';
+
+            $('#catmodal').modal('show');
+
+
+
+        });
+
+
+
+
+        $("#datatable1").on("click", ".edit-button", function (event) {
+            event.preventDefault(); // Prevent default behavior
+
+            var row = $(this).closest("tr");
+            var id = $(this).data("id");
+
+
+            var name = row.find("td:nth-child(1)").text();
+            var capa = row.find("td:nth-child(2)").text();
+            var price = row.find("td:nth-child(3)").text();
+
+            $("#id").val(id);
+            $("#room").val(name);
+
+            $("#capa").val(capa);
+            $("#amount").val(price);
+
+            document.getElementById('submitbtn1').style.display = 'none';
+            document.getElementById('editbtn1').style.display = 'inline-block';
+            document.getElementById('deletebtn1').style.display = 'none';
+
+            $('#catmodal1').modal('show');
+
+
+
+        });
+
+
+
+        $("#datatable3").on("click", ".edit-button", function (event) {
+            event.preventDefault(); // Prevent default behavior
+
+            var row = $(this).closest("tr");
+            var id = $(this).data("id");
+
+
+            var dura = row.find("td:nth-child(4)").text();
+            var amount = row.find("td:nth-child(5)").text();
+
+
+            $("#id1").val(id);
+            $("#duration").val(dura);
+
+
+            $("#price").val(amount);
+
+            document.getElementById('submitbtn2').style.display = 'none';
+            document.getElementById('editbtn2').style.display = 'inline-block';
+            document.getElementById('deletebtn2').style.display = 'none';
+
+            $('#catmodal3').modal('show');
+
+
+
+        });
+        function updatebooking() {
+            // Clear previous error messages
+            document.getElementById('duration1').textContent = "";
+            document.getElementById('price1').textContent = "";
+            document.getElementById('date').textContent = "";
+
+            var price = $("#price").val();
+            var duration = $("#duration").val();
+            var date = $("#date").val();
+            var custid = $("#custid").val();
+            var roomid = $("#roomid").val();
+
+
+            var id = $("#id1").val();
+
+            // Validate the form values
+            let isValid = true;
+            // Uncomment and adjust validation as necessary
+            if (duration.trim() === "") {
+                document.getElementById('duration1').textContent = "Please select an item.";
+                isValid = false;
+            }
+            if (price.trim() === "") {
+                document.getElementById('price1').textContent = "Please enter a valid date.";
+                isValid = false;
+            }
+
+
+
+            // If all validations pass, proceed with AJAX call
+            if (isValid) {
+
+                $.ajax({
+                    url: 'add_details.aspx/updatebooking',
+                    data: "{'id':'" + id + "', 'price':'" + price + "','duration':'" + duration + "','date':'" + date + "','custid':'" + custid + "','roomid':'" + roomid + "'}",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (response) {
+                        console.log(response);
+                        if (response.d === 'true') {
+                            Swal.fire(
+                                'Successfully Saved!',
+                                'You added a new Item!',
+                                'success'
+                            );
+                            $('#catmodal1').modal('hide');
+                            clearInputFields();
+                            displaycustomer();
+                            displayrooms();
+                            displaybooking();
+
+                        } else {
+                            // Handle errors in the response
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data Insertion Failed',
+                                text: 'There was an error while inserting the data.',
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+            }
+
+            function clearInputFields() {
+                // Replace these lines with code to clear the input fields
+                $("#catname").val('');
+
+            }
+        }
+
+        function updaterooms() {
+            // Clear previous error messages
+            document.getElementById('room1').textContent = "";
+            document.getElementById('capa1').textContent = "";
+            document.getElementById('amount1').textContent = "";
+
+
+
+
+
+            var room = $("#room").val();
+            var capa = $("#capa").val();
+            var amount = $("#amount").val();
+
+
+            var id = $("#id").val();
+
+            // Validate the form values
+            let isValid = true;
+
+            if (room.trim() === "") {
+                document.getElementById('room1').textContent = "Please enter the  Item Name.";
+                isValid = false;
+            }
+
+
+            if (capa.trim() === "") {
+                document.getElementById('capa1').textContent = "Please enter the  Price.";
+                isValid = false;
+            }
+
+            if (amount.trim() === "") {
+                document.getElementById('amount1').textContent = "Please enter the  Price.";
+                isValid = false;
+            }
+
+
+
+
+
+
+            // If all validations pass, proceed with AJAX call
+            if (isValid) {
+
+                $.ajax({
+                    url: 'add_details.aspx/updaterooms',
+                    data: "{'id':'" + id + "', 'room':'" + room + "','capa':'" + capa + "','amount':'" + amount + "'}",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (response) {
+                        console.log(response);
+                        if (response.d === 'true') {
+                            Swal.fire(
+                                'Successfully Saved!',
+                                'You added a new Item!',
+                                'success'
+                            );
+                            $('#catmodal1').modal('hide');
+                            clearInputFields();
+                            displaycustomer();
+                            displayrooms();
+
+                        } else {
+                            // Handle errors in the response
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data Insertion Failed',
+                                text: 'There was an error while inserting the data.',
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+            }
+
+            function clearInputFields() {
+                // Replace these lines with code to clear the input fields
+                $("#catname").val('');
+
+            }
+        }
+
+
+        function updateitem() {
+            // Clear previous error messages
+            document.getElementById('custname1').textContent = "";
+            document.getElementById('number1').textContent = "";
+
+
+
+
+
+            var custname = $("#custname").val();
+            var number = $("#number").val();
+
+
+            var id = $("#id").val();
+
+            // Validate the form values
+            let isValid = true;
+
+            if (custname.trim() === "") {
+                document.getElementById('custname1').textContent = "Please enter the  Item Name.";
+                isValid = false;
+            }
+
+
+            if (number.trim() === "") {
+                document.getElementById('number1').textContent = "Please enter the  Price.";
+                isValid = false;
+            }
+
+
+
+
+
+
+            // If all validations pass, proceed with AJAX call
+            if (isValid) {
+
+                $.ajax({
+                    url: 'add_details.aspx/updatecust',
+                    data: "{'id':'" + id + "', 'custname':'" + custname + "','number':'" + number + "'}",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (response) {
+                        console.log(response);
+                        if (response.d === 'true') {
+                            Swal.fire(
+                                'Successfully Saved!',
+                                'You added a new Item!',
+                                'success'
+                            );
+                            $('#catmodal').modal('hide');
+                            clearInputFields();
+                            displaycustomer();
+
+                        } else {
+                            // Handle errors in the response
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data Insertion Failed',
+                                text: 'There was an error while inserting the data.',
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+            }
+
+            function clearInputFields() {
+                // Replace these lines with code to clear the input fields
+                $("#catname").val('');
+
+            }
+        }
 
 
         displaybooking();
@@ -1011,10 +1334,10 @@
 
                         $("#datatable3 tbody").append(
                             "<tr>" +
-               
+
                             "<td>" + CustomerName + "</td>" +
                             "<td>" + RoomName + "</td>" +
-                          "<td>" + BookingDateTime + "</td>" +
+                            "<td>" + BookingDateTime + "</td>" +
                             "<td>" + Duration + "</td>" +
                             "<td>" + TotalBookingAmount + "</td>" +
                             "<td>" +
@@ -1036,5 +1359,206 @@
                 }
             });
         }
+
+
+
+
+
+        $("#datatable").on("click", ".delete-btn", function (event) {
+            event.preventDefault(); // Prevent default behavior
+
+            var row = $(this).closest("tr");
+            var id = $(this).data("id");
+
+
+
+            // Clear previous error messages
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to start a new day stock?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, start it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Execute the AJAX request only if the user confirms
+                    $.ajax({
+                        url: 'add_details.aspx/deletecust',
+                        data: "{'id':'" + id + "'}",
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (response) {
+                            console.log(response);
+                            if (response.d === 'true') {
+                                Swal.fire(
+                                    'Successfully Started!',
+                                    'You Started a new Day Stock!',
+                                    'success'
+                                );
+                                $('#stockmodal').modal('hide');
+
+                                displaycustomer();
+                            } else {
+                                // Handle errors in the response
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Data Insertion Failed',
+                                    text: 'There was an error while inserting the stock data: ' + response.d,
+                                });
+                            }
+                        },
+                        error: function (response) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lama Tuuri Karo ',
+                                text: 'An error occurred during the AJAX request: ',
+                            });
+                        }
+                    });
+                }
+            });
+
+
+
+        });
+
+
+
+
+        $("#datatable1").on("click", ".delete-btn", function (event) {
+            event.preventDefault(); // Prevent default behavior
+
+            var row = $(this).closest("tr");
+            var id = $(this).data("id");
+
+
+
+            // Clear previous error messages
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to start a new day stock?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, start it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Execute the AJAX request only if the user confirms
+                    $.ajax({
+                        url: 'add_details.aspx/deleteroom',
+                        data: "{'id':'" + id + "'}",
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (response) {
+                            console.log(response);
+                            if (response.d === 'true') {
+                                Swal.fire(
+                                    'Successfully Started!',
+                                    'You Started a new Day Stock!',
+                                    'success'
+                                );
+                                $('#stockmodal').modal('hide');
+
+                                displaycustomer();
+                            } else {
+                                // Handle errors in the response
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Data Insertion Failed',
+                                    text: 'There was an error while inserting the stock data: ' + response.d,
+                                });
+                            }
+                        },
+                        error: function (response) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lama Tuuri Karo ',
+                                text: 'An error occurred during the AJAX request: ',
+                            });
+                        }
+                    });
+                }
+            });
+
+
+
+        });
+
+
+        $("#datatable3").on("click", ".delete-btn", function (event) {
+            event.preventDefault(); // Prevent default behavior
+
+            var row = $(this).closest("tr");
+            var id = $(this).data("id");
+
+
+
+            // Clear previous error messages
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to start a new day stock?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, start it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Execute the AJAX request only if the user confirms
+                    $.ajax({
+                        url: 'add_details.aspx/deletebooking',
+                        data: "{'id':'" + id + "'}",
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (response) {
+                            console.log(response);
+                            if (response.d === 'true') {
+                                Swal.fire(
+                                    'Successfully Started!',
+                                    'You Started a new Day Stock!',
+                                    'success'
+                                );
+                                $('#stockmodal').modal('hide');
+
+                                displaycustomer();
+                                displaybooking();
+                            } else {
+                                // Handle errors in the response
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Data Insertion Failed',
+                                    text: 'There was an error while inserting the stock data: ' + response.d,
+                                });
+                            }
+                        },
+                        error: function (response) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lama Tuuri Karo ',
+                                text: 'An error occurred during the AJAX request: ',
+                            });
+                        }
+                    });
+                }
+            });
+
+
+
+        });
+
+
+
     </script>
 </asp:Content>
+
+
+
