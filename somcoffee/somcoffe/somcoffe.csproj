@@ -104,6 +104,7 @@
   <ItemGroup>
     <Content Include="add_category.aspx" />
     <Content Include="add_details.aspx" />
+    <Content Include="admin.aspx" />
     <Content Include="assets\css\animate.css" />
     <Content Include="assets\css\bootstrap-datetimepicker.min.css" />
     <Content Include="assets\css\bootstrap.min.css" />
@@ -615,6 +616,13 @@
     </Compile>
     <Compile Include="add_details.aspx.designer.cs">
       <DependentUpon>add_details.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin.aspx.cs">
+      <DependentUpon>admin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin.aspx.designer.cs">
+      <DependentUpon>admin.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />

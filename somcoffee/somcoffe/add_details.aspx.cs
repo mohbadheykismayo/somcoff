@@ -248,6 +248,17 @@ namespace somcoffe
             public string CustomerName;
             public string ContactInfo;
         }
+
+        public class employ
+        {
+            public string EmployeeID;
+            public string EmployeeName;
+            public string ContactInfo;
+            public string username;
+            public string password;
+        }
+
+
         [WebMethod]
         public static customers[] displaycustomer()
         {
@@ -271,6 +282,46 @@ namespace somcoffe
 
 
                     field.ContactInfo = dr["ContactInfo"].ToString();
+
+
+
+                    details.Add(field);
+                }
+            } // Connection will be automatically closed here
+
+            return details.ToArray();
+        }
+
+
+        [WebMethod]
+        public static employ[] displayemployees()
+        {
+            List<employ> details = new List<employ>();
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand(@"  
+    	select * from Employees
+
+        ", con);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    employ field = new employ();
+                    field.EmployeeID = dr["EmployeeID"].ToString();
+                    field.EmployeeName = dr["EmployeeName"].ToString();
+
+
+                    field.ContactInfo = dr["ContactInfo"].ToString();
+
+
+                    field.username = dr["username"].ToString();
+
+
+                    field.password = dr["password"].ToString();
 
 
 
