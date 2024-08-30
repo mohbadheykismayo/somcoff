@@ -101,12 +101,12 @@
                 <div class="col-6">
         <div class="page-header">
 <div class="page-title">
-<h4>Customers list</h4>
+<h4>Employee list</h4>
 
 </div>
 <div class="page-btn">
 <a href="#" class="btn btn-added" onclick="callmodal()">
-<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Customer
+<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Employee
 </a>
 </div>
 </div>

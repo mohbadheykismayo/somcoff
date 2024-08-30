@@ -578,7 +578,7 @@
 
     </div>
 
-        <div class="col-6">
+     <%--   <div class="col-6">
         <div class="page-header">
 <div class="page-title">
 <h4>Customers list</h4>
@@ -676,7 +676,7 @@
 </div>
 </div>
 </div>
-    </div>
+    </div>--%>
     <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/dataTables.bootstrap4.min.js"></script>

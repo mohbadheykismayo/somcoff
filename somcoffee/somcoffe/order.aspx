@@ -96,21 +96,23 @@
     <div class="card">
 <div class="card-body">
 <div class="row">
- <div class="col-6">
-     <div class="col-lg-3 col-sm-6 col-12">
+ <div class="col-8">
+     <div class="row">
+         <div class="col-6">
+                  <div class="col-lg-3 col-sm-6 col-12">
 <div class="form-group">
-<label>Category</label>
+<label>3dex da Waqti</label>
 <select class="select" id="catdrop">
 
 </select>
 </div>
 </div>
- </div>
-    <div class="col-6">
+         </div>
+             <div class="col-6">
         
 <div class="col-lg-3 col-sm-6 col-12">
 <div class="form-group">
-<label> Status</label>
+<label> Inta Kale</label>
 <select class="select" id="drinkdrop">
     <option value="0">Please Select </option>
 <option value="Drinks">Drinks</option>
@@ -121,6 +123,10 @@
 
   
     </div>
+     </div>
+
+ </div>
+  
 
 
 
@@ -161,8 +167,8 @@
 
         <br />
 <!-- Clear Button -->
-<button id="clearSelection" class="btn btn-danger">Clear All Selections</button>
-<button id="takeOrder" class="btn btn-success" style="display: none;">Take Order</button>
+<button id="clearSelection" class="btn btn-danger">Tir Tir Ayaga dhan</button>
+<button id="takeOrder" class="btn btn-success" style="display: none;">Qaad Dalabka</button>
 
 
 
@@ -170,7 +176,7 @@
         <br />
         <br />
         <br />
-        <h1> Recent Orders</h1>
+        <h1> Dalab Yada U Dambeeye</h1>
         <div class="row">
             <div class="col-12">
                 
@@ -179,8 +185,8 @@
 <thead>
 <tr>
 
-    <th>Order ID</th>
-<th>Order Date</th>
+    <th>Number Ka</th>
+<th>Waqti Ga</th>
 
 
 </tr>
@@ -1933,7 +1939,21 @@
                     const quantity = selectedItems[itemID].quantity;
                     const orderItemID = selectedItems[itemID].OrderItemID;
                     const stockid = selectedItems[itemID].StockID;
-                   
+                 
+
+                    alert(orderItemID)
+                    // Check if orderItemID is undefined
+                    if (typeof orderItemID === 'undefined') {
+                        // Remove the item from the UI
+                        $(this).closest('.selected-item').remove();
+                        delete selectedItems[itemID];
+                        updateOverallTotalPrice();
+
+                        // Uncheck the checkbox for the removed item
+                        $(`.item-checkbox[data-item-id="${itemID}"]`).prop('checked', false);
+                        return; // Exit the function if orderItemID is undefined
+                    }
+
                     // Perform an AJAX call to handle item removal
                     $.ajax({
                         url: 'order.aspx/removeItem', // Update the URL to your actual endpoint
@@ -1942,7 +1962,8 @@
                         data: JSON.stringify({
                             orderItemID: orderItemID,
                             quantity: quantity,
-                            stockid: stockid
+                            stockid: stockid,
+                            itemID: itemID
                         }),
                         success: function (response) {
                             // Handle the success response
@@ -1961,6 +1982,7 @@
                         }
                     });
                 });
+
             }
 
             function updateTotalPrice(parentElement) {

@@ -198,12 +198,8 @@ GROUP BY
 
 
 
-
-
-
-
         [WebMethod]
-        public static string removeItem(string orderItemID, string quantity , string stockid)
+        public static string removeItem(string orderItemID, string quantity, string stockid, string itemID)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
@@ -213,41 +209,65 @@ GROUP BY
                 {
                     con.Open();
 
-                    // Delete job from jobs table
-                    string jobQuery = "DELETE FROM Order_Items WHERE OrderItemID = @orderItemID";
+                    int price;
 
-                    using (SqlCommand cmd = new SqlCommand(jobQuery, con))
+                    // Retrieve the SubTotalAmount for the item
+                    string selecttotal = "SELECT SubTotalAmount FROM Order_Items WHERE OrderItemID = @orderItemID";
+
+                    using (SqlCommand cmd2 = new SqlCommand(selecttotal, con))
+                    {
+                        cmd2.Parameters.AddWithValue("@orderItemID", orderItemID);
+
+                        object result = cmd2.ExecuteScalar();
+                        price = result != null ? Convert.ToInt32(result) : 0;
+                    }
+
+                    // Insert the deleted item information into the deleteditems table
+                    string insertQuery = @"INSERT INTO deleteditems (ItemID, Quantity, SubTotalAmount)
+                                   VALUES (@ItemID, @Quantity, @SubTotalAmount)";
+
+                    using (SqlCommand cmd3 = new SqlCommand(insertQuery, con))
+                    {
+                        cmd3.Parameters.AddWithValue("@ItemID", itemID);
+                        cmd3.Parameters.AddWithValue("@Quantity", quantity);
+                        cmd3.Parameters.AddWithValue("@SubTotalAmount", price);
+
+                        cmd3.ExecuteNonQuery();
+                    }
+
+                    // Delete the item from the Order_Items table
+                    string deleteQuery = "DELETE FROM Order_Items WHERE OrderItemID = @orderItemID";
+
+                    using (SqlCommand cmd = new SqlCommand(deleteQuery, con))
                     {
                         cmd.Parameters.AddWithValue("@orderItemID", orderItemID);
 
                         cmd.ExecuteNonQuery();
                     }
-                    // Update Item_Stock table based on StockID and ItemID
-                    using (SqlCommand cmd1 = new SqlCommand(@"UPDATE Item_Stock 
-                                                        SET QuantityRemaining = QuantityRemaining + @Quantity ,
-                                                          QuantitySold = QuantitySold - @Quantity
-                                                        WHERE StockID = @stockid   ", con))
+
+                    // Update the Item_Stock table based on StockID and ItemID
+                    string updateStockQuery = @"UPDATE Item_Stock 
+                                         SET QuantityRemaining = QuantityRemaining + @Quantity,
+                                             QuantitySold = QuantitySold - @Quantity
+                                         WHERE StockID = @stockid";
+
+                    using (SqlCommand cmd1 = new SqlCommand(updateStockQuery, con))
                     {
-                        cmd1.Parameters.AddWithValue("@quantity", quantity);
+                        cmd1.Parameters.AddWithValue("@Quantity", quantity);
                         cmd1.Parameters.AddWithValue("@stockid", stockid);
-                        
 
                         cmd1.ExecuteNonQuery();
                     }
-
                 }
 
                 return "true";
             }
             catch (Exception ex)
             {
-                // Handle exceptions
-                throw new Exception("Lama Tuuri Karo");
+                // Return a detailed error message
+                return $"Error: {ex.Message} at line {ex.StackTrace}";
             }
         }
-
-
-
 
 
 
@@ -377,8 +397,10 @@ GROUP BY
   
 
 
-
+	
 SELECT * FROM Orders
+	inner JOIN 
+    Order_Items ON Orders.OrderID = Order_Items.OrderID
 ORDER BY OrderDateTime DESC;
 
 

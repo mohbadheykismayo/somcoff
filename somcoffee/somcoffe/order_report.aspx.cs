@@ -35,7 +35,6 @@ namespace somcoffe
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
-   
 SELECT 
     CAST(Orders.OrderDateTime AS DATE) AS OrderDate, 
     SUM(COALESCE(Credits.CreditAmount, 0)) AS TotalCredits, 
@@ -45,6 +44,8 @@ FROM
     Orders
 LEFT JOIN 
     Credits ON Orders.OrderID = Credits.OrderID
+	inner JOIN 
+    Order_Items ON Orders.OrderID = Order_Items.OrderID
 GROUP BY 
     CAST(Orders.OrderDateTime AS DATE)
 ORDER BY 
@@ -167,6 +168,7 @@ LEFT JOIN
 
 
 		
+
 	SELECT 
     Orders.OrderID, 
     Orders.OrderDateTime, 
@@ -177,6 +179,8 @@ LEFT JOIN
     COALESCE(Orders.TotalAmount, 0) - COALESCE(Credits.CreditAmount, 0) AS TotalCombinedAmount
 FROM 
     Orders
+		inner JOIN 
+    Order_Items ON Orders.OrderID = Order_Items.OrderID
 LEFT JOIN 
     Customers ON Orders.CustomerID = Customers.CustomerID
 LEFT JOIN 

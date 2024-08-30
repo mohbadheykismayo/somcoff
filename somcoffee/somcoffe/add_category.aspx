@@ -28,7 +28,7 @@
 <div class="col-lg-6 col-sm-6 col-12">
 <div class="form-group">
     <input hidden type="text" id="id">
-<label>Category Name</label>
+<label>Magaca Nooca Cuntada</label>
 <input type="text" id="catname">
     <small id="nameError" class="text-danger"></small>
 </div>
@@ -57,12 +57,12 @@
 
 <div class="page-header">
 <div class="page-title">
-<h4>Product Category list</h4>
-<h6>View/Search product Category</h6>
+<h4>List ga </h4>
+
 </div>
 <div class="page-btn">
 <a href="#" class="btn btn-added" onclick="callmodal()">
-<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Category
+<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Ku Dar 
 </a>
 </div>
 </div>
@@ -137,11 +137,10 @@
 <thead>
 <tr>
 
-    <th>Category Id</th>
-<th>Category name</th>
+<th>Magaca Xiliga Cuntada</th>
 
 
-<th>Action</th>
+<th>Ficil</th>
 </tr>
 </thead>
 <tbody>
@@ -176,7 +175,7 @@
 
                         $("#datatable tbody").append(
                             "<tr>" +
-                            "<td>" + id + "</td>" +
+                    
                             "<td>" + name + "</td>" +
                             "<td>" +
                             '<a class="me-3 edit-button" data-id="' + id + '">' +

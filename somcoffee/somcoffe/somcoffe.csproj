@@ -105,6 +105,7 @@
     <Content Include="add_category.aspx" />
     <Content Include="add_details.aspx" />
     <Content Include="admin.aspx" />
+    <Content Include="assets\bootstrap.min.css" />
     <Content Include="assets\css\animate.css" />
     <Content Include="assets\css\bootstrap-datetimepicker.min.css" />
     <Content Include="assets\css\bootstrap.min.css" />
@@ -594,6 +595,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="items.aspx" />
+    <Content Include="login.aspx" />
     <Content Include="order.aspx" />
     <Content Include="order_report.aspx" />
     <Content Include="Site.Master" />
@@ -642,6 +644,13 @@
     </Compile>
     <Compile Include="items.aspx.designer.cs">
       <DependentUpon>items.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="login.aspx.cs">
+      <DependentUpon>login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="login.aspx.designer.cs">
+      <DependentUpon>login.aspx</DependentUpon>
     </Compile>
     <Compile Include="order.aspx.cs">
       <DependentUpon>order.aspx</DependentUpon>
