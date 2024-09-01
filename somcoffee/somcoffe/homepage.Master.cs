@@ -26,7 +26,7 @@ namespace somcoffe
                 // Hide the Admin link if the role is "employee"
                 if (Label2.Text == "employee")
                 {
-                    adminLink.Visible = false;
+                    //adminLink.Visible = false;
                 }
             }
 

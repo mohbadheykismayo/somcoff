@@ -592,6 +592,16 @@
     <Content Include="assets\plugins\twitter-bootstrap-wizard\form-wizard.js" />
     <Content Include="assets\plugins\twitter-bootstrap-wizard\jquery.bootstrap.wizard.min.js" />
     <Content Include="assets\plugins\twitter-bootstrap-wizard\prettify.js" />
+    <Content Include="datatables\btn.js" />
+    <Content Include="datatables\datatables.css" />
+    <Content Include="datatables\datatables.js" />
+    <Content Include="datatables\datatables.min.css" />
+    <Content Include="datatables\datatables.min.js" />
+    <Content Include="datatables\dtmin.js" />
+    <Content Include="datatables\htmlbyn.js" />
+    <Content Include="datatables\jquery-3.4.1.min.js" />
+    <Content Include="datatables\jzip.js" />
+    <Content Include="datatables\pdf.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="items.aspx" />

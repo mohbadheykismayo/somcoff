@@ -37,7 +37,7 @@ namespace somcoffe
                     Session["username"] = dr["username"].ToString();
                     Session["role"] = "admin";
                     
-                    Response.Redirect("order_report.aspx");
+                    Response.Redirect("order.aspx");
                 }
                 else
                 {

@@ -113,7 +113,7 @@
     <div class="col-6">
         <div class="page-header">
 <div class="page-title">
-<h4>Items list</h4>
+<h4>List Ga Alaabta</h4>
 
 </div>
 <div class="page-btn">
@@ -212,7 +212,7 @@
         <div class="col-6">
         <div class="page-header">
 <div class="page-title">
-<h4>Item Stock List</h4>
+<h4>Baqaarka Alaabta</h4>
 
 </div>
 <div class="page-btn">
@@ -284,7 +284,7 @@
         <div class="col-8">
                     <div class="page-header">
 <div class="page-title">
-<h4>Todays Stock List</h4>
+<h4>Alaabta Maanta</h4>
 
 </div>
 <div class="page-btn">
@@ -424,14 +424,23 @@
 
 
 
+    <script src="datatables/jquery-3.4.1.min.js"></script>
 
 
 
-
-    <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/dataTables.bootstrap4.min.js"></script>
         <script>
+            function call() {
+         
+
+                
+            }
+          
+
+
+
+         
 
             getcat();
             function getcat(){
@@ -518,7 +527,7 @@
                         );
                     }
 
-
+                    call();
                 },
                 error: function (response) {
                     alert(response.responseText);
@@ -1498,7 +1507,18 @@
                                 "</tr>"
                             );
                         }
-
+                        var table = $('#datatable1').DataTable({
+                            lengthChange: false,
+                            language: {
+                                searchPlaceholder: 'Search customers ...' // Set the placeholder text
+                            },
+                            buttons: [
+                                {
+                                    extend: 'excel',
+                                    text: 'Export to Excel'
+                                }
+                            ]
+                        });
 
                     },
                     error: function (response) {

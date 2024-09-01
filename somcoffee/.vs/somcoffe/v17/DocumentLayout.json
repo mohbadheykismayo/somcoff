@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\add_details.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
-      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\add_details.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\login.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
-      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\order.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\login.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\admin.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
-      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\admin.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\admin.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\admin.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|c:\\users\\hp\\documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\order.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\items.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\items.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\homepage.master||{B30AFBFF-D992-43B7-B62D-2642580A2883}",
@@ -27,8 +27,20 @@
       "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\homepage.master.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\admin.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\admin.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\admin.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\admin.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|c:\\users\\hp\\documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\add_details.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\add_details.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\order.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\order.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order_report.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -37,18 +49,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order_report.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
       "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\order_report.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
-      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\login.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\login.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\items.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
-      "RelativeMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|solutionrelative:somcoffe\\items.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{067C5A60-D9BA-4044-AB99-611C0E69F8AE}|somcoffe\\somcoffe.csproj|C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\add_category.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
@@ -65,12 +65,12 @@
   ],
   "DocumentGroupContainers": [
     {
-      "Orientation": 0,
+      "Orientation": 1,
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "DockedHeight": 200,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -78,46 +78,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "order.aspx",
-              "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx",
-              "RelativeDocumentMoniker": "somcoffe\\order.aspx",
-              "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx",
-              "RelativeToolTip": "somcoffe\\order.aspx",
-              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
-              "WhenOpened": "2024-08-21T23:01:37.542Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "order.aspx.cs",
-              "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx.cs",
-              "RelativeDocumentMoniker": "somcoffe\\order.aspx.cs",
-              "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx.cs",
-              "RelativeToolTip": "somcoffe\\order.aspx.cs",
-              "ViewState": "AQIAAMUAAAAA7r333nswwOUAAAAVAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-24T20:28:36.856Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
               "Title": "admin.aspx.cs",
               "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\admin.aspx.cs",
               "RelativeDocumentMoniker": "somcoffe\\admin.aspx.cs",
               "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\admin.aspx.cs",
               "RelativeToolTip": "somcoffe\\admin.aspx.cs",
-              "ViewState": "AQIAAFUAAAAAAAAAAAAAAFkAAAAKAAAA",
+              "ViewState": "AQIAAI8AAAAAAAAAAAAmwFkAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-28T08:50:40.125Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "admin.aspx",
               "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\admin.aspx",
               "RelativeDocumentMoniker": "somcoffe\\admin.aspx",
@@ -149,14 +123,53 @@
               "RelativeDocumentMoniker": "somcoffe\\homepage.Master.cs",
               "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\homepage.Master.cs",
               "RelativeToolTip": "somcoffe\\homepage.Master.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAWAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAABbAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-28T10:28:02.207Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "items.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\items.aspx",
+              "RelativeDocumentMoniker": "somcoffe\\items.aspx",
+              "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\items.aspx",
+              "RelativeToolTip": "somcoffe\\items.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2024-08-22T12:28:34.965Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "login.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx",
+              "RelativeDocumentMoniker": "somcoffe\\login.aspx",
+              "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx",
+              "RelativeToolTip": "somcoffe\\login.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2024-08-28T10:11:09.011Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "login.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx.cs",
+              "RelativeDocumentMoniker": "somcoffe\\login.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx.cs",
+              "RelativeToolTip": "somcoffe\\login.aspx.cs",
+              "ViewState": "AQIAABYAAAAAAAAAAAAAACcAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-28T10:17:18.272Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "add_details.aspx",
               "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\add_details.aspx",
               "RelativeDocumentMoniker": "somcoffe\\add_details.aspx",
@@ -169,7 +182,31 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
+              "Title": "order.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx.cs",
+              "RelativeDocumentMoniker": "somcoffe\\order.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx.cs",
+              "RelativeToolTip": "somcoffe\\order.aspx.cs",
+              "ViewState": "AQIAAMUAAAAA7r333nswwOUAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-24T20:28:36.856Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "order.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx",
+              "RelativeDocumentMoniker": "somcoffe\\order.aspx",
+              "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order.aspx",
+              "RelativeToolTip": "somcoffe\\order.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2024-08-21T23:01:37.542Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "order_report.aspx.cs",
               "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order_report.aspx.cs",
               "RelativeDocumentMoniker": "somcoffe\\order_report.aspx.cs",
@@ -177,12 +214,11 @@
               "RelativeToolTip": "somcoffe\\order_report.aspx.cs",
               "ViewState": "AQIAAHkBAAAAAAAAAAAswIYBAAAPAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-22T09:45:54.448Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-22T09:45:54.448Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "order_report.aspx",
               "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\order_report.aspx",
               "RelativeDocumentMoniker": "somcoffe\\order_report.aspx",
@@ -190,44 +226,7 @@
               "RelativeToolTip": "somcoffe\\order_report.aspx",
               "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
-              "WhenOpened": "2024-08-27T11:54:55.482Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "login.aspx",
-              "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx",
-              "RelativeDocumentMoniker": "somcoffe\\login.aspx",
-              "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx",
-              "RelativeToolTip": "somcoffe\\login.aspx",
-              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
-              "WhenOpened": "2024-08-28T10:11:09.011Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "login.aspx.cs",
-              "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx.cs",
-              "RelativeDocumentMoniker": "somcoffe\\login.aspx.cs",
-              "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\login.aspx.cs",
-              "RelativeToolTip": "somcoffe\\login.aspx.cs",
-              "ViewState": "AQIAABYAAAAAAAAAAAAAACUAAAAhAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-28T10:17:18.272Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "items.aspx",
-              "DocumentMoniker": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\items.aspx",
-              "RelativeDocumentMoniker": "somcoffe\\items.aspx",
-              "ToolTip": "C:\\Users\\hp\\Documents\\active projects\\somcof\\somcoff\\somcoffee\\somcoffe\\items.aspx",
-              "RelativeToolTip": "somcoffe\\items.aspx",
-              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
-              "WhenOpened": "2024-08-22T12:28:34.965Z"
+              "WhenOpened": "2024-08-27T11:54:55.482Z"
             },
             {
               "$type": "Document",
