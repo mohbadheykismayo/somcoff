@@ -64,7 +64,7 @@ ORDER BY
 
                     field.TotalCombinedAmountPerDay = dr["TotalCombinedAmountPerDay"].ToString();
 
-           
+
 
 
                     details.Add(field);
@@ -79,7 +79,7 @@ ORDER BY
             public string OrderDateTime;
             public string CustomerName;
             public string EmployeeName;
-     
+
             public string CreditAmount;
             public string TotalAmount;
             public string TotalCombinedAmount;
@@ -143,7 +143,7 @@ LEFT JOIN
                     field.TotalAmount = dr["TotalAmount"].ToString();
                     field.TotalCombinedAmount = dr["TotalCombinedAmount"].ToString();
 
-                    
+
                     details.Add(field);
                 }
             } // Connection will be automatically closed here
@@ -155,7 +155,7 @@ LEFT JOIN
 
 
         [WebMethod]
-        public static orderreport[] dailyreports( string id)
+        public static orderreport[] dailyreports(string id)
         {
             List<orderreport> details = new List<orderreport>();
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
@@ -165,12 +165,10 @@ LEFT JOIN
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
 
-
-
-		
+	
 
 	SELECT 
-    Orders.OrderID, 
+    DISTINCT(Orders.OrderID), 
     Orders.OrderDateTime, 
     Customers.CustomerName, 
     Employees.EmployeeName, 
@@ -271,7 +269,7 @@ WHERE  Orders.OrderID = @id
                     field.CustomerName = dr["CustomerName"].ToString();
                     field.EmployeeName = dr["EmployeeName"].ToString();
 
-              
+
                     details.Add(field);
                 }
             } // Connection will be automatically closed here

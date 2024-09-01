@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static somcoffe.add_details;
 
 namespace somcoffe
 {
@@ -16,9 +17,127 @@ namespace somcoffe
         {
 
         }
+        public class deyn
+        {
+            public string EmployeeName;
+            public string CustomerName;
+            public string CreditAmount;
+            public string OrderDateTime;
+            public string TotalAmount;
+            public string OrderID;
 
-        
-                 [WebMethod]
+
+
+
+
+
+
+
+
+
+
+        }
+
+        [WebMethod]
+        public static deyn[] displaydeyn()
+        {
+            List<deyn> details = new List<deyn>();
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand(@"  
+select Orders.OrderID,   Customers.CustomerName,Employees.EmployeeName,Credits.CreditAmount,Orders.OrderDateTime,Orders.TotalAmount  from Credits
+inner join Customers on Credits.CustomerID = Credits.CustomerID
+inner join Employees on Credits.IssuedByEmployeeID = Employees.EmployeeID
+inner join Orders on Credits.OrderID= Orders.OrderID
+
+        ", con);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    deyn field = new deyn();
+                    field.EmployeeName = dr["EmployeeName"].ToString();
+                    field.CustomerName = dr["CustomerName"].ToString();
+                    field.CreditAmount = dr["CreditAmount"].ToString();
+                    field.OrderDateTime = dr["OrderDateTime"].ToString();
+                    field.TotalAmount = dr["TotalAmount"].ToString();
+
+                    field.OrderID = dr["OrderID"].ToString();
+
+
+
+
+
+                    details.Add(field);
+                }
+            } // Connection will be automatically closed here
+
+            return details.ToArray();
+        }
+
+
+
+
+
+
+
+
+        public class tuur
+        {
+            public string ItemName;
+            public string quantity;
+            public string SubTotalAmount;
+            public string date;
+
+        }
+
+
+
+        [WebMethod]
+        public static tuur[] displaydelete()
+        {
+            List<tuur> details = new List<tuur>();
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand(@"  
+	select items.ItemName, deleteditems.quantity , deleteditems.SubTotalAmount ,deleteditems.date  from deleteditems
+	inner join	Items on deleteditems.ItemID = Items.ItemID 
+
+        ", con);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    tuur field = new tuur();
+                    field.ItemName = dr["ItemName"].ToString();
+                    field.quantity = dr["quantity"].ToString();
+                    field.SubTotalAmount = dr["SubTotalAmount"].ToString();
+                    field.date = dr["date"].ToString();
+               
+
+
+
+
+                    details.Add(field);
+                }
+            } // Connection will be automatically closed here
+
+            return details.ToArray();
+        }
+
+
+
+
+
+
+
+        [WebMethod]
         public static string deleteemploy(string id)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
@@ -54,7 +173,7 @@ namespace somcoffe
 
 
         [WebMethod]
-        public static string updateemploy(string employname, string number, string username, string password , string id)
+        public static string updateemploy(string employname, string number, string username, string password, string id)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
@@ -90,7 +209,7 @@ namespace somcoffe
 
 
         [WebMethod]
-        public static string submitemploy(string employname, string number,string username, string password)
+        public static string submitemploy(string employname, string number, string username, string password)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
@@ -109,7 +228,7 @@ namespace somcoffe
                         cmd.Parameters.AddWithValue("@number", number);
                         cmd.Parameters.AddWithValue("@username", username);
                         cmd.Parameters.AddWithValue("@password", password);
-         
+
 
 
                         cmd.ExecuteNonQuery();

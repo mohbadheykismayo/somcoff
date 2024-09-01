@@ -69,7 +69,7 @@ namespace somcoffe
             public string EmployeeName;
             public string CreditAmount;
             public string CustomerName;
-     
+
 
 
         }
@@ -113,7 +113,7 @@ GROUP BY
                         field.Price = dr["Price"].ToString();
                         field.ItemID = dr["ItemID"].ToString();
                         field.StockID = dr["StockID"].ToString();
-                        
+
 
 
 
@@ -199,7 +199,7 @@ GROUP BY
 
 
         [WebMethod]
-        public static string removeItem(string orderItemID, string quantity, string stockid, string itemID)
+        public static string removeItem(string orderItemID, string quantity, string stockid, string itemID, string employ)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
@@ -223,13 +223,15 @@ GROUP BY
                     }
 
                     // Insert the deleted item information into the deleteditems table
-                    string insertQuery = @"INSERT INTO deleteditems (ItemID, Quantity, SubTotalAmount)
-                                   VALUES (@ItemID, @Quantity, @SubTotalAmount)";
+                    string insertQuery = @"INSERT INTO deleteditems (name ,ItemID, Quantity, SubTotalAmount)
+                                   VALUES (@employ,@ItemID, @Quantity, @SubTotalAmount)";
 
                     using (SqlCommand cmd3 = new SqlCommand(insertQuery, con))
                     {
                         cmd3.Parameters.AddWithValue("@ItemID", itemID);
                         cmd3.Parameters.AddWithValue("@Quantity", quantity);
+                        cmd3.Parameters.AddWithValue("@employ", employ);
+                        
                         cmd3.Parameters.AddWithValue("@SubTotalAmount", price);
 
                         cmd3.ExecuteNonQuery();
@@ -298,7 +300,7 @@ GROUP BY
                 {
                     cmd.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
-           
+
                     cmd.Parameters.AddWithValue("@TotalAmount", totalAmount);
 
                     orderId = (int)cmd.ExecuteScalar();
@@ -317,7 +319,7 @@ GROUP BY
                                               VALUES (@CustomerID, @creditamount, @EmployeeID, @OrderID)", conn))
                     {
                         cmd1.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
-                        cmd1.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)customerId.Value : DBNull.Value);
+                        cmd1.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
                         cmd1.Parameters.AddWithValue("@creditamount", amountPaid.HasValue ? (object)amountPaid.Value : DBNull.Value);
                         cmd1.Parameters.AddWithValue("@OrderID", orderId);
 
@@ -396,9 +398,7 @@ GROUP BY
                 SqlCommand cmd = new SqlCommand(@"  
   
 
-
-	
-SELECT * FROM Orders
+SELECT  DISTINCT(Orders.OrderID), Orders.OrderDateTime FROM Orders
 	inner JOIN 
     Order_Items ON Orders.OrderID = Order_Items.OrderID
 ORDER BY OrderDateTime DESC;
@@ -414,7 +414,7 @@ ORDER BY OrderDateTime DESC;
                     field.OrderDateTime = dr["OrderDateTime"].ToString();
 
 
-                 
+
 
 
                     details.Add(field);
@@ -507,7 +507,7 @@ GROUP BY Order_Items.ItemID
                         field.EmployeeName = dr["EmployeeName"].ToString();
                         field.CreditAmount = dr["CreditAmount"].ToString();
                         field.CustomerName = dr["CustomerName"].ToString();
-                        
+
 
 
 

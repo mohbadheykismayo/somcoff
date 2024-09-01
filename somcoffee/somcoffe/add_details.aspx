@@ -7,14 +7,14 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel3">Customer Operations</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel3">Badal Macmiilka</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
 
           <div class="page-header">
 <div class="page-title">
-<h4>Add Customer</h4>
+<h4>Ku Dar Macmiil</h4>
 
 </div>
 </div>
@@ -34,7 +34,7 @@
 </div>
     <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
-<label> Room</label>
+<label> Qolka</label>
 <select class="select" id="roomid">
 
 </select>
@@ -45,14 +45,14 @@
 
         <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
-<label> Booking Date</label>
+<label>  Waqtiga</label>
     <input  type="datetime-local" id="date" class="form-control"/>
 </div>
 </div>
 
 <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
-<label>Duration </label>
+<label>Mudada </label>
 <input type="text" id="duration">
         <small id="duration1" class="text-danger"></small>
 </div>
@@ -63,7 +63,7 @@
   
 <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
-<label>Amount</label>
+<label>Lacagta</label>
 <input type="text" class="form-control" id="price">
         <small id="price1" class="text-danger"></small>
 </div>
@@ -125,7 +125,7 @@
 
           <div class="page-header">
 <div class="page-title">
-<h4>Add Customer</h4>
+<h4>Ku Dar Macmiil</h4>
 
 </div>
 </div>
@@ -136,7 +136,7 @@
         <input id="id" style="display:none"/>
 <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
-<label>customer name</label>
+<label>Magaca Macmiilka</label>
 <input type="text" id="custname">
         <small id="custname1" class="text-danger"></small>
 </div>
@@ -147,7 +147,7 @@
   
 <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
-<label>Phone Number</label>
+<label>Number ka</label>
 <input type="text" class="form-control" id="number">
         <small id="number1" class="text-danger"></small>
 </div>
@@ -202,14 +202,14 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel1">Rooms Operations</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel1">Badal Qolalka</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
 
           <div class="page-header">
 <div class="page-title">
-<h4>Add Rooms</h4>
+<h4>Ku Dar Qolalka</h4>
 
 </div>
 </div>
@@ -220,7 +220,7 @@
 
 <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
-<label>Room name</label>
+<label>Magaca Qolka</label>
 <input type="text" id="room">
         <small id="room1" class="text-danger"></small>
 </div>
@@ -228,7 +228,7 @@
 
     <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
-<label>Capacity</label>
+<label>Muga</label>
 <input type="text" id="capa">
         <small id="capa1" class="text-danger"></small>
 </div>
@@ -238,7 +238,7 @@
   
 <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
-<label>Price</label>
+<label>Lacagta</label>
 <input type="text" class="form-control" id="amount">
         <small id="amount1" class="text-danger"></small>
 </div>
@@ -292,12 +292,12 @@
     <div class="col-6">
         <div class="page-header">
 <div class="page-title">
-<h4>Customers list</h4>
+<h4>Tirada Macaamiisha</h4>
 
 </div>
 <div class="page-btn">
 <a href="#" class="btn btn-added" onclick="callmodal()">
-<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Customer
+<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Ku Dar Macmiilka
 </a>
 </div>
 </div>
@@ -372,8 +372,8 @@
 <thead>
 <tr>
 
-    <th>Customer Name</th>
-<th>Number</th>
+    <th>Magaca Macmiilka</th>
+<th>Number ka</th>
 
 <th>Action</th>
 </tr>
@@ -394,12 +394,12 @@
             <div class="col-6">
         <div class="page-header">
 <div class="page-title">
-<h4>Rooms list</h4>
+<h4>Tirada Qolalka</h4>
 
 </div>
 <div class="page-btn">
 <a href="#" class="btn btn-added" onclick="callmodal1()">
-<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Rooms
+<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Ku Dar Qolalka
 </a>
 </div>
 </div>
@@ -474,9 +474,9 @@
 <thead>
 <tr>
 
-    <th>Room Name</th>
-<th>Capacity</th>
-    <th>Price</th>
+    <th>Magaca Qolalka</th>
+<th>Muga</th>
+    <th>Lacagta</th>
 <th>Action</th>
 </tr>
 </thead>

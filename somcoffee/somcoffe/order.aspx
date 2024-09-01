@@ -8,7 +8,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Order</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Badal Order</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -17,7 +17,7 @@
                                           <div class="col-lg-3 col-sm-6 col-12">
 <div class="form-group">
            <input style="display:none" id="orderin" />
-<label>Category</label>
+<label>Sedex da Waqti</label>
 <select class="select" id="catdrop1">
 
 </select>
@@ -27,10 +27,10 @@
               <div class="col-6">
                             <div class="col-lg-3 col-sm-6 col-12">
 <div class="form-group">
-<label> Status</label>
+<label> NoocYada</label>
 <select class="select" id="drinkdrop1">
     <option value="0">Please Select </option>
-<option value="Drinks">Drinks</option>
+<option value="Drinks">Cabitaan</option>
 <option value="Fast Food">Fast Food</option>
 </select>
 </div>
@@ -58,25 +58,25 @@
     <input type="checkbox" id="isCreditOrder1" /> Credit Order
 </div>
 <div id="creditDetails1" style="display: none;">
-    <label for="customerID1">Customer:</label>
+    <label for="customerID1">Macmiilka:</label>
     <select class="form-control" id="customerID1">
         <option value="">Select Customer</option>
         <!-- Add customer options here -->
     </select>
     
-    <label for="employeeID1">Employee:</label>
+    <label for="employeeID1">Shaqaalaha:</label>
     <select class="form-control" id="employeeID1">
    
         <!-- Add employee options here -->
     </select>
     
-    <label for="amountPaid">Amount Paid:</label>
+    <label for="amountPaid">Lacag tii La Bixiye:</label>
     <input class="form-control" type="number" id="amountPaid1" min="0" step="0.01" value="0.00" />
 </div>
     <!-- Action buttons -->
     <div class="action-buttons">
-        <button id="takeOrderBtn" class="btn btn-success">Take Order</button>
-        <button id="clearSelectionBtn" class="btn btn-warning">Clear Selection</button>
+        <button id="takeOrderBtn" class="btn btn-success">Bedel Dalabka</button>
+        <button id="clearSelectionBtn" class="btn btn-warning">Tir Tir Ayaga Dhan</button>
     </div>
 </div>
 
@@ -149,19 +149,19 @@
     <input type="checkbox" id="isCreditOrder" /> Credit Order
 </div>
 <div id="creditDetails" style="display: none;">
-    <label for="customerID">Customer:</label>
+    <label for="customerID">Macmiilka:</label>
     <select class="form-control" id="customerID">
         <option value="">Select Customer</option>
         <!-- Add customer options here -->
     </select>
     
-    <label for="employeeID">Employee:</label>
+    <label for="employeeID">Shaqaalaha:</label>
     <select class="form-control" id="employeeID">
         <option value="">Select Employee</option>
         <!-- Add employee options here -->
     </select>
     
-    <label for="amountPaid">Amount Paid:</label>
+    <label for="amountPaid">Lacag La Bixinaayo:</label>
     <input class="form-control" type="number" id="amountPaid" min="0" step="0.01" value="0.00" />
 </div>
 
@@ -931,7 +931,11 @@
                     type: 'POST',
                     contentType: "application/json; charset=utf-8", // Add charset for proper encoding
                     success: function (response) {
-                        alert(response.d); // Display the success message from the server
+                        Swal.fire(
+                            'Waxaad Diiwaangalisey Order!',
+                            '!',
+                            'success'
+                        );
                         displaytodaystock();
                         // Print the receipt
                         let printContent = `
@@ -1941,7 +1945,7 @@
                     const stockid = selectedItems[itemID].StockID;
                  
 
-                    alert(orderItemID)
+                 
                     // Check if orderItemID is undefined
                     if (typeof orderItemID === 'undefined') {
                         // Remove the item from the UI
@@ -1954,6 +1958,9 @@
                         return; // Exit the function if orderItemID is undefined
                     }
 
+                    const employ = document.getElementById('Label1').textContent;
+
+
                     // Perform an AJAX call to handle item removal
                     $.ajax({
                         url: 'order.aspx/removeItem', // Update the URL to your actual endpoint
@@ -1963,7 +1970,8 @@
                             orderItemID: orderItemID,
                             quantity: quantity,
                             stockid: stockid,
-                            itemID: itemID
+                            itemID: itemID,
+                            employ: employ
                         }),
                         success: function (response) {
                             // Handle the success response
@@ -2055,7 +2063,11 @@
                         amountPaid: amountPaid
                     }),
                     success: function (response) {
-                        alert("Order placed successfully");
+                        Swal.fire(
+                            'Waxaad Badasha Order!',
+                            '!',
+                            'success'
+                        );
 
                         // Print the receipt
                         let printContent = `
