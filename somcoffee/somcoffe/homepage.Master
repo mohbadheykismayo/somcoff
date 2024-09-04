@@ -8,7 +8,7 @@
     <asp:ContentPlaceHolder ID="head" runat="server">
      
     </asp:ContentPlaceHolder>
-            <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.jpg">
+            <link rel="shortcut icon" type="image/x-icon" href="assets/somcof.ico">
 <style>
     /* General Sidebar Styling */
 .sidebar {
@@ -114,11 +114,13 @@
 <div class="header">
 
 <div class="header-left active">
-<a href="index.html" class="logo">
-<img src="assets/img/logo.png" alt="">
+<a href="#" class="logo">
+  
+    <img src="assets/somcof%20(1).png" />
 </a>
-<a href="index.html" class="logo-small">
-<img src="assets/img/logo-small.png" alt="">
+<a href="#" class="logo-small">
+
+    <img src="assets/somcof.jpeg" />
 </a>
 <a id="toggle_btn" href="javascript:void(0);">
 </a>
@@ -144,7 +146,9 @@
 
 <li class="nav-item dropdown has-arrow main-drop">
 <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
-<span class="user-img"><img src="assets/img/profiles/avator1.jpg" alt="">
+<span class="user-img">
+ <%--   <img src="assets/img/profiles/avator1.jpg" alt="">--%>
+    <img src="assets/somcof.jpeg" />
 <span class="status online"></span></span>
 </a>
 <div class="dropdown-menu menu-drop-user">
@@ -214,7 +218,7 @@
                         <span>Dadka Iyo Qolalka</span>
                     </a>
                 </li>
-                <li>
+                <li id="adminLink" runat="server">
                     <a href="admin.aspx" class="sidebar-button">
                         <img src="assets/img/icons/users1.svg" alt="People" class="sidebar-icon">
                         <span>Admin Ka</span>

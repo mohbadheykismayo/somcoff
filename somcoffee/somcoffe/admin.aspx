@@ -14,7 +14,7 @@
 
           <div class="page-header">
 <div class="page-title">
-<h4>Add Employee</h4>
+<h4>kU Dar Shaqaale</h4>
 
 </div>
 </div>
@@ -97,16 +97,99 @@
     </div>
   </div>
 </div>
+
+
+    <div class="modal fade" id="catmodal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel1">Admin Badal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+          <div class="page-header">
+<div class="page-title">
+<h4>kU Dar Shaqaale</h4>
+
+</div>
+</div>
+
+<div class="card">
+<div class="card-body">
+<div class="row">
+        <input id="id1" style="display:none"/>
+
+
+
+  
+  
+
+
+  <div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label>username</label>
+<input type="text" id="user">
+        <small id="user1" class="text-danger"></small>
+</div>
+</div>
+
+
+
+    <div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label>password</label>
+<input type="text" id="pass">
+        <small id="pass1" class="text-danger"></small>
+</div>
+</div>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="col-lg-12">
+        <a href="javascript:void(0);" id="deletebtn1" class="btn btn-submit me-2" onclick="deletecategory()">delete</a>
+    <a href="javascript:void(0);" id="editbtn1" class="btn btn-submit me-2" onclick="updateadmin()">edit</a>
+<a href="javascript:void(0);" id="submitbtn1" class="btn btn-submit me-2" onclick="submitemploy()">Submit</a>
+<a href="categorylist.html" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
+</div>
+</div>
+</div>
+</div>
+
+      </div>
+     <%-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>--%>
+    </div>
+  </div>
+</div>
     <div class="row">
                 <div class="col-6">
         <div class="page-header">
 <div class="page-title">
-<h4>Employee list</h4>
+<h4>List Shaqaalaha</h4>
 
 </div>
 <div class="page-btn">
 <a href="#" class="btn btn-added" onclick="callmodal()">
-<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Employee
+<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Ku Dar Shaqaale
 </a>
 </div>
 </div>
@@ -181,8 +264,8 @@
 <thead>
 <tr>
 
-    <th>Employee Name</th>
-<th>Contact Info</th>
+    <th>magaca shaqaalaha</th>
+<th>number ka</th>
     <th>UserName</th>
     <th>Password</th>
 
@@ -337,51 +420,71 @@
 </div>
 </div>
 
-<div class="card" id="filter_inputs11">
-<div class="card-body pb-0">
-<div class="row">
-<div class="col-lg-2 col-sm-6 col-12">
-<div class="form-group">
-<select class="select">
-<option>Choose Category</option>
-<option>Computers</option>
-</select>
-</div>
-</div>
-<div class="col-lg-2 col-sm-6 col-12">
-<div class="form-group">
-<select class="select">
-<option>Choose Sub Category</option>
-<option>Fruits</option>
-</select>
-</div>
-</div>
-<div class="col-lg-2 col-sm-6 col-12">
-<div class="form-group">
-<select class="select">
-<option>Choose Sub Brand</option>
-<option>Iphone</option>
-</select>
-</div>
-</div>
-<div class="col-lg-1 col-sm-6 col-12 ms-auto">
-<div class="form-group">
-<a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img"></a>
-</div>
-</div>
-</div>
-</div>
-</div>
-
 <div class="table-responsive">
 <table class="table  " id="tuur">
 <thead>
 <tr>
-    <th>Magaca </th>
+        <th>Magaca qofka tuuray </th>
+    <th>Magaca alaabta </th>
     <th>inta xabo</th>
 
     <th>lacagta</th>
     <th>Waqtiga</th>
+
+</tr>
+</thead>
+<tbody>
+
+</tbody>
+</table>
+</div>
+</div>
+</div>
+    </div>
+                                <div class="col-6">
+        <div class="page-header">
+<div class="page-title">
+<h4>Admin ka</h4>
+
+</div>
+
+</div>
+
+<div class="card">
+<div class="card-body">
+<div class="table-top">
+<div class="search-set">
+<div class="search-path">
+<a class="btn btn-filter" id="filter_search111">
+<img src="assets/img/icons/filter.svg" alt="img">
+<span><img src="assets/img/icons/closes.svg" alt="img"></span>
+</a>
+</div>
+<div class="search-input">
+<a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+</div>
+</div>
+<div class="wordset">
+<ul>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+</li>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
+</li>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
+</li>
+</ul>
+</div>
+</div>
+
+<div class="table-responsive">
+<table class="table  " id="adminka">
+<thead>
+<tr>
+        <th>username </th>
+    <th>password </th>
 
 </tr>
 </thead>
@@ -411,13 +514,13 @@
             // Clear previous error messages
 
             Swal.fire({
-                title: 'Are you sure?',
-                text: "Do you want to start a new day stock?",
+                title: 'Ma Hubta Inaa Tuureyso?',
+                text: "ma tuureysaa?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, start it!'
+                confirmButtonText: 'HAA!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Execute the AJAX request only if the user confirms
@@ -685,6 +788,28 @@
             $('#catmodal').modal('show');
 
         }
+
+
+
+
+        function callmodal1() {
+            document.getElementById('submitbtn1').style.display = 'inline-block';
+            document.getElementById('editbtn1').style.display = 'none';
+            document.getElementById('deletebtn1').style.display = 'none';
+            /*  $("#catname").val('');*/
+            $('#catmodal1').modal('show');
+
+        }
+
+
+
+
+
+
+
+
+
+
         displayemployees();
         function displayemployees() {
             $.ajax({
@@ -812,16 +937,16 @@
                         var quantity = response.d[i].quantity;
                         var SubTotalAmount = response.d[i].SubTotalAmount;
                         var date = response.d[i].date;
-                   
+                        var name = response.d[i].name;
 
 
 
                         $("#tuur tbody").append(
                             "<tr>" +
+                            "<td>" + name + "</td>" +
                             "<td>" + ItemName + "</td>" +
                             "<td>" + quantity + "</td>" +
-                            "<td>" + CreditAmount + "</td>" +
-                            "<td>" + SubTotalAmount + "</td>" +
+                                  "<td>" + SubTotalAmount + "</td>" +
                             "<td>" + date + "</td>" +
                          
                             "</tr>"
@@ -836,5 +961,221 @@
             });
         }
 
+
+
+        displayadmin();
+        function displayadmin() {
+            $.ajax({
+                url: 'admin.aspx/displayadmin',
+                dataType: "json",
+                type: 'POST',
+                contentType: "application/json",
+                success: function (response) {
+                    console.log(response)
+
+
+                    $("#adminka tbody").empty();
+
+                    for (var i = 0; i < response.d.length; i++) {
+                        var userid = response.d[i].userid;
+                   
+                        var username = response.d[i].username;
+                        var password = response.d[i].password;
+
+
+
+
+
+
+
+
+                        $("#adminka tbody").append(
+                            "<tr>" +
+                            "<td>" + username + "</td>" +
+                            "<td>" + password + "</td>" +
+                 
+
+                            "<td>" +
+                            '<a class="me-3 edit-button" data-id="' + userid + '">' +
+                            '<img src="assets/img/icons/edit.svg" alt="Edit">' +
+                            '</a>' +
+                            '<a class="me-3 delete-btn" data-id="' + userid + '">' +
+                            '<img src="assets/img/icons/delete.svg" alt="Delete">' +
+                            '</a>' +
+                            "</td>" +
+                            "</tr>"
+                        );
+                    }
+
+
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+        $("#adminka").on("click", ".edit-button", function (event) {
+            event.preventDefault(); // Prevent default behavior
+
+            var row = $(this).closest("tr");
+            var id = $(this).data("id");
+
+            var user = row.find("td:nth-child(1)").text();
+            var pass = row.find("td:nth-child(2)").text();
+
+            $("#id1").val(id);
+         
+            $("#user").val(user);
+
+            $("#pass").val(pass);
+
+            document.getElementById('submitbtn1').style.display = 'none';
+            document.getElementById('editbtn1').style.display = 'inline-block';
+            document.getElementById('deletebtn1').style.display = 'none';
+
+            $('#catmodal1').modal('show');
+
+
+
+        });
+
+
+
+        //$("#adminka").on("click", ".delete-btn", function (event) {
+        //    event.preventDefault(); // Prevent default behavior
+
+        //    var row = $(this).closest("tr");
+        //    var id = $(this).data("id");
+
+
+
+        //    // Clear previous error messages
+
+        //    Swal.fire({
+        //        title: 'Ma Hubta Inaa Tuureyso?',
+        //        text: "ma tuureysaa?",
+        //        icon: 'warning',
+        //        showCancelButton: true,
+        //        confirmButtonColor: '#3085d6',
+        //        cancelButtonColor: '#d33',
+        //        confirmButtonText: 'HAA!'
+        //    }).then((result) => {
+        //        if (result.isConfirmed) {
+        //            // Execute the AJAX request only if the user confirms
+        //            $.ajax({
+        //                url: 'admin.aspx/deleteadmin',
+        //                data: "{'id':'" + id + "'}",
+        //                contentType: 'application/json; charset=utf-8',
+        //                dataType: 'json',
+        //                type: 'POST',
+        //                success: function (response) {
+        //                    console.log(response);
+        //                    if (response.d === 'true') {
+        //                        Swal.fire(
+        //                            'Successfully Started!',
+        //                            'You Started a new Day Stock!',
+        //                            'success'
+        //                        );
+        //                        $('#stockmodal').modal('hide');
+        //                        displayadmin();
+        //                    } else {
+        //                        // Handle errors in the response
+        //                        Swal.fire({
+        //                            icon: 'error',
+        //                            title: 'Data Insertion Failed',
+        //                            text: 'There was an error while inserting the stock data: ' + response.d,
+        //                        });
+        //                    }
+        //                },
+        //                error: function (response) {
+        //                    Swal.fire({
+        //                        icon: 'error',
+        //                        title: 'Lama Tuuri Karo ',
+        //                        text: 'An error occurred during the AJAX request: ',
+        //                    });
+        //                }
+        //            });
+        //        }
+        //    });
+
+
+
+        //});
+
+
+
+        function updateadmin() {
+            // Clear previous error messages
+            document.getElementById('user1').textContent = "";
+      
+   
+
+        
+         
+            var username = $("#user").val();
+
+            var password = $("#pass").val();
+            var id = $("#id1").val();
+
+            // Validate the form values
+            let isValid = true;
+
+         
+            if (username.trim() === "") {
+                document.getElementById('username1').textContent = "Please enter a valid date.";
+                isValid = false;
+            }
+            if (password.trim() === "") {
+                document.getElementById('password1').textContent = "Please enter a valid date.";
+                isValid = false;
+            }
+
+
+
+
+
+            // If all validations pass, proceed with AJAX call
+            if (isValid) {
+
+                $.ajax({
+                    url: 'admin.aspx/updateadmin',
+                    data: "{'id':'" + id + "','username':'" + username + "','password':'" + password + "'}",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (response) {
+                        console.log(response);
+                        if (response.d === 'true') {
+                            Swal.fire(
+                                'Successfully Saved!',
+                                'You added a new Item!',
+                                'success'
+                            );
+                            $('#catmodal1').modal('hide');
+                          
+                            displayadmin();
+
+                        } else {
+                            // Handle errors in the response
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data Insertion Failed',
+                                text: 'There was an error while inserting the data.',
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+            }
+
+            function clearInputFields() {
+                // Replace these lines with code to clear the input fields
+                $("#catname").val('');
+
+            }
+        }
     </script>
 </asp:Content>

@@ -26,7 +26,8 @@ namespace somcoffe
             public string CategoryName;
             public string Section;
             public string Price;
-
+          
+            
 
 
         }
@@ -41,7 +42,11 @@ namespace somcoffe
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
-        select * from Items
+     
+
+
+	   select * from Items
+	   inner join Categories on Items.CategoryID = Categories.CategoryID
         ", con);
 
                 SqlDataReader dr = cmd.ExecuteReader();
@@ -49,7 +54,7 @@ namespace somcoffe
                 {
                     itemclass field = new itemclass();
                     field.ItemID = dr["ItemID"].ToString();
-
+                    field.CategoryName = dr["CategoryName"].ToString();
                     field.ItemName = dr["ItemName"].ToString();
 
                     field.CategoryID = dr["CategoryID"].ToString();

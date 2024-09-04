@@ -110,6 +110,7 @@
     <Content Include="assets\css\bootstrap-datetimepicker.min.css" />
     <Content Include="assets\css\bootstrap.min.css" />
     <Content Include="assets\css\dataTables.bootstrap4.min.css" />
+    <Content Include="assets\css\somcof.png" />
     <Content Include="assets\css\style.css" />
     <Content Include="assets\img\barcode1.png" />
     <Content Include="assets\img\brand\adidas.png" />
@@ -592,6 +593,10 @@
     <Content Include="assets\plugins\twitter-bootstrap-wizard\form-wizard.js" />
     <Content Include="assets\plugins\twitter-bootstrap-wizard\jquery.bootstrap.wizard.min.js" />
     <Content Include="assets\plugins\twitter-bootstrap-wizard\prettify.js" />
+    <Content Include="assets\somcof %281%29.png" />
+    <Content Include="assets\somcof.ico" />
+    <Content Include="assets\somcof.jpeg" />
+    <Content Include="assets\somcof.png" />
     <Content Include="datatables\btn.js" />
     <Content Include="datatables\datatables.css" />
     <Content Include="datatables\datatables.js" />
@@ -602,7 +607,6 @@
     <Content Include="datatables\jquery-3.4.1.min.js" />
     <Content Include="datatables\jzip.js" />
     <Content Include="datatables\pdf.js" />
-    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="items.aspx" />
     <Content Include="login.aspx" />
@@ -744,6 +748,9 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>assets\somcof.ico</ApplicationIcon>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

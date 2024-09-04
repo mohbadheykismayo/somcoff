@@ -48,10 +48,11 @@ namespace somcoffe
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
-select Orders.OrderID,   Customers.CustomerName,Employees.EmployeeName,Credits.CreditAmount,Orders.OrderDateTime,Orders.TotalAmount  from Credits
+	select Orders.OrderID,   Customers.CustomerName,Employees.EmployeeName,Credits.CreditAmount,Orders.OrderDateTime,Orders.TotalAmount  from Credits
 inner join Customers on Credits.CustomerID = Credits.CustomerID
 inner join Employees on Credits.IssuedByEmployeeID = Employees.EmployeeID
 inner join Orders on Credits.OrderID= Orders.OrderID
+	order by  Orders.OrderDateTime desc;
 
         ", con);
 
@@ -77,13 +78,49 @@ inner join Orders on Credits.OrderID= Orders.OrderID
 
             return details.ToArray();
         }
+        
+
+
+                [WebMethod]
+        public static adminn[] displayadmin()
+        {
+            List<adminn> details = new List<adminn>();
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand(@"  
+
+	select * from admin
+
+        ", con);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    adminn field = new adminn();
+                    field.userid = dr["userid"].ToString();
+                    field.username = dr["username"].ToString();
+                    field.password = dr["password"].ToString();
 
 
 
 
 
+                    details.Add(field);
+                }
+            } // Connection will be automatically closed here
 
+            return details.ToArray();
+        }
 
+        public class adminn
+        {
+            public string userid;
+            public string username;
+            public string password;
+        }
 
         public class tuur
         {
@@ -91,7 +128,7 @@ inner join Orders on Credits.OrderID= Orders.OrderID
             public string quantity;
             public string SubTotalAmount;
             public string date;
-
+            public string name;
         }
 
 
@@ -106,8 +143,10 @@ inner join Orders on Credits.OrderID= Orders.OrderID
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
-	select items.ItemName, deleteditems.quantity , deleteditems.SubTotalAmount ,deleteditems.date  from deleteditems
+
+		select deleteditems.name, items.ItemName, deleteditems.quantity , deleteditems.SubTotalAmount ,deleteditems.date  from deleteditems
 	inner join	Items on deleteditems.ItemID = Items.ItemID 
+	order by  deleteditems.date desc;
 
         ", con);
 
@@ -115,6 +154,7 @@ inner join Orders on Credits.OrderID= Orders.OrderID
                 while (dr.Read())
                 {
                     tuur field = new tuur();
+                    field.name = dr["name"].ToString();
                     field.ItemName = dr["ItemName"].ToString();
                     field.quantity = dr["quantity"].ToString();
                     field.SubTotalAmount = dr["SubTotalAmount"].ToString();
@@ -168,6 +208,40 @@ inner join Orders on Credits.OrderID= Orders.OrderID
             }
         }
 
+
+
+
+
+        [WebMethod]
+        public static string deleteadmin(string id)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+
+                    // Delete job from jobs table
+                    string jobQuery = "DELETE FROM admin WHERE userid = @id";
+
+                    using (SqlCommand cmd = new SqlCommand(jobQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@id", id);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                return "true";
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                throw new Exception("Lama Tuuri Karo");
+            }
+        }
 
 
 
@@ -246,6 +320,47 @@ inner join Orders on Credits.OrderID= Orders.OrderID
                 return $"Error: {ex.Message}";
             }
         }
+
+
+
+
+
+
+
+
+        [WebMethod]
+        public static string updateadmin( string username, string password, string id)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+
+                    // Update the item in the Items table
+                    string catquery = "UPDATE admin SET username = @username, password = @password WHERE userid = @id;";
+                    using (SqlCommand cmd = new SqlCommand(catquery, con))
+                    {
+             
+                        cmd.Parameters.AddWithValue("@username", username);
+                        cmd.Parameters.AddWithValue("@password", password);
+                        cmd.Parameters.AddWithValue("@id", id);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                return "true";
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions and return the error message
+                return "Error in submititem method: " + ex.Message;
+            }
+        }
+
 
 
     }

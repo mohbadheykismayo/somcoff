@@ -498,11 +498,11 @@
                     for (var i = 0; i < response.d.length; i++) {
                         var id = response.d[i].ItemID;
                         var name = response.d[i].ItemName;
-                        var CategoryID = response.d[i].CategoryID;
+                        var CategoryName = response.d[i].CategoryName;
                         var Section = response.d[i].Section;
                         var Price = response.d[i].Price;
                   
-
+                        
 
 
 
@@ -510,9 +510,9 @@
 
                         $("#datatable tbody").append(
                             "<tr>" +
-                            "<td>" + id + "</td>" +
+                      
                             "<td>" + name + "</td>" +
-                            "<td>" + CategoryID + "</td>" +
+                            "<td>" + CategoryName + "</td>" +
                             "<td>" + Section + "</td>" +
                             "<td>" + Price + "</td>" +
                             "<td>" +
