@@ -92,121 +92,89 @@
     </div>
   </div>
 </div>
-
-    <div class="card">
-<div class="card-body">
-<div class="row">
- <div class="col-8">
-     <div class="row">
-         <div class="col-6">
-                  <div class="col-lg-3 col-sm-6 col-12">
-<div class="form-group">
-<label>3dex da Waqti</label>
-<select class="select" id="catdrop">
-
-</select>
-</div>
-</div>
-         </div>
-             <div class="col-6">
-        
-<div class="col-lg-3 col-sm-6 col-12">
-<div class="form-group">
-<label> Inta Kale</label>
-<select class="select" id="drinkdrop">
-    <option value="0">Please Select </option>
-<option value="Drinks">Drinks</option>
-<option value="Fast Food">Fast Food</option>
-</select>
-</div>
-</div>
-
-  
-    </div>
-     </div>
-
- </div>
-  
-
-
-
-
-</div>
-<div class="row">
-    <div class="col-6">
-        <div class="row" id="orderslist"></div>
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-8 col-md-12">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>3dex da Waqti</label>
+              <select class="form-control select" id="catdrop">
+              </select>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Inta Kale</label>
+              <select class="form-control select" id="drinkdrop">
+                <option value="0">Please Select</option>
+                <option value="Drinks">Drinks</option>
+                <option value="Fast Food">Fast Food</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="col-6">
-        
-<!-- Selected Items Container -->
-<div id="selectedItemsList"></div>
+    <div class="row mt-3">
+      <div class="col-lg-6 col-md-12">
+        <div id="orderslist"></div>
+      </div>
 
-<!-- Total Price -->
-<div>Total Price: $<span id="totalPrice">0.00</span></div>
+      <div class="col-lg-6 col-md-12">
+        <!-- Selected Items Container -->
+        <div id="selectedItemsList"></div>
+
+        <!-- Total Price -->
+        <div>Total Price: $<span id="totalPrice">0.00</span></div>
 
         <div>
-    <input type="checkbox" id="isCreditOrder" /> Credit Order
-</div>
-<div id="creditDetails" style="display: none;">
-    <label for="customerID">Macmiilka:</label>
-    <select class="form-control" id="customerID">
-        <option value="">Select Customer</option>
-        <!-- Add customer options here -->
-    </select>
-    
-    <label for="employeeID">Shaqaalaha:</label>
-    <select class="form-control" id="employeeID">
-        <option value="">Select Employee</option>
-        <!-- Add employee options here -->
-    </select>
-    
-    <label for="amountPaid">Lacag La Bixinaayo:</label>
-    <input class="form-control" type="number" id="amountPaid" min="0" step="0.01" value="0.00" />
-</div>
-
-        <br />
-<!-- Clear Button -->
-<button id="clearSelection" class="btn btn-danger">Tir Tir Ayaga dhan</button>
-<button id="takeOrder" class="btn btn-success" style="display: none;">Qaad Dalabka</button>
-
-
-
-
-        <br />
-        <br />
-        <br />
-        <h1> Dalab Yada U Dambeeye</h1>
-        <div class="row">
-            <div class="col-12">
-                
-<div class="table-responsive">
-<table class="table  " id="todaystocktbl">
-<thead>
-<tr>
-
-    <th>Number Ka</th>
-<th>Waqti Ga</th>
-
-
-</tr>
-</thead>
-<tbody>
-
-</tbody>
-</table>
-</div>
-            </div>
+          <input type="checkbox" id="isCreditOrder" /> Credit Order
         </div>
+        <div id="creditDetails" style="display: none;">
+          <label for="customerID">Macmiilka:</label>
+          <select class="form-control" id="customerID">
+            <option value="">Select Customer</option>
+            <!-- Add customer options here -->
+          </select>
+
+          <label for="employeeID">Shaqaalaha:</label>
+          <select class="form-control" id="employeeID">
+            <option value="">Select Employee</option>
+            <!-- Add employee options here -->
+          </select>
+
+          <label for="amountPaid">Lacag La Bixinaayo:</label>
+          <input class="form-control" type="number" id="amountPaid" min="0" step="0.01" value="0.00" />
+        </div>
+
+        <br />
+        <!-- Clear Button -->
+        <button id="clearSelection" class="btn btn-danger">Tir Tir Ayaga dhan</button>
+        <button id="takeOrder" class="btn btn-success" style="display: none;">Qaad Dalabka</button>
+
+        <br />
+        <br />
+        <h1>Dalab Yada U Dambeeye</h1>
+        <div class="table-responsive">
+          <table class="table table-striped" id="todaystocktbl">
+            <thead>
+              <tr>
+                <th>Number Ka</th>
+                <th>Waqti Ga</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-
+  </div>
 </div>
 
-
-
-
-</div>
-</div>
         <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/dataTables.bootstrap4.min.js"></script>
@@ -724,19 +692,20 @@
                             // Check if item is already selected
                             const isChecked = selectedItems[item.ItemID] ? 'checked' : '';
                             const itemHtml = `
-                        <div class="col-lg-4 col-sm-4">
-                            <div class="productset flex-fill">
-                                <div class="productsetcontent">
-                                    <input type="checkbox" class="item-checkbox" data-item-id="${item.ItemID}" data-item-name="${item.ItemName}" data-item-quantity="${item.QuantityRemaining}" data-item-price="${item.Price || '0'}" data-stock-id="${item.StockID}" ${isChecked} />
-                                    <h3>${item.ItemName}</h3>
-                                    <h4>${item.QuantityRemaining}</h4>
-                                    <h4>${item.Price || 'N/A'}</h4>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+    <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <input type="checkbox" class="item-checkbox mb-2" data-item-id="${item.ItemID}" data-item-name="${item.ItemName}" data-item-quantity="${item.QuantityRemaining}" data-item-price="${item.Price || '0'}" data-stock-id="${item.StockID}" ${isChecked} />
+                <h5 class="card-title">${item.ItemName}</h5>
+                <p class="card-text">Quantity: ${item.QuantityRemaining}</p>
+                <p class="card-text">Price: ${item.Price || 'N/A'}</p>
+            </div>
+        </div>
+    </div>
+    `;
                             container.append(itemHtml);
                         });
+
 
                         $('.item-checkbox').change(function () {
                             const itemID = $(this).data('item-id');
@@ -939,67 +908,82 @@
                         displaytodaystock();
                         // Print the receipt
                         let printContent = `
-                <img src="assets/img/logo.png" alt="SomCoffe Logo"/>
-                <h2>SomCoffe</h2>
-                <h2>SomCoffe Kismayo, Somalia</h2>
-                <h2>EVC: *712*0614020290*${totalPrice.toFixed(2)}#</h2>
-                <h2>E-DAHAB: *712*0624020290*${totalPrice.toFixed(2)}#</h2>
-                <hr>
-                <p>Customer ID: ${customerId || 'N/A'}</p>
-                <p>Employee ID: ${employeeId || 'N/A'}</p>
-                <p>Booking ID: ${bookingId || 'N/A'}</p>
-                <p>Total Price: $${totalPrice.toFixed(2)}</p>
-                <table  cellpadding="5" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Item Name</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
+<div style="text-align: center; font-family: Arial, sans-serif; font-size: 12px; max-width: 250px; margin: 0 auto; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+  <div style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px;">
+    <img src="assets/somcof%20(1).png" alt="SomCoffe Logo" style="width: 50px; height: 50px; margin-bottom: 5px;" />
+    <h2 style="margin: 5px 0; font-size: 16px; font-weight: bold;">SomCoffe</h2>
+    <p style="margin: 0; font-size: 10px; color: #666;">SomCoffe Kismayo, Somalia</p>
+  </div>
+
+  <div style="border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+    <p style="margin: 5px 0; font-size: 12px; color: #333;">EVC: <strong>*712*0614020290*${totalPrice.toFixed(2)}#</strong></p>
+    <p style="margin: 5px 0; font-size: 12px; color: #333;">E-DAHAB: <strong>*712*0624020290*${totalPrice.toFixed(2)}#</strong></p>
+  </div>
+
+  <div style="border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+    <p style="margin: 5px 0; font-size: 10px;">Customer ID: <strong>${customerId || 'N/A'}</strong></p>
+    <p style="margin: 5px 0; font-size: 10px;">Employee ID: <strong>${employeeId || 'N/A'}</strong></p>
+    <p style="margin: 5px 0; font-size: 10px;">Booking ID: <strong>${bookingId || 'N/A'}</strong></p>
+    <p style="margin: 5px 0; font-size: 12px; font-weight: bold;">Total Price: $${totalPrice.toFixed(2)}</p>
+  </div>
+
+  <table style="width: 100%; margin-top: 10px; font-size: 10px; border-collapse: collapse;" cellpadding="5" cellspacing="0">
+      <thead>
+          <tr style="border-bottom: 1px solid #ddd;">
+              <th style="text-align: left; padding: 5px;">Item</th>
+              <th style="text-align: center; padding: 5px;">Qty</th>
+              <th style="text-align: center; padding: 5px;">Price</th>
+              <th style="text-align: right; padding: 5px;">Total</th>
+          </tr>
+      </thead>
+      <tbody>`;
 
                         let receiptTotalPrice = 0;
                         Object.values(selectedItems).forEach(itemDetails => {
                             receiptTotalPrice += itemDetails.quantity * itemDetails.price;
                             printContent += `
-                    <tr>
-                        <td>${itemDetails.name}</td>
-                        <td>${itemDetails.quantity}</td>
-                        <td>$${itemDetails.price.toFixed(2)}</td>
-                        <td>$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
-                    </tr>`;
+      <tr>
+          <td style="padding: 5px 0;">${itemDetails.name}</td>
+          <td style="text-align: center; padding: 5px 0;">${itemDetails.quantity}</td>
+          <td style="text-align: center; padding: 5px 0;">$${itemDetails.price.toFixed(2)}</td>
+          <td style="text-align: right; padding: 5px 0;">$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
+      </tr>`;
                         });
 
                         printContent += `
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th colspan="3">Total Price</th>
-                            <th>$${receiptTotalPrice.toFixed(2)}</th>
-                        </tr>
-                    </tfoot>
-                </table>`;
+      </tbody>
+      <tfoot>
+          <tr style="border-top: 1px solid #ddd;">
+              <th colspan="3" style="text-align: right; padding: 5px;">Total:</th>
+              <th style="text-align: right; padding: 5px;">$${receiptTotalPrice.toFixed(2)}</th>
+          </tr>
+      </tfoot>
+  </table>`;
 
                         if (amountPaid > 0) {
                             printContent += `
-                <p>Amount Paid: $${amountPaid.toFixed(2)}</p>
-                <p>Remaining Amount: $${(receiptTotalPrice - amountPaid).toFixed(2)}</p>`;
+    <div style="border-top: 1px solid #ddd; margin-top: 10px; padding-top: 10px;">
+      <p style="margin: 5px 0;">Amount Paid: $${amountPaid.toFixed(2)}</p>
+      <p style="margin: 5px 0;">Remaining: $${(receiptTotalPrice - amountPaid).toFixed(2)}</p>
+    </div>`;
                         }
 
                         printContent += `
-                <br><br><br>
-                <h3>Thank you for your Order!</h3>`;
+  <div style="margin-top: 10px; border-top: 1px solid #ddd; padding-top: 10px;">
+    <p style="font-weight: bold; margin: 5px 0;">Thank you for your Order!</p>
+    <p style="font-size: 10px; color: #666;">Developed by KismatoICT</p>
+  </div>
+</div>`;
 
-                        const printWindow = window.open('', '', 'height=400,width=600');
-                        printWindow.document.write('<html><head><title>Order Receipt</title>');
-                        printWindow.document.write('</head><body>');
+                        const printWindow = window.open('', '', 'height=400,width=300');
+                        printWindow.document.write('<html><head><title>Order Receipt</title></head><body>');
                         printWindow.document.write(printContent);
                         printWindow.document.write('</body></html>');
                         printWindow.document.close();
                         printWindow.focus();
                         printWindow.print();
+
+
                     },
                     error: function (response) {
                         alert('Error placing the order: ' + response.responseText);
@@ -2071,71 +2055,81 @@
 
                         // Print the receipt
                         let printContent = `
-<img src="assets/img/logo.png" alt="SomCoffe Logo"/>
-<h2>SomCoffe</h2>
-<h2>SomCoffe Kismayo, Somalia</h2>
-<h2>EVC: *712*0614020290*${totalAmount.toFixed(2)}#</h2>
-<h2>E-DAHAB: *712*0624020290*${totalAmount.toFixed(2)}#</h2>
-<hr>
-<p>Customer ID: ${customerId || 'N/A'}</p>
-<p>Employee ID: ${employeeId || 'N/A'}</p>
-<p>Booking ID: ${orderin || 'N/A'}</p>
-<p>Total Price: $${totalAmount.toFixed(2)}</p>
-<table cellpadding="5" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
-        </tr>
-    </thead>
-    <tbody>`;
+<div style="text-align: center; font-family: Arial, sans-serif; font-size: 12px; max-width: 250px; margin: 0 auto;">
+    <img src="assets/somcof%20(1).png" alt="SomCoffe Logo" style="width: 50px; height: 50px; margin-bottom: 10px;" />
+    <h2 style="margin: 0; font-size: 16px; font-weight: bold;">SomCoffe</h2>
+    <p style="margin: 2px 0; font-size: 12px;">Kismayo, Somalia</p>
+
+    <div style="margin: 10px 0; font-size: 12px;">
+        <p style="margin: 5px 0;">EVC: <strong>*712*0614020290*${totalAmount.toFixed(2)}#</strong></p>
+        <p style="margin: 5px 0;">E-DAHAB: <strong>*712*0624020290*${totalAmount.toFixed(2)}#</strong></p>
+    </div>
+    
+    <hr style="border-top: 1px dashed #ccc; margin: 10px 0;">
+    
+    <div style="text-align: left; font-size: 12px;">
+        <p style="margin: 2px 0;">Customer ID: <strong>${customerId || 'N/A'}</strong></p>
+        <p style="margin: 2px 0;">Employee ID: <strong>${employeeId || 'N/A'}</strong></p>
+        <p style="margin: 2px 0;">Booking ID: <strong>${orderin || 'N/A'}</strong></p>
+        <p style="margin: 5px 0;">Total Price: <strong>$${totalAmount.toFixed(2)}</strong></p>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px;" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr style="border-bottom: 1px solid #ccc;">
+                <th style="text-align: left; padding: 5px;">Item</th>
+                <th style="text-align: center; padding: 5px;">Qty</th>
+                <th style="text-align: center; padding: 5px;">Price</th>
+                <th style="text-align: right; padding: 5px;">Total</th>
+            </tr>
+        </thead>
+        <tbody>`;
 
                         let receiptTotalPrice = 0;
                         Object.values(selectedItems).forEach(itemDetails => {
                             receiptTotalPrice += itemDetails.quantity * itemDetails.price;
                             printContent += `
-    <tr>
-        <td>${itemDetails.name}</td>
-        <td>${itemDetails.quantity}</td>
-        <td>$${itemDetails.price.toFixed(2)}</td>
-        <td>$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
-    </tr>`;
+            <tr>
+                <td style="padding: 5px;">${itemDetails.name}</td>
+                <td style="text-align: center; padding: 5px;">${itemDetails.quantity}</td>
+                <td style="text-align: center; padding: 5px;">$${itemDetails.price.toFixed(2)}</td>
+                <td style="text-align: right; padding: 5px;">$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
+            </tr>`;
                         });
 
                         printContent += `
-    </tbody>
-    <tfoot>
-        <tr>
-            <th colspan="3">Total Price</th>
-            <th>$${receiptTotalPrice.toFixed(2)}</th>
-        </tr>
-    </tfoot>
-</table>`;
+        </tbody>
+        <tfoot>
+            <tr style="border-top: 1px solid #ccc;">
+                <th colspan="3" style="text-align: right; padding: 5px;">Total Price</th>
+                <th style="text-align: right; padding: 5px;">$${receiptTotalPrice.toFixed(2)}</th>
+            </tr>
+        </tfoot>
+    </table>`;
 
                         if (amountPaid > 0) {
                             printContent += `
-<p>Amount Paid: $${amountPaid.toFixed(2)}</p>
-<p>Remaining Amount: $${(receiptTotalPrice - amountPaid).toFixed(2)}</p>`;
+    <div style="margin: 10px 0; font-size: 12px;">
+        <p>Amount Paid: <strong>$${amountPaid.toFixed(2)}</strong></p>
+        <p>Remaining Amount: <strong>$${(receiptTotalPrice - amountPaid).toFixed(2)}</strong></p>
+    </div>`;
                         }
 
                         printContent += `
-<br><br><br>
-<h3>Thank you for your Order!</h3>
-<br>
+    <hr style="border-top: 1px dashed #ccc;">
+    <p style="margin: 10px 0; font-size: 12px; font-weight: bold;">Thank you for your Order!</p>
+    <p style="font-size: 10px; color: #777;">--- Kismayo ICT Solutions ---</p>
+</div>`;
 
-<hr>---Kismayoictsoutions-----</hr>
-`;
-
-                        const printWindow = window.open('', '', 'height=400,width=600');
-                        printWindow.document.write('<html><head><title>Order Receipt</title>');
-                        printWindow.document.write('</head><body>');
+                        const printWindow = window.open('', '', 'height=400,width=300');
+                        printWindow.document.write('<html><head><title>Order Receipt</title></head><body>');
                         printWindow.document.write(printContent);
                         printWindow.document.write('</body></html>');
                         printWindow.document.close();
                         printWindow.focus();
                         printWindow.print();
+
+
                     },
                     error: function (error) {
                         console.log('Error placing order:', error);

@@ -35,7 +35,7 @@ namespace somcoffe
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
-SELECT 
+   SELECT 
     CAST(Orders.OrderDateTime AS DATE) AS OrderDate, 
     SUM(COALESCE(Credits.CreditAmount, 0)) AS TotalCredits, 
     SUM(COALESCE(Orders.TotalAmount, 0)) AS TotalAmountPerDay,
@@ -44,8 +44,7 @@ FROM
     Orders
 LEFT JOIN 
     Credits ON Orders.OrderID = Credits.OrderID
-	inner JOIN 
-    Order_Items ON Orders.OrderID = Order_Items.OrderID
+
 GROUP BY 
     CAST(Orders.OrderDateTime AS DATE)
 ORDER BY 

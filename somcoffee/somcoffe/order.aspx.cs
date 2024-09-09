@@ -613,7 +613,20 @@ GROUP BY Order_Items.ItemID
                                         cmd.ExecuteNonQuery();
                                     }
                                 }
-
+                                // Update the order in the Orders table
+                                using (SqlCommand cmd5 = new SqlCommand(@"
+                            UPDATE Orders 
+                            SET 
+                                OrderDateTime = GETDATE(), 
+                            
+                                TotalAmount = @TotalAmount
+                            WHERE OrderID = @OrderID;", con, transaction))
+                                {
+                                    cmd5.Parameters.AddWithValue("@OrderID", order.orderin);
+                             
+                                    cmd5.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+                                    cmd5.ExecuteNonQuery();
+                                }
                                 // Update customer credit if customerId or employeeId is provided
                                 if (customerId != 0 || employeeId != 0)
                                 {

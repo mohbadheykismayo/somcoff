@@ -108,247 +108,205 @@
   </div>
 </div>
 
-
 <div class="row">
-    <div class="col-6">
+    <div class="col-lg-6 col-md-12">
         <div class="page-header">
-<div class="page-title">
-<h4>List Ga Alaabta</h4>
+            <div class="page-title">
+                <h4>List Ga Alaabta</h4>
+            </div>
+            <div class="page-btn">
+               <a href="#" class="btn btn-added" onclick="callmodal()">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Ku dar Alaabta
+                </a>
+            </div>
+        </div>
 
-</div>
-<div class="page-btn">
-<a href="#" class="btn btn-added" onclick="callmodal()">
-<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add Items
-</a>
-</div>
-</div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search">
+                                <img src="assets/img/icons/filter.svg" alt="img">
+                                <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+                        </div>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a></li>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a></li>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a></li>
+                        </ul>
+                    </div>
+                </div>
 
-<div class="card">
-<div class="card-body">
-<div class="table-top">
-<div class="search-set">
-<div class="search-path">
-<a class="btn btn-filter" id="filter_search">
-<img src="assets/img/icons/filter.svg" alt="img">
-<span><img src="assets/img/icons/closes.svg" alt="img"></span>
-</a>
-</div>
-<div class="search-input">
-<a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
-</div>
-</div>
-<div class="wordset">
-<ul>
-<li>
-<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-</li>
-<li>
-<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
-</li>
-<li>
-<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
-</li>
-</ul>
-</div>
-</div>
+                <div class="card" id="filter_inputs">
+                    <div class="card-body pb-0">
+                        <div class="row">
+                            <div class="col-lg-2 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <select class="select">
+                                        <option>Choose Category</option>
+                                        <option>Computers</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <select class="select">
+                                        <option>Choose Sub Category</option>
+                                        <option>Fruits</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <select class="select">
+                                        <option>Choose Sub Brand</option>
+                                        <option>Iphone</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 col-sm-6 col-12 ms-auto">
+                                <div class="form-group">
+                                    <a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-<div class="card" id="filter_inputs">
-<div class="card-body pb-0">
-<div class="row">
-<div class="col-lg-2 col-sm-6 col-12">
-<div class="form-group">
-<select class="select">
-<option>Choose Category</option>
-<option>Computers</option>
-</select>
-</div>
-</div>
-<div class="col-lg-2 col-sm-6 col-12">
-<div class="form-group">
-<select class="select">
-<option>Choose Sub Category</option>
-<option>Fruits</option>
-</select>
-</div>
-</div>
-<div class="col-lg-2 col-sm-6 col-12">
-<div class="form-group">
-<select class="select">
-<option>Choose Sub Brand</option>
-<option>Iphone</option>
-</select>
-</div>
-</div>
-<div class="col-lg-1 col-sm-6 col-12 ms-auto">
-<div class="form-group">
-<a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img"></a>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<div class="table-responsive">
-<table class="table  " id="datatable">
-<thead>
-<tr>
-
-    <th>item Id</th>
-<th>item name</th>
-        <th>Category Id</th>
-<th>section</th>
-    <th>price</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-
-</tbody>
-</table>
-</div>
-</div>
-</div>
-    </div>
-        <div class="col-6">
-        <div class="page-header">
-<div class="page-title">
-<h4>Baqaarka Alaabta</h4>
-
-</div>
-<div class="page-btn">
-<a href="#" class="btn btn-added" onclick="callstockmodal()">
-<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Add To Stock
-</a>
-</div>
-</div>
-
-<div class="card">
-<div class="card-body">
-<div class="table-top">
-<div class="search-set">
-<div class="search-path">
-<a class="btn btn-filter" id="filter_search1">
-<img src="assets/img/icons/filter.svg" alt="img">
-<span><img src="assets/img/icons/closes.svg" alt="img"></span>
-</a>
-</div>
-<div class="search-input">
-<a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
-</div>
-</div>
-<div class="wordset">
-<ul>
-<li>
-<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-</li>
-<li>
-<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
-</li>
-<li>
-<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
-</li>
-</ul>
-</div>
-</div>
-
-
-
-<div class="table-responsive">
-<table class="table  " id="datatable1">
-<thead>
-<tr>
-
-    <th>item</th>
-<th>date</th>
-        <th>qty available</th>
-<th>qty sold</th>
-    <th>qty remaining</th>
-
-</tr>
-</thead>
-<tbody>
-
-</tbody>
-</table>
-</div>
-</div>
-</div>
-    </div>
-</div>
-
-
-
-
-
-    <div class="row">
-        <div class="col-8">
-                    <div class="page-header">
-<div class="page-title">
-<h4>Alaabta Maanta</h4>
-
-</div>
-<div class="page-btn">
-<a href="#" class="btn btn-added" onclick="startnextday()">
-<img src="assets/img/icons/plus.svg" class="me-1" alt="img">Start The Next Day
-</a>
-</div>
-</div>
-
-<div class="card">
-<div class="card-body">
-<div class="table-top">
-<div class="search-set">
-<div class="search-path">
-<a class="btn btn-filter" id="filter_search11">
-<img src="assets/img/icons/filter.svg" alt="img">
-<span><img src="assets/img/icons/closes.svg" alt="img"></span>
-</a>
-</div>
-<div class="search-input">
-<a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
-</div>
-</div>
-<div class="wordset">
-<ul>
-<li>
-<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-</li>
-<li>
-<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
-</li>
-<li>
-<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
-</li>
-</ul>
-</div>
-</div>
-
-
-
-<div class="table-responsive">
-<table class="table  " id="todaystocktbl">
-<thead>
-<tr>
-
-    <th>item</th>
-<th>date</th>
-        <th>quantity available</th>
-<th>quantity sold</th>
-    <th>quantity remaining</th>
-
-</tr>
-</thead>
-<tbody>
-
-</tbody>
-</table>
-</div>
-</div>
-</div>
+                <div class="table-responsive">
+                    <table class="table" id="datatable">
+                        <thead>
+                            <tr>
+                            <th>ID Alaabta</th>
+                                <th>Magaca Alaabta</th>
+                                <th>Nooca</th>
+                                <th>Qeybta</th>
+                                <th>Qiimaha</th>
+                                <th>Fal</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
+    <div class="col-lg-6 col-md-12">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Baqaarka Alaabta</h4>
+            </div>
+            <div class="page-btn">
+                <a href="#" class="btn btn-added" onclick="callstockmodal()">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Ku dar Stock
+                </a>
+            </div>
+        </div>
 
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search1">
+                                <img src="assets/img/icons/filter.svg" alt="img">
+                                <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+                        </div>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a></li>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a></li>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table" id="datatable1">
+                        <thead>
+                            <tr>
+                           <th>Alaabta</th>
+                                <th>Taariikhda</th>
+                                <th>Tirada La Heli Karo</th>
+                                <th>Tirada La Iibiyey</th>
+                                <th>Tirada Hartay</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-header">
+            <div class="page-title">
+                <h4>Alaabta Maanta</h4>
+            </div>
+            <div class="page-btn">
+               <a href="#" class="btn btn-added" onclick="startnextday()">
+                    <img src="assets/img/icons/plus.svg" class="me-1" alt="img">Bilow Maalin Cusub
+                </a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-top">
+                    <div class="search-set">
+                        <div class="search-path">
+                            <a class="btn btn-filter" id="filter_search11">
+                                <img src="assets/img/icons/filter.svg" alt="img">
+                                <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                            </a>
+                        </div>
+                        <div class="search-input">
+                            <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+                        </div>
+                    </div>
+                    <div class="wordset">
+                        <ul>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a></li>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a></li>
+                            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table" id="todaystocktbl">
+                        <thead>
+                            <tr>
+                            <th>Alaabta</th>
+                                <th>Taariikhda</th>
+                                <th>Tirada La Heli Karo</th>
+                                <th>Tirada La Iibiyey</th>
+                                <th>Tirada Hartay</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <!-- Modal -->
@@ -1497,9 +1455,7 @@
                                 "<td>" + QuantitySold + "</td>" +
                                 "<td>" + QuantityRemaining + "</td>" +
                                 "<td>" +
-                                                          '<a class="me-3 delete-btn" data-id="' + StockID + '">' +
-                                '<img src="assets/img/icons/delete.svg" alt="Delete">' +
-                                '</a>' +
+                                     
                                 '<a class="me-3 -btn btn-success send-btn" data-id="' + StockID + '">' +
                             '   <button class=" btn btn-success" >Send</button>  ' +
                                 '</a>' +
@@ -1507,18 +1463,7 @@
                                 "</tr>"
                             );
                         }
-                        var table = $('#datatable1').DataTable({
-                            lengthChange: false,
-                            language: {
-                                searchPlaceholder: 'Search customers ...' // Set the placeholder text
-                            },
-                            buttons: [
-                                {
-                                    extend: 'excel',
-                                    text: 'Export to Excel'
-                                }
-                            ]
-                        });
+                     
 
                     },
                     error: function (response) {
