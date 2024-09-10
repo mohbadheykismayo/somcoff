@@ -10,6 +10,9 @@
     </asp:ContentPlaceHolder>
             <link rel="shortcut icon" type="image/x-icon" href="assets/somcof.ico">
 <style>
+    body {
+            font-size: 3em; /* Adjust the size as needed */
+        }
     /* General Sidebar Styling */
 .sidebar {
     width: 100%;

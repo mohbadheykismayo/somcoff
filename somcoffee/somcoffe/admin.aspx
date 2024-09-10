@@ -1,5 +1,25 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/homepage.Master" AutoEventWireup="true" CodeBehind="admin.aspx.cs" Inherits="somcoffe.admin" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+              <style>
+      #datatable{
+          font-size: 1.2em;
+      }
+
+        #tuur{
+      font-size: 1.2em;
+  }
+
+              #employees{
+    font-size: 1.2em;
+}
+
+            #adminka{
+    font-size: 1.2em;
+}
+
+   
+        
+  </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <!-- Modal -->

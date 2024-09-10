@@ -1,5 +1,18 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/homepage.Master" AutoEventWireup="true" CodeBehind="items.aspx.cs" Inherits="somcoffe.items" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+      <style>
+      #datatable{
+          font-size: 1.4em;
+      }
+        #datatable1{
+      font-size: 1.4em;
+  }
+              #todaystocktbl{
+    font-size: 1.4em;
+}
+   
+        
+  </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
@@ -184,7 +197,7 @@
                     <table class="table" id="datatable">
                         <thead>
                             <tr>
-                            <th>ID Alaabta</th>
+                       
                                 <th>Magaca Alaabta</th>
                                 <th>Nooca</th>
                                 <th>Qeybta</th>

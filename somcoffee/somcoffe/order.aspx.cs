@@ -398,10 +398,12 @@ GROUP BY
                 SqlCommand cmd = new SqlCommand(@"  
   
 
-SELECT  DISTINCT(Orders.OrderID), Orders.OrderDateTime FROM Orders
-	inner JOIN 
-    Order_Items ON Orders.OrderID = Order_Items.OrderID
-ORDER BY OrderDateTime DESC;
+
+SELECT DISTINCT(Orders.OrderID), Orders.OrderDateTime 
+FROM Orders
+INNER JOIN Order_Items ON Orders.OrderID = Order_Items.OrderID
+WHERE CONVERT(date, Orders.OrderDateTime) = CONVERT(date, GETDATE())
+ORDER BY Orders.OrderDateTime DESC;
 
 
         ", con);
