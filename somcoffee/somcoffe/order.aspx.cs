@@ -69,7 +69,7 @@ namespace somcoffe
             public string EmployeeName;
             public string CreditAmount;
             public string CustomerName;
-
+            public string image;
 
 
         }
@@ -84,6 +84,7 @@ namespace somcoffe
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@" 	
 	 SELECT 
+   Items.image,
     Items.ItemName,
     MAX(Items.ItemID) AS ItemID,
     MAX(Item_Stock.StockID) AS  StockID,
@@ -98,7 +99,8 @@ INNER JOIN
 	WHERE 
 Items.CategoryID = @search   AND CAST(Item_Stock.StockDate AS DATE) = CAST(GETDATE() AS DATE)
 GROUP BY 
-    Items.ItemName
+    Items.ItemName,
+   Items.image
 ", con);
                 cmd.Parameters.AddWithValue("@search", search);
 
@@ -116,7 +118,18 @@ GROUP BY
 
 
 
-
+                        // Check if the image column is DBNull before converting
+                        if (dr["image"] != DBNull.Value)
+                        {
+                            byte[] imageBytes = (byte[])dr["image"];
+                            string base64Image = Convert.ToBase64String(imageBytes);
+                            field.image = "data:image/png;base64," + base64Image; // Adjust MIME type if needed
+                        }
+                        else
+                        {
+                            // Assign a default image or leave it as null/empty
+                            field.image = "data:image/png;base64,default-image-base64"; // Use a base64 placeholder if desired
+                        }
 
 
                         details.Add(field);
@@ -151,6 +164,7 @@ GROUP BY
                 SqlCommand cmd = new SqlCommand(@" 	
 
 		 SELECT 
+Items.image,
     Items.ItemName,
     MAX(Items.ItemID) AS ItemID,
     MAX(Item_Stock.StockID) AS  StockID,
@@ -165,7 +179,8 @@ INNER JOIN
 	WHERE 
 Items.Section = @search   AND CAST(Item_Stock.StockDate AS DATE) = CAST(GETDATE() AS DATE)
 GROUP BY 
-    Items.ItemName
+    Items.ItemName,
+   Items.image
 
 ", con);
                 cmd.Parameters.AddWithValue("@search", search);
@@ -182,7 +197,18 @@ GROUP BY
                         field.ItemID = dr["ItemID"].ToString();
                         field.StockID = dr["StockID"].ToString();
 
-
+                        // Check if the image column is DBNull before converting
+                        if (dr["image"] != DBNull.Value)
+                        {
+                            byte[] imageBytes = (byte[])dr["image"];
+                            string base64Image = Convert.ToBase64String(imageBytes);
+                            field.image = "data:image/png;base64," + base64Image; // Adjust MIME type if needed
+                        }
+                        else
+                        {
+                            // Assign a default image or leave it as null/empty
+                            field.image = "data:image/png;base64,default-image-base64"; // Use a base64 placeholder if desired
+                        }
 
 
 

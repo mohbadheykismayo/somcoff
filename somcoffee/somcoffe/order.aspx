@@ -18,9 +18,19 @@
     font-size: 1.2em;
 }
 
+.highlight-card {
+    border: 3px solid #ff9800; /* Highlight the card with orange border */
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.7); /* Add a subtle shadow around the card */
+    border-radius: 8px;
+}
 
-   
-        
+.highlight-image {
+    border: 3px solid #ff9800; /* Add a border to the image */
+    border-radius: 8px; /* Rounded corners for the image */
+    transition: border 0.3s ease; /* Smooth transition for visual effect */
+}
+
+
   </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -698,7 +708,6 @@
             // Generic function to handle AJAX requests
             function handleAjaxRequest(url, dropdownSelector) {
                 const search = $(dropdownSelector).val();
-
                 $.ajax({
                     url: url,
                     data: JSON.stringify({ 'search': search }),
@@ -714,25 +723,39 @@
                             // Check if item is already selected
                             const isChecked = selectedItems[item.ItemID] ? 'checked' : '';
                             const itemHtml = `
-    <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <input type="checkbox" class="item-checkbox mb-2" data-item-id="${item.ItemID}" data-item-name="${item.ItemName}" data-item-quantity="${item.QuantityRemaining}" data-item-price="${item.Price || '0'}" data-stock-id="${item.StockID}" ${isChecked} />
-                <h5 class="card-title">${item.ItemName}</h5>
-                <p class="card-text">Quantity: ${item.QuantityRemaining}</p>
-                <p class="card-text">Price: ${item.Price || 'N/A'}</p>
+<div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+    <div class="card h-100 shadow-sm border-0 ${isChecked ? 'highlight-card' : ''}">
+        <label class="card-label" style="cursor: pointer;">
+            <input type="checkbox" class="item-checkbox d-none" 
+                   data-item-id="${item.ItemID}" 
+                   data-item-name="${item.ItemName}" 
+                   data-item-quantity="${item.QuantityRemaining}" 
+                   data-item-price="${item.Price || '0'}" 
+                   data-stock-id="${item.StockID}" 
+                   ${isChecked} />
+            <div class="card-header p-0">
+                <img src="${item.image}" class="card-img-top ${isChecked ? 'highlight-image' : ''}" alt="${item.ItemName}" style="width:100%;height:250px;object-fit:cover;border-radius: 8px 8px 0 0;">
             </div>
-        </div>
+            <div class="card-body text-center">
+                <h5 class="card-title font-weight-bold">${item.ItemName}</h5>
+                <p class="card-text text-muted mb-2">Quantity Available: <span class="font-weight-bold">${item.QuantityRemaining}</span></p>
+                <p class="card-text text-muted mb-4">Price: <span class="font-weight-bold">${item.Price || 'N/A'}</span></p>
+            </div>
+        </label>
     </div>
-    `;
+</div>
+`;
                             container.append(itemHtml);
                         });
 
-
+                        // Handle checkbox state and visual highlighting for both the card and image
                         $('.item-checkbox').change(function () {
                             const itemID = $(this).data('item-id');
                             const itemName = $(this).data('item-name');
                             const stockID = $(this).data('stock-id');
+                            const card = $(this).closest('.card');
+                            const image = $(this).siblings('.card-header').find('img');
+
                             if ($(this).is(':checked')) {
                                 selectedItems[itemID] = {
                                     name: itemName,
@@ -741,10 +764,14 @@
                                     price: parseFloat($(this).data('item-price')),
                                     quantity: 1 // default quantity
                                 };
+                                card.addClass('highlight-card'); // Highlight the card
+                                image.addClass('highlight-image'); // Highlight the image
                             } else {
                                 delete selectedItems[itemID];
-                           
+                                card.removeClass('highlight-card'); // Remove the card highlight
+                                image.removeClass('highlight-image'); // Remove the image highlight
                             }
+
                             updateSelectedItems();
                             toggleTakeOrderButton();
                         });
@@ -753,6 +780,7 @@
                         alert('Error: ' + response.responseText);
                     }
                 });
+
             }
 
             // Handle category drop-down change
@@ -1790,7 +1818,7 @@
 
                 $.ajax({
                     url: url,
-                    data: JSON.stringify({ search: search }),
+                    data: JSON.stringify({ 'search': search }),
                     dataType: "json",
                     type: 'POST',
                     contentType: "application/json",
@@ -1798,39 +1826,69 @@
                         const data = response.d;
                         const container = $('#orderslist1');
                         container.empty();
-                        console.log(data);
+
                         data.forEach(item => {
-                     
+                            // Check if item is already selected
                             const isChecked = selectedItems[item.ItemID] ? 'checked' : '';
                             const itemHtml = `
-                        <div class="col-lg-4 col-sm-4">
-                            <div class="productset flex-fill">
-                                <div class="productsetcontent">
-                                    <input type="checkbox" class="item-checkbox" 
-                                        data-item-id="${item.ItemID}" 
-                                        data-item-name="${item.ItemName}" 
-                                        data-item-quantity="${item.QuantityRemaining}" 
-                                        data-item-price="${item.Price || '0'}" 
-                                        data-stock-id="${item.StockID}" 
-                                        data-order-id="${item.OrderID}" 
-                                        data-order-item-id="${item.OrderItemID || ''}" ${isChecked} />
-                                    <h3>${item.ItemName}</h3>
-                                    <h4>${item.QuantityRemaining}</h4>
-                                    <h4>${item.Price || 'N/A'}</h4>
-                                </div>
-                            </div>
-                        </div>`;
+<div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+    <div class="card h-100 shadow-sm border-0 ${isChecked ? 'highlight-card' : ''}">
+        <label class="card-label" style="cursor: pointer;">
+            <input type="checkbox" class="item-checkbox d-none" 
+                   data-item-id="${item.ItemID}" 
+                   data-item-name="${item.ItemName}" 
+                   data-item-quantity="${item.QuantityRemaining}" 
+                   data-item-price="${item.Price || '0'}" 
+                   data-stock-id="${item.StockID}" 
+                   ${isChecked} />
+            <div class="card-header p-0">
+                <img src="${item.image}" class="card-img-top ${isChecked ? 'highlight-image' : ''}" alt="${item.ItemName}" style="width:100%;height:150px;object-fit:cover;border-radius: 8px 8px 0 0;">
+            </div>
+            <div class="card-body text-center">
+                <h5 class="card-title font-weight-bold">${item.ItemName}</h5>
+                <p class="card-text text-muted mb-2">Quantity Available: <span class="font-weight-bold">${item.QuantityRemaining}</span></p>
+                <p class="card-text text-muted mb-4">Price: <span class="font-weight-bold">${item.Price || 'N/A'}</span></p>
+            </div>
+        </label>
+    </div>
+</div>
+`;
                             container.append(itemHtml);
                         });
 
-                  
+                        // Handle checkbox state and visual highlighting for both the card and image
+                        $('.item-checkbox').change(function () {
+                            const itemID = $(this).data('item-id');
+                            const itemName = $(this).data('item-name');
+                            const stockID = $(this).data('stock-id');
+                            const card = $(this).closest('.card');
+                            const image = $(this).siblings('.card-header').find('img');
 
-                        attachCheckboxChangeHandlers();
+                            if ($(this).is(':checked')) {
+                                selectedItems[itemID] = {
+                                    name: itemName,
+                                    stockID: stockID,
+                                    maxQuantity: $(this).data('item-quantity'),
+                                    price: parseFloat($(this).data('item-price')),
+                                    quantity: 1 // default quantity
+                                };
+                                card.addClass('highlight-card'); // Highlight the card
+                                image.addClass('highlight-image'); // Highlight the image
+                            } else {
+                                delete selectedItems[itemID];
+                                card.removeClass('highlight-card'); // Remove the card highlight
+                                image.removeClass('highlight-image'); // Remove the image highlight
+                            }
+
+                            updateSelectedItems();
+                            toggleTakeOrderButton();
+                        });
                     },
                     error: function (response) {
-                        alert(response.responseText);
+                        alert('Error: ' + response.responseText);
                     }
                 });
+
             }
 
             // Handle category drop-down change

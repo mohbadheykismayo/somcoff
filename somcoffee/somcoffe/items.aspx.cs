@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
@@ -26,7 +27,7 @@ namespace somcoffe
             public string CategoryName;
             public string Section;
             public string Price;
-          
+            public string image;
             
 
 
@@ -41,12 +42,9 @@ namespace somcoffe
             using (SqlConnection con = new SqlConnection(cs))
             {
                 con.Open();
-                SqlCommand cmd = new SqlCommand(@"  
-     
-
-
-	   select * from Items
-	   inner join Categories on Items.CategoryID = Categories.CategoryID
+                SqlCommand cmd = new SqlCommand(@"
+            select * from Items
+            inner join Categories on Items.CategoryID = Categories.CategoryID
         ", con);
 
                 SqlDataReader dr = cmd.ExecuteReader();
@@ -56,20 +54,30 @@ namespace somcoffe
                     field.ItemID = dr["ItemID"].ToString();
                     field.CategoryName = dr["CategoryName"].ToString();
                     field.ItemName = dr["ItemName"].ToString();
-
                     field.CategoryID = dr["CategoryID"].ToString();
-
                     field.Section = dr["Section"].ToString();
-
                     field.Price = dr["Price"].ToString();
 
+                    // Check if the image column is DBNull before converting
+                    if (dr["image"] != DBNull.Value)
+                    {
+                        byte[] imageBytes = (byte[])dr["image"];
+                        string base64Image = Convert.ToBase64String(imageBytes);
+                        field.image = "data:image/png;base64," + base64Image; // Adjust MIME type if needed
+                    }
+                    else
+                    {
+                        // Assign a default image or leave it as null/empty
+                        field.image = "data:image/png;base64,default-image-base64"; // Use a base64 placeholder if desired
+                    }
 
                     details.Add(field);
                 }
-            } // Connection will be automatically closed here
+            }
 
             return details.ToArray();
         }
+
 
         [WebMethod]
         public static List<ListItem> getcat()
@@ -101,9 +109,22 @@ namespace somcoffe
             }
         }
 
+
+        //string itemname, string price, string section, string catdrop
+
         [WebMethod]
-        public static string submititem(string itemname, string price, string section, string catdrop)
+        public static string submititem(FileData data)
         {
+            // Save image file to server
+            string filePath = HttpContext.Current.Server.MapPath("~/Files/");
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
+            string fileName = Path.GetFileName(data.Name);
+            string imageFilePath = Path.Combine(filePath, fileName);
+            File.WriteAllBytes(imageFilePath, Convert.FromBase64String(data.Data));
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
             try
@@ -113,19 +134,21 @@ namespace somcoffe
                     con.Open();
 
                     // Insert into patient table
-                    string catquery = "INSERT INTO Items (ItemName,CategoryID,Section,Price) VALUES (@itemname,@catdrop,@section,@price);";
+                    string catquery = "INSERT INTO Items (ItemName,CategoryID,Section,Price, image) VALUES (@itemname,@catdrop,@section,@price, @image);";
                     using (SqlCommand cmd = new SqlCommand(catquery, con))
                     {
-                        cmd.Parameters.AddWithValue("@itemname", itemname);
-                        cmd.Parameters.AddWithValue("@price", price);
-                        cmd.Parameters.AddWithValue("@section", section);
-                        cmd.Parameters.AddWithValue("@catdrop", catdrop);
-
+                        cmd.Parameters.AddWithValue("@itemname", data.itemname);
+                        cmd.Parameters.AddWithValue("@price", data.price);
+                        cmd.Parameters.AddWithValue("@section", data.section);
+                        cmd.Parameters.AddWithValue("@catdrop", data.catdrop);
+                        cmd.Parameters.AddWithValue("@image", File.ReadAllBytes(imageFilePath));
                         cmd.ExecuteNonQuery();
 
                     }
                 }
+                File.Delete(imageFilePath);
 
+             
                 return "true";
             }
             catch (Exception ex)
@@ -135,40 +158,83 @@ namespace somcoffe
             }
         }
 
+        public class FileData
+        {
+            public string Data { get; set; }
+            public string ContentType { get; set; }
+            public string ItemID;
+            public string itemname;
+            public string catdrop;
+            public string CategoryName;
+            public string section;
+            public string price;
+
+            public string Name { get; set; }
+
+
+
+
+
+
+
+
+
+
+        }
 
         [WebMethod]
-        public static string updateitem(string itemname, string price, string section, string id, string catdrop)
+        public static string Updateitem(Itemee data1)
         {
-            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
-
-            try
+            if (data1.Name != null)
             {
-                using (SqlConnection con = new SqlConnection(cs))
+                byte[] bytes = Convert.FromBase64String(data1.Data);
+                string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+                try
                 {
-                    con.Open();
-
-                    // Update the item in the Items table
-                    string catquery = "UPDATE Items SET ItemName = @itemname, CategoryID = @catdrop, Section = @section, Price = @price WHERE ItemID = @id;";
-                    using (SqlCommand cmd = new SqlCommand(catquery, con))
+                    using (SqlConnection con = new SqlConnection(cs))
                     {
-                        cmd.Parameters.AddWithValue("@itemname", itemname);
-                        cmd.Parameters.AddWithValue("@price", price);
-                        cmd.Parameters.AddWithValue("@section", section);
-                        cmd.Parameters.AddWithValue("@catdrop", catdrop);
-                        cmd.Parameters.AddWithValue("@id", id);
+                        con.Open();
 
-                        cmd.ExecuteNonQuery();
+                        // Update the item in the Items table
+                        string catquery = "UPDATE Items SET ItemName = @itemname, CategoryID = @catdrop, Section = @section,image=@image, Price = @price WHERE ItemID = @id;";
+                        using (SqlCommand cmd = new SqlCommand(catquery, con))
+                        {
+                            cmd.Parameters.AddWithValue("@itemname", data1.itemname);
+                            cmd.Parameters.AddWithValue("@price", data1.price);
+                            cmd.Parameters.AddWithValue("@section", data1.section);
+                            cmd.Parameters.AddWithValue("@catdrop", data1.catdrop);
+                            cmd.Parameters.AddWithValue("@id", data1.id);
+                            cmd.Parameters.AddWithValue("@image", bytes);
+
+                            cmd.ExecuteNonQuery();
+                        }
                     }
-                }
 
-                return "true";
+                    return "true";
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions and return the error message
+                    return "Error in submititem method: " + ex.Message;
+                }
             }
-            catch (Exception ex)
-            {
-                // Handle exceptions and return the error message
-                return "Error in submititem method: " + ex.Message;
-            }
+            return "File name is null.";
         }
+
+        public class Itemee
+        {
+            public string id { get; set; }
+            public string Data { get; set; }
+            public string Name { get; set; }
+            public string itemname { get; set; }
+            public string price { get; set; }
+            public string section { get; set; }
+            public string catdrop { get; set; }
+            public string image { get; set; }
+
+        }
+
 
         public class itemstock
         {
@@ -178,7 +244,7 @@ namespace somcoffe
             public string QuantitySold;
             public string QuantityRemaining;
             public string StockID;
-
+            public string image;
 
         }
                   [WebMethod]
@@ -191,7 +257,9 @@ namespace somcoffe
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
-     SELECT 
+
+        SELECT 
+		 Items.image,
     Items.ItemName,
     Item_Stock.StockID,
     Item_Stock.StockDate,
@@ -223,6 +291,19 @@ WHERE
                     field.QuantitySold = dr["QuantitySold"].ToString();
 
                     field.QuantityRemaining = dr["QuantityRemaining"].ToString();
+
+                    // Check if the image column is DBNull before converting
+                    if (dr["image"] != DBNull.Value)
+                    {
+                        byte[] imageBytes = (byte[])dr["image"];
+                        string base64Image = Convert.ToBase64String(imageBytes);
+                        field.image = "data:image/png;base64," + base64Image; // Adjust MIME type if needed
+                    }
+                    else
+                    {
+                        // Assign a default image or leave it as null/empty
+                        field.image = "data:image/png;base64,default-image-base64"; // Use a base64 placeholder if desired
+                    }
 
 
                     details.Add(field);
@@ -300,8 +381,15 @@ WHERE
 
 
 
+        public class itemm
+        {
+            public string id { get; set; }
+            public string Data { get; set; }
+            public string Name { get; set; }
 
-        
+
+        }
+
 
 
 
@@ -329,6 +417,7 @@ WHERE
                 SqlCommand cmd = new SqlCommand(@"  
   
 	SELECT 
+    Items.image,
     Items.ItemName,
     Item_Stock.StockID,
     Item_Stock.StockDate,
@@ -360,6 +449,18 @@ WHERE
                     field.QuantitySold = dr["QuantitySold"].ToString();
 
                     field.QuantityRemaining = dr["QuantityRemaining"].ToString();
+                    // Check if the image column is DBNull before converting
+                    if (dr["image"] != DBNull.Value)
+                    {
+                        byte[] imageBytes = (byte[])dr["image"];
+                        string base64Image = Convert.ToBase64String(imageBytes);
+                        field.image = "data:image/png;base64," + base64Image; // Adjust MIME type if needed
+                    }
+                    else
+                    {
+                        // Assign a default image or leave it as null/empty
+                        field.image = "data:image/png;base64,default-image-base64"; // Use a base64 placeholder if desired
+                    }
 
 
                     details.Add(field);

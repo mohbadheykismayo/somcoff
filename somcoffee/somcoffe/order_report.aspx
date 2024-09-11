@@ -73,6 +73,7 @@
 <table class="table  " id="dailystock">
 <thead>
 <tr>
+       <th>Sawirka</th>
         <th>Magaca</th>
 
         <th>Qeybta</th>
@@ -203,7 +204,7 @@
 <thead>
 <tr>
 
-    <th>Waqriga</th>
+    <th>Waqtiga</th>
 <th>Magaca Macmiilka</th>
         <th>Magaca Shaqaalaha</th>
 <th>Deynta</th>
@@ -331,6 +332,7 @@
 <table class="table  " id="datatable2">
 <thead>
 <tr>
+        <th>Sawirka</th>
 
     <th>Magaca</th>
 <th>Magaca Macmiilka</th>
@@ -795,7 +797,12 @@
                         var Price = response.d[i].Price;
                         var TotalSalesAmount = response.d[i].TotalSalesAmount;
 
-                        
+                        var image = response.d[i].image;
+
+                        // If 'image' is a URL, wrap it in an <img> tag
+                        var imageTag = '<img src="' + image + '" alt="Item Image" style="width:50px;height:50px;">';
+
+
 
 
 
@@ -807,6 +814,7 @@
 
                         $("#dailystock tbody").append(
                             "<tr>" +
+                            "<td>" + imageTag + "</td>" +
                             "<td>" + ItemName + "</td>" +
                             "<td>" + Section + "</td>" +
                             "<td>" + Price + "</td>" +
@@ -859,7 +867,10 @@
                         var OrderDateTime = response.d[i].OrderDateTime;
                         var SubTotalAmount = response.d[i].SubTotalAmount;
 
+                        var image = response.d[i].image;
 
+                        // If 'image' is a URL, wrap it in an <img> tag
+                        var imageTag = '<img src="' + image + '" alt="Item Image" style="width:50px;height:50px;">';
 
 
 
@@ -867,6 +878,7 @@
 
                         $("#datatable2 tbody").append(
                             "<tr>" +
+                            "<td>" + imageTag + "</td>" +
                             "<td>" + ItemName + "</td>" +
                             "<td>" + CustomerName + "</td>" +
                             "<td>" + EmployeeName + "</td>" +

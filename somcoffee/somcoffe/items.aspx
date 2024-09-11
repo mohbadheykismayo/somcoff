@@ -77,10 +77,18 @@
 </div>
 </div>
 
+    <div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+       <input type="file" id="FileUpload1" accept="image/*">
 
-  
+ <img id="selectedImage22" src="" alt="Selected Image" />
 
 
+         <input type="file" id="FileUpload11" accept="image/*">
+
+ <img id="selectedImage221" src="" alt="Selected Image" />
+    </div>
+</div>
 
 
 
@@ -105,7 +113,7 @@
 <div class="col-lg-12">
         <a href="javascript:void(0);" id="deletebtn" class="btn btn-submit me-2" onclick="deletecategory()">delete</a>
     <a href="javascript:void(0);" id="editbtn" class="btn btn-submit me-2" onclick="updateitem()">edit</a>
-<a href="javascript:void(0);" id="submitbtn" class="btn btn-submit me-2" onclick="submititem()">Submit</a>
+<a href="javascript:void(0);" id="submitbtn" class="btn btn-submit me-2" >Submit</a>
 <a href="categorylist.html" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
 </div>
 </div>
@@ -197,7 +205,7 @@
                     <table class="table" id="datatable">
                         <thead>
                             <tr>
-                       
+                                <th>sawirka</th>
                                 <th>Magaca Alaabta</th>
                                 <th>Nooca</th>
                                 <th>Qeybta</th>
@@ -251,6 +259,7 @@
                     <table class="table" id="datatable1">
                         <thead>
                             <tr>
+                                     <th>sawirka</th>
                            <th>Alaabta</th>
                                 <th>Taariikhda</th>
                                 <th>Tirada La Heli Karo</th>
@@ -306,6 +315,7 @@
                     <table class="table" id="todaystocktbl">
                         <thead>
                             <tr>
+                                     <th>sawirka</th>
                             <th>Alaabta</th>
                                 <th>Taariikhda</th>
                                 <th>Tirada La Heli Karo</th>
@@ -407,8 +417,310 @@
 
                 
             }
-          
+            $('[id*=FileUpload11]').change(function () {
+                if (typeof (FileReader) != "undefined") {
+                    var input = this;
+                    if (input.files.length > 0) {
+                        var file = input.files[0];
 
+                        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+                        if (regex.test(file.name.toLowerCase())) {
+                            fileName = file.name;
+                            contentType = file.type;
+
+                            reader.onload = function (e) {
+                                $('#selectedImage221').attr('src', e.target.result);
+                            }
+
+                            reader.readAsDataURL(file);
+                        } else {
+                            alert(file.name + " is not a valid image file.");
+                        }
+                    }
+                } else {
+                    alert("This browser does not support HTML5 FileReader.");
+                }
+            });
+            $("[id*=editbtn]").click(function () {
+       
+
+
+
+
+
+
+                // Clear previous error messages
+                document.getElementById('itemname1').textContent = "";
+                document.getElementById('price1').textContent = "";
+
+
+
+
+
+                var itemname = $("#itemname").val();
+                var price = $("#price").val();
+                var section = $("#section").val();
+                var catdrop = $("#catdrop").val();
+
+                var id = $("#id").val();
+
+                // Validate the form values
+                let isValid = true;
+
+                if (itemname.trim() === "") {
+                    document.getElementById('itemname1').textContent = "Please enter the  Item Name.";
+                    isValid = false;
+                }
+
+
+                if (price.trim() === "") {
+                    document.getElementById('price1').textContent = "Please enter the  Price.";
+                    isValid = false;
+                }
+
+
+
+                if (price == 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Bank price',
+                        text: 'There was an error while inserting the data.',
+                    });
+                    isValid = false;
+                }
+
+                if (section == 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Bank Section',
+                        text: 'There was an error while inserting the data.',
+                    });
+                    isValid = false;
+                }
+
+
+
+
+
+
+                // Check if a file is selected and create a FileReader to read the file
+                var fileInput = document.getElementById('FileUpload11'); // Replace 'fileInput' with your actual file input ID
+
+
+
+                var file = fileInput.files[0];
+                var byteData = "";
+                var fileName = file ? file.name : "";
+
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        byteData = e.target.result.split(';base64,')[1];
+
+                        // Create a JSON object
+                        var jsonData = {
+                            id: id, // Include the book ID in the data
+                            Data: byteData,
+                            Name: fileName,
+                            catdrop: catdrop,
+                            section: section,
+                            price: price,
+                            itemname: itemname
+
+                        };
+
+                        // Send data to server using AJAX
+                        if (isValid) {
+
+                            $.ajax({
+                                type: "POST",
+                                url: "items.aspx/Updateitem", // Change the URL to your update endpoint
+                                data: JSON.stringify({ data1: jsonData }),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (r) {
+                                    console.log(r.d);
+                                    // Clear the file input
+                                    $("#FileUpload11").val(''); // Replace #fileInput with the actual ID of your file input element
+                                    // Optionally, reset reader.result to ensure it doesn't hold old data
+                                    reader.result = null;
+
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: r.d
+                                    });
+                                },
+                                error: function (r) {
+                                    alert(r.responseText);
+                                },
+                                failure: function (r) {
+                                    alert(r.responseText);
+                                }
+                            });
+
+                        }
+                        };
+                    reader.readAsDataURL(file);
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Image Selected',
+                        text: 'Please select an image before saving.'
+                    });
+
+                }
+
+                return false;
+            });
+
+
+            $(document).ready(function () {
+                var reader = new FileReader();
+                var fileName;
+                var contentType;
+
+                $('[id*=FileUpload1]').change(function () {
+                    if (typeof (FileReader) != "undefined") {
+                        var input = this;
+                        if (input.files.length > 0) {
+                            var file = input.files[0];
+
+                            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+                            if (regex.test(file.name.toLowerCase())) {
+                                fileName = file.name;
+                                contentType = file.type;
+
+                                reader.onload = function (e) {
+                                    $('#selectedImage22').attr('src', e.target.result);
+                                }
+
+                                reader.readAsDataURL(file);
+                            } else {
+                                alert(file.name + " is not a valid image file.");
+                            }
+                        }
+                    } else {
+                        alert("This browser does not support HTML5 FileReader.");
+                    }
+                });
+
+                $("[id*=submitbtn]").click(function () {
+              
+
+
+
+
+
+                    // Clear previous error messages
+                    document.getElementById('itemname1').textContent = "";
+                    document.getElementById('price1').textContent = "";
+
+
+
+
+
+                    var itemname = $("#itemname").val();
+                    var price = $("#price").val();
+                    var section = $("#section").val();
+                    var catdrop = $("#catdrop").val();
+
+            
+                    // Validate the form values
+                    let isValid = true;
+
+                    if (itemname.trim() === "") {
+                        document.getElementById('itemname1').textContent = "Please enter the  Item Name.";
+                        isValid = false;
+                    }
+
+
+                    if (price.trim() === "") {
+                        document.getElementById('price1').textContent = "Please enter the  Price.";
+                        isValid = false;
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    var im = $("#FileUpload1").val();
+
+
+                    if (!im) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'No Image Selected',
+                            text: 'Please select an image before saving.'
+                        });
+                        return false; // Prevent further execution
+                    }
+
+                    var byteData = reader.result.split(';')[1].replace("base64,", "");
+
+                    var obj = {
+                        Data: byteData,
+                        Name: fileName,
+                        ContentType: contentType,
+                        catdrop: catdrop,
+                        section: section,
+                        price: price,
+                        itemname: itemname
+
+                    };
+                    // If all validations pass, proceed with AJAX call
+                    if (isValid) {
+                        $.ajax({
+                            type: "POST",
+                            url: "items.aspx/submititem",
+                            data: JSON.stringify({ data: obj }), // Update the data field to include the prescid
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (r) {
+                                // Clear the file input
+                                $("#FileUpload1").val(''); // Replace #fileInput with the actual ID of your file input element
+                                // Optionally, reset reader.result to ensure it doesn't hold old data
+                                reader.result = null;
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: r.d
+                                });
+                            },
+                            error: function (r) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: r.responseText
+                                });
+                                console.log(r.responseText);
+                            },
+                            failure: function (r) {
+                                alert(r.responseText);
+                                console.log(r);
+                            }
+                        });
+                    }
+                        return false;
+                });
+            });
 
 
          
@@ -472,16 +784,14 @@
                         var CategoryName = response.d[i].CategoryName;
                         var Section = response.d[i].Section;
                         var Price = response.d[i].Price;
-                  
-                        
+                        var image = response.d[i].image;
 
-
-
-
+                        // If 'image' is a URL, wrap it in an <img> tag
+                        var imageTag = '<img src="' + image + '" alt="Item Image" style="width:50px;height:50px;">';
 
                         $("#datatable tbody").append(
                             "<tr>" +
-                      
+                            "<td>" + imageTag + "</td>" +
                             "<td>" + name + "</td>" +
                             "<td>" + CategoryName + "</td>" +
                             "<td>" + Section + "</td>" +
@@ -498,6 +808,7 @@
                         );
                     }
 
+
                     call();
                 },
                 error: function (response) {
@@ -506,7 +817,7 @@
             });
         }
 
-        function submititem() {
+        function submititem1() {
             // Clear previous error messages
             document.getElementById('itemname1').textContent = "";
             document.getElementById('price1').textContent = "";
@@ -588,7 +899,7 @@
 
 
 
-            function updateitem() {
+            function updateitem1() {
                 // Clear previous error messages
                 document.getElementById('itemname1').textContent = "";
                 document.getElementById('price1').textContent = "";
@@ -880,6 +1191,12 @@
             document.getElementById('submitbtn').style.display = 'none';
             document.getElementById('editbtn').style.display = 'inline-block';
             document.getElementById('deletebtn').style.display = 'none';
+
+
+            document.getElementById('FileUpload11').style.display = 'inline-block';
+            document.getElementById('selectedImage221').style.display = 'inline-block';
+            document.getElementById('FileUpload1').style.display = 'none';
+            document.getElementById('selectedImage22').style.display = 'none';
             
             $('#catmodal').modal('show');
 
@@ -1184,6 +1501,13 @@
             document.getElementById('submitbtn').style.display = 'inline-block';
             document.getElementById('editbtn').style.display = 'none';
             document.getElementById('deletebtn').style.display = 'none';
+
+            
+            
+            document.getElementById('FileUpload11').style.display = 'none';
+            document.getElementById('selectedImage221').style.display = 'none';
+
+
           /*  $("#catname").val('');*/
             $('#catmodal').modal('show');
 
@@ -1287,7 +1611,7 @@
      
 
              
-                var qty = row.find("td:nth-child(3)").text();
+                var qty = row.find("td:nth-child(4)").text();
                 $("#id1").val(id);
 
 
@@ -1328,13 +1652,17 @@
                             var QuantitySold = response.d[i].QuantitySold;
                             var QuantityRemaining = response.d[i].QuantityRemaining;
                             
+                            var image = response.d[i].image;
 
+                            // If 'image' is a URL, wrap it in an <img> tag
+                            var imageTag = '<img src="' + image + '" alt="Item Image" style="width:50px;height:50px;">';
 
 
 
 
                             $("#todaystocktbl tbody").append(
                                 "<tr>" +
+                                "<td>" + imageTag + "</td>" +
                                 "<td>" + ItemName + "</td>" +
                                 "<td>" + StockDate + "</td>" +
                                 "<td>" + QuantityAvailable + "</td>" +
@@ -1456,12 +1784,14 @@
                             var QuantityRemaining = response.d[i].QuantityRemaining;
                             var StockID = response.d[i].StockID;
                             
+                            var image = response.d[i].image;
 
-
-
+                            // If 'image' is a URL, wrap it in an <img> tag
+                            var imageTag = '<img src="' + image + '" alt="Item Image" style="width:50px;height:50px;">';
 
                             $("#datatable1 tbody").append(
                                 "<tr>" +
+                                "<td>" + imageTag + "</td>" +
                                 "<td>" + ItemName + "</td>" +
                                 "<td>" + StockDate + "</td>" +
                                 "<td>" + QuantityAvailable + "</td>" +

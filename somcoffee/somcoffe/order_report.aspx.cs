@@ -86,7 +86,7 @@ ORDER BY
             public string ItemName;
             public string Quantity;
             public string SubTotalAmount;
-
+            public string image;
 
 
 
@@ -231,6 +231,7 @@ WHERE
                 SqlCommand cmd = new SqlCommand(@"  
 
 	SELECT 
+	Items.image,
 	Items.ItemName,
 	Order_Items.Quantity,
 		Order_Items.SubTotalAmount,
@@ -268,7 +269,18 @@ WHERE  Orders.OrderID = @id
                     field.CustomerName = dr["CustomerName"].ToString();
                     field.EmployeeName = dr["EmployeeName"].ToString();
 
-
+                    // Check if the image column is DBNull before converting
+                    if (dr["image"] != DBNull.Value)
+                    {
+                        byte[] imageBytes = (byte[])dr["image"];
+                        string base64Image = Convert.ToBase64String(imageBytes);
+                        field.image = "data:image/png;base64," + base64Image; // Adjust MIME type if needed
+                    }
+                    else
+                    {
+                        // Assign a default image or leave it as null/empty
+                        field.image = "data:image/png;base64,default-image-base64"; // Use a base64 placeholder if desired
+                    }
                     details.Add(field);
                 }
             } // Connection will be automatically closed here
@@ -297,6 +309,7 @@ WHERE  Orders.OrderID = @id
             public string Section;
             public string Price;
             public string TotalSalesAmount;
+            public string image;
         }
 
 
@@ -368,6 +381,7 @@ ORDER BY
 
 	SELECT 
     CAST(Item_Stock.StockDate AS DATE) AS StockDate, 
+   Items.image,
     Items.ItemName,
     Items.Section,
     Items.Price,
@@ -385,11 +399,13 @@ GROUP BY
     CAST(Item_Stock.StockDate AS DATE),
     Items.ItemName,
     Items.Section,
+   Items.image,
     Items.Price
 ORDER BY 
     StockDate, 
     Items.Section,
     Items.Price,
+    Items.image,
     Items.ItemName;
         ", con);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -409,7 +425,18 @@ ORDER BY
                     field.TotalQuantityRemaining = dr["TotalQuantityRemaining"].ToString();
 
                     field.TotalSalesAmount = dr["TotalSalesAmount"].ToString();
-
+                    // Check if the image column is DBNull before converting
+                    if (dr["image"] != DBNull.Value)
+                    {
+                        byte[] imageBytes = (byte[])dr["image"];
+                        string base64Image = Convert.ToBase64String(imageBytes);
+                        field.image = "data:image/png;base64," + base64Image; // Adjust MIME type if needed
+                    }
+                    else
+                    {
+                        // Assign a default image or leave it as null/empty
+                        field.image = "data:image/png;base64,default-image-base64"; // Use a base64 placeholder if desired
+                    }
                     details.Add(field);
                 }
             } // Connection will be automatically closed here
