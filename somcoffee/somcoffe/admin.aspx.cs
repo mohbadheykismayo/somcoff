@@ -17,6 +17,46 @@ namespace somcoffe
         {
 
         }
+
+        [WebMethod]
+        public static string updatedeyn(string id, string qty)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+
+
+
+                    // Adjust the query to insert the parsed date
+                    string catquery = "UPDATE Credits SET CreditAmount = @qtya  WHERE CreditID = @id;";
+
+
+                    using (SqlCommand cmd = new SqlCommand(catquery, con))
+                    {
+
+                        cmd.Parameters.AddWithValue("@qtya", qty);
+                        cmd.Parameters.AddWithValue("@id", id);  // Insert the parsed DateTime object
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                return "true";
+            }
+            catch (SqlException sqlEx)
+            {
+                return $"SQL Error: {sqlEx.Message}";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }
+
         public class deyn
         {
             public string EmployeeName;
@@ -25,10 +65,11 @@ namespace somcoffe
             public string OrderDateTime;
             public string TotalAmount;
             public string OrderID;
+            public string rem;
 
+            public string CreditID;
 
-
-
+            
 
 
 
@@ -48,12 +89,22 @@ namespace somcoffe
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
-	select Orders.OrderID,   Customers.CustomerName,Employees.EmployeeName,Credits.CreditAmount,Orders.OrderDateTime,Orders.TotalAmount  from Credits
-inner join Customers on Credits.CustomerID = Credits.CustomerID
-inner join Employees on Credits.IssuedByEmployeeID = Employees.EmployeeID
-inner join Orders on Credits.OrderID= Orders.OrderID
-	order by  Orders.OrderDateTime desc;
 
+SELECT DISTINCT 
+    Credits.CreditID, 
+    Orders.OrderID, 
+    Customers.CustomerName, 
+    Employees.EmployeeName, 
+    Credits.CreditAmount, 
+    Orders.OrderDateTime, 
+    SUM(COALESCE(Orders.TotalAmount, 0)) - SUM(COALESCE(Credits.CreditAmount, 0)) AS rem
+FROM Credits
+INNER JOIN Customers ON Credits.CustomerID = Customers.CustomerID
+INNER JOIN Employees ON Credits.IssuedByEmployeeID = Employees.EmployeeID
+INNER JOIN Orders ON Credits.OrderID = Orders.OrderID
+INNER JOIN Order_Items ON Orders.OrderID = Order_Items.OrderID
+GROUP BY Orders.OrderID, Customers.CustomerName, Employees.EmployeeName, Credits.CreditAmount, Orders.OrderDateTime ,   Credits.CreditID
+ORDER BY Orders.OrderDateTime DESC;
         ", con);
 
                 SqlDataReader dr = cmd.ExecuteReader();
@@ -64,10 +115,10 @@ inner join Orders on Credits.OrderID= Orders.OrderID
                     field.CustomerName = dr["CustomerName"].ToString();
                     field.CreditAmount = dr["CreditAmount"].ToString();
                     field.OrderDateTime = dr["OrderDateTime"].ToString();
-                    field.TotalAmount = dr["TotalAmount"].ToString();
-
+               
+                    field.rem = dr["rem"].ToString();
                     field.OrderID = dr["OrderID"].ToString();
-
+                    field.CreditID = dr["CreditID"].ToString();
 
 
 

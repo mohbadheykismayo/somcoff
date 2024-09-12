@@ -35,20 +35,28 @@ namespace somcoffe
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"  
-   SELECT 
-    CAST(Orders.OrderDateTime AS DATE) AS OrderDate, 
-    SUM(COALESCE(Credits.CreditAmount, 0)) AS TotalCredits, 
-    SUM(COALESCE(Orders.TotalAmount, 0)) AS TotalAmountPerDay,
-    SUM(COALESCE(Orders.TotalAmount, 0)) - SUM(COALESCE(Credits.CreditAmount, 0)) AS TotalCombinedAmountPerDay
+ 
+	 
+	SELECT 
+    CAST(O.OrderDateTime AS DATE) AS OrderDate, 
+    SUM(COALESCE(O.TotalAmount, 0)) AS TotalAmountPerDay,  -- Total order amount per day
+    SUM(COALESCE(C.CreditAmount, O.TotalAmount)) AS TotalCreditsPaid,  -- Total amount paid (Credit or Full Payment)
+    SUM(COALESCE(O.TotalAmount, 0) - COALESCE(C.CreditAmount, 0)) AS TotalRemainingAmount,  -- Remaining unpaid credit (if any)
+    SUM(COALESCE(C.CreditAmount, O.TotalAmount)) AS TotalMoneyReceived,  -- Total money received (credit payments or full payments)
+    SUM(COALESCE(O.TotalAmount, 0)) - SUM(COALESCE(C.CreditAmount, O.TotalAmount)) AS Difference,  -- Difference between TotalAmountPerDay and TotalMoneyReceived
+    COUNT(OI.OrderItemID) AS TotalItemsSold,  -- Total number of items sold per day
+    SUM(OI.SubTotalAmount) AS TotalItemsSubTotal -- Total of items' SubTotalAmount per day
 FROM 
-    Orders
+    Orders O
 LEFT JOIN 
-    Credits ON Orders.OrderID = Credits.OrderID
-
+    Credits C ON O.OrderID = C.OrderID
+INNER JOIN 
+    Order_Items OI ON O.OrderID = OI.OrderID
 GROUP BY 
-    CAST(Orders.OrderDateTime AS DATE)
+    CAST(O.OrderDateTime AS DATE)
 ORDER BY 
-    OrderDate;
+    OrderDate DESC;
+
         ", con);
 
                 SqlDataReader dr = cmd.ExecuteReader();
@@ -56,12 +64,12 @@ ORDER BY
                 {
                     dailyorderreport field = new dailyorderreport();
                     field.OrderDate = dr["OrderDate"].ToString();
-                    field.totalcredits = dr["TotalCredits"].ToString();
+                    field.totalcredits = dr["Difference"].ToString();
 
 
                     field.TotalAmountPerDay = dr["TotalAmountPerDay"].ToString();
 
-                    field.TotalCombinedAmountPerDay = dr["TotalCombinedAmountPerDay"].ToString();
+                    field.TotalCombinedAmountPerDay = dr["TotalMoneyReceived"].ToString();
 
 
 

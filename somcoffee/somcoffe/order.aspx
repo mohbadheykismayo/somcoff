@@ -955,6 +955,7 @@
                             '!',
                             'success'
                         );
+                     
                         displaytodaystock();
                         // Print the receipt
                         let printContent = `
@@ -1033,7 +1034,10 @@
                         printWindow.focus();
                         printWindow.print();
 
-
+                        $('#selectedItemsList').empty();
+                        $('#totalPrice').text('0.00');
+                        selectedItems = {}; // Clear selected items object
+                        $('.item-checkbox').prop('checked', false);
                     },
                     error: function (response) {
                         alert('Error placing the order: ' + response.responseText);
@@ -2089,7 +2093,7 @@
                     $('#creditDetails1').hide();
                 }
             });
-
+          
             $('#takeOrderBtn').click(function (e) {
                 e.preventDefault(); // Prevent page refresh
                 console.log(selectedItems);
@@ -2127,12 +2131,14 @@
                         amountPaid: amountPaid
                     }),
                     success: function (response) {
+
                         Swal.fire(
                             'Waxaad Badasha Order!',
                             '!',
                             'success'
                         );
-
+                        displaytodaystock();
+                        $('#catmodal').modal('hide');
                         // Print the receipt
                         let printContent = `
 <div style="text-align: center; font-family: Arial, sans-serif; font-size: 12px; max-width: 250px; margin: 0 auto;">
@@ -2209,7 +2215,10 @@
                         printWindow.focus();
                         printWindow.print();
 
-
+                        $('#selectedItemsList1').empty();
+                        $('#totalPrice1').text('0.00');
+                        selectedItems = {}; // Clear selected items object
+                        $('.item-checkbox').prop('checked', false);
                     },
                     error: function (error) {
                         console.log('Error placing order:', error);

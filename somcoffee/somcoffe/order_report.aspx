@@ -207,7 +207,7 @@
     <th>Waqtiga</th>
 <th>Magaca Macmiilka</th>
         <th>Magaca Shaqaalaha</th>
-<th>Deynta</th>
+<th>Lacagta U Bixiye</th>
     <th>Lacagta Laga Rabay</th>
 <th>Lacagta Ku Hartay</th>
 
@@ -337,7 +337,7 @@
     <th>Magaca</th>
 <th>Magaca Macmiilka</th>
         <th> Shaqaalaha</th>
-<th>Deynta</th>
+<th>Lacagta u Bixiye</th>
        <th>Lacagta</th>
     <th>inta Xabo</th>
 <th>Waqtiga</th>
@@ -427,9 +427,10 @@
 <tr>
 
     <th>Waqtiga </th>
-<th>Deynta </th>
-        <th>Lacagta Guud </th>
-<th>Lacagta La Qabtay</th>
+            <th>Lacagta Guud </th>
+<th>Lacagta la Bixiye </th>
+
+<th>Lacagta La Hartay</th>
 
 
 </tr>
@@ -634,10 +635,11 @@
                         $("#todaystocktbl tbody").append(
                             "<tr>" +
                             "<td>" + OrderDate + "</td>" +
-                            "<td>" + totalcredits + "</td>" +
                             "<td>" + TotalAmountPerDay + "</td>" +
+                        
+                        
                             "<td>" + TotalCombinedAmountPerDay + "</td>" +
-              
+                            "<td>" + totalcredits + "</td>" +
                             "<td>" +
                             '<a class="me-3 edit-button" data-id="' + OrderDate + '">' +
                             '<img src="assets/img/icons/edit.svg" alt="Edit">' +
@@ -650,11 +652,12 @@
                 },
                 error: function (response) {
                     alert(response.responseText);
+                    console.log(response.responseText);
                 }
             });
         }
 
-        datadisplay();
+  /*      datadisplay();*/
         function datadisplay() {
             $.ajax({
                 url: 'order_report.aspx/datadisplay',
@@ -700,6 +703,7 @@
                 },
                 error: function (response) {
                     alert(response.responseText);
+                    console.log(response.responseText);
                 }
             });
         }

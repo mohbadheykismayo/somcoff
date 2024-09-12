@@ -284,7 +284,7 @@
 <thead>
 <tr>
 
-    <th>magaca shaqaalaha</th>
+    <th>magaca </th>
 <th>number ka</th>
     <th>UserName</th>
     <th>Password</th>
@@ -382,13 +382,13 @@
 <table class="table  " id="deyn">
 <thead>
 <tr>
-    <th>Magaca Macmiilka</th>
-    <th>Magaca Shaqalaha</th>
+ 
+    <th>Shaqalaha</th>
+       <th>Macmiilka</th>
+    <th>Lacagta U bixiye</th>
 
-    <th>Deynta</th>
-    <th>Waqtiga</th>
-      <th>Lacagta Guud</th>
-<th>Action</th>
+      <th>Lacagta Harty</th>
+        <th>Waqtiga</th>
 </tr>
 </thead>
 <tbody>
@@ -517,11 +517,180 @@
 </div>
     </div>
     </div>
+
+
+
+    
+    <!-- Modal -->
+<div class="modal fade" id="stockmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel11">Stock Operations</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+          <div class="page-header">
+<div class="page-title">
+<h4>Items Add to Stock</h4>
+
+</div>
+</div>
+
+<div class="card">
+<div class="card-body">
+<div class="row">
+        <input id="id11" style="display:none"/>
+
+<div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label>Lacata La Bixinaayo</label>
+<input type="text" id="qtya">
+        <small id="itemname11" class="text-danger"></small>
+</div>
+</div>
+
+
+<%--    <div class="col-lg-4 col-sm-6 col-12" id="datee">
+<div class="form-group">
+<label> Stock Date</label>
+    <input  type="datetime-local" id="date" class="form-control"/>
+</div>
+</div>--%>
+  
+
+
+<div class="col-lg-12">
+   
+      <a href="javascript:void(0);" id="editbtn11" class="btn btn-submit me-2" onclick="updatedeyn()">Bixi</a>
+    
+
+<a href="categorylist.html" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</a>
+</div>
+</div>
+</div>
+</div>
+
+      </div>
+     <%-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>--%>
+    </div>
+  </div>
+</div>
+
+
+
     <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/dataTables.bootstrap4.min.js"></script>
     <script>
 
+
+
+        function updatedeyn() {
+            // Clear previous error messages
+            document.getElementById('itemname11').textContent = "";
+
+
+
+
+
+
+            var qty = $("#qtya").val();
+
+            var id = $("#id11").val();
+
+            // Validate the form values
+            let isValid = true;
+
+            if (qty.trim() === "") {
+                document.getElementById('itemname11').textContent = "Please enter the  Item Name.";
+                isValid = false;
+            }
+
+
+
+
+
+
+            // If all validations pass, proceed with AJAX call
+            if (isValid) {
+
+                $.ajax({
+                    url: 'admin.aspx/updatedeyn',
+                    data: "{'id':'" + id + "', 'qty':'" + qty + "'}",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (response) {
+                        console.log(response);
+                        if (response.d === 'true') {
+                            Swal.fire(
+                                'Successfully paid!',
+                                'You paid a new deyn!',
+                                'success'
+                            );
+                            $('#stockmodal').modal('hide');
+                            displaydeyn();
+
+                        } else {
+                            // Handle errors in the response
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data Insertion Failed',
+                                text: 'There was an error while inserting the data.',
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+            }
+
+            function clearInputFields() {
+                // Replace these lines with code to clear the input fields
+                $("#catname").val('');
+
+            }
+        }
+
+
+
+
+
+
+
+
+        $("#deyn").on("click", ".edit-button", function (event) {
+            event.preventDefault(); // Prevent default behavior
+            $('#stockmodal').modal('hide');
+
+            var row = $(this).closest("tr");
+            var id = $(this).data("id");
+
+
+
+            var qty = row.find("td:nth-child(3)").text();
+            $("#id11").val(id);
+
+
+            $("#qtya").val(qty);
+
+  
+
+            document.getElementById('editbtn11').style.display = 'inline-block';
+         
+
+
+            $('#stockmodal').modal('show');
+
+
+        });
 
         $("#employees").on("click", ".delete-btn", function (event) {
             event.preventDefault(); // Prevent default behavior
@@ -902,12 +1071,14 @@
                         var EmployeeName = response.d[i].EmployeeName;
                         var CustomerName = response.d[i].CustomerName;
                         var CreditAmount = response.d[i].CreditAmount;
-                        var TotalAmount = response.d[i].TotalAmount;
+                  
                         var OrderDateTime = response.d[i].OrderDateTime;
                         var OrderID = response.d[i].OrderID;
+                        var rem = response.d[i].rem;
+                        var CreditID = response.d[i].CreditID;
 
 
-
+                        
 
 
 
@@ -917,15 +1088,11 @@
                             "<td>" + EmployeeName + "</td>" +
                             "<td>" + CustomerName + "</td>" +
                             "<td>" + CreditAmount + "</td>" +
-                            "<td>" + TotalAmount + "</td>" +
+                            "<td>" + rem + "</td>" +
                             "<td>" + OrderDateTime + "</td>" +
                             "<td>" +
-                            '<a class="me-3 edit-button" data-id="' + OrderID + '">' +
-                            '<img src="assets/img/icons/edit.svg" alt="Edit">' +
-                            '</a>' +
-                            '<a class="me-3 delete-btn" data-id="' + OrderID + '">' +
-                            '<img src="assets/img/icons/delete.svg" alt="Delete">' +
-                            '</a>' +
+                            '<a class="me-3 btn btn-success text-white edit-button" data-id="' + CreditID + '">' +
+                            ' Bixi' +
                             "</td>" +
                             "</tr>"
                         );
