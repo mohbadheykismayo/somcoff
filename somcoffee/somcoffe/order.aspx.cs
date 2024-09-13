@@ -303,7 +303,7 @@ GROUP BY
 
 
         [WebMethod]
-        public static string TakeOrder(List<OrderItem> order, int? customerId, int? amountPaid, int? employeeId)
+        public static string TakeOrder(List<OrderItem> order, int? customerId, decimal? amountPaid, int? employeeId)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
             int orderId = 0;
@@ -554,7 +554,7 @@ GROUP BY Order_Items.ItemID
 
 
         [WebMethod]
-        public static string takeOrder7(OrderData[] orders, int customerId, int employeeId, int amountPaid)
+        public static string takeOrder7(OrderData[] orders, int customerId, int employeeId, decimal amountPaid)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 

@@ -179,7 +179,8 @@
           </select>
 
           <label for="amountPaid">Lacag La Bixinaayo:</label>
-          <input class="form-control" type="number" id="amountPaid" min="0" step="0.01" value="0.00" />
+   <input class="form-control" type="number" id="amountPaid" min="0" step="0.01" value="0.00" />
+
         </div>
 
         <br />
@@ -916,10 +917,11 @@
                 const customerId = isCreditOrder ? $('#customerID').val() : null;
                 const employeeId = isCreditOrder ? $('#employeeID').val() : null;
                 const bookingId = isCreditOrder ? $('#bookingID').val() : null;
-                const amountPaid = isCreditOrder ? parseFloat($('#amountPaid').val()) || 0 : null; // Get amount paid or null if not credit order
+                const amountPaid = isCreditOrder ? (parseFloat($('#amountPaid').val()) || 0) : null;
+
 
                 const totalPrice = parseFloat($('#totalPrice').text()) || 0; // Get total price
-
+                alert(amountPaid);
            
                 // Prepare the data object to be sent to the server
                 const orderData = [];
