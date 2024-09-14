@@ -43,8 +43,9 @@ namespace somcoffe
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand(@"
-            select * from Items
-            inner join Categories on Items.CategoryID = Categories.CategoryID
+        
+    select * from Items
+    left join Categories on Items.CategoryID = Categories.CategoryID
         ", con);
 
                 SqlDataReader dr = cmd.ExecuteReader();
@@ -125,6 +126,7 @@ namespace somcoffe
             string fileName = Path.GetFileName(data.Name);
             string imageFilePath = Path.Combine(filePath, fileName);
             File.WriteAllBytes(imageFilePath, Convert.FromBase64String(data.Data));
+
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
             try
@@ -133,28 +135,37 @@ namespace somcoffe
                 {
                     con.Open();
 
-                    // Insert into patient table
-                    string catquery = "INSERT INTO Items (ItemName,CategoryID,Section,Price, image) VALUES (@itemname,@catdrop,@section,@price, @image);";
+                    // Insert into Items table
+                    string catquery = "INSERT INTO Items (ItemName, CategoryID, Section, Price, image) VALUES (@itemname, @catdrop, @section, @price, @image);";
                     using (SqlCommand cmd = new SqlCommand(catquery, con))
                     {
                         cmd.Parameters.AddWithValue("@itemname", data.itemname);
                         cmd.Parameters.AddWithValue("@price", data.price);
                         cmd.Parameters.AddWithValue("@section", data.section);
-                        cmd.Parameters.AddWithValue("@catdrop", data.catdrop);
+
+                        // Check if catdrop is null or empty and use DBNull if it is
+                        if (string.IsNullOrEmpty(data.catdrop))
+                        {
+                            cmd.Parameters.AddWithValue("@catdrop", DBNull.Value);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@catdrop", data.catdrop);
+                        }
+
                         cmd.Parameters.AddWithValue("@image", File.ReadAllBytes(imageFilePath));
                         cmd.ExecuteNonQuery();
-
                     }
                 }
+
                 File.Delete(imageFilePath);
 
-             
                 return "true";
             }
             catch (Exception ex)
             {
                 // Handle exceptions and return the error message
-                return "Error in submitdata method: " + ex.Message;
+                return "Error in submititem method: " + ex.Message;
             }
         }
 

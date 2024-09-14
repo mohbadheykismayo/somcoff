@@ -1,5 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/homepage.Master" AutoEventWireup="true" CodeBehind="admin.aspx.cs" Inherits="somcoffe.admin" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+        <!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css"/>
+
+
               <style>
       #datatable{
           font-size: 1.2em;
@@ -200,8 +205,9 @@
     </div>
   </div>
 </div>
+
     <div class="row">
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12">
         <div class="page-header">
 <div class="page-title">
 <h4>List Shaqaalaha</h4>
@@ -304,7 +310,7 @@
 
 
 
-                        <div class="col-6">
+                        <div class="col-lg-6 col-md-12">
         <div class="page-header">
 <div class="page-title">
 <h4>Deynta Maqan</h4>
@@ -379,30 +385,28 @@
 </div>
 
 <div class="table-responsive">
-<table class="table  " id="deyn">
-<thead>
-<tr>
- 
-    <th>Shaqalaha</th>
-       <th>Macmiilka</th>
-    <th>Lacagta U bixiye</th>
-
-      <th>Lacagta Harty</th>
-        <th>Waqtiga</th>
-</tr>
-</thead>
-<tbody>
-
-</tbody>
-</table>
+    <table class="table" id="deyn">
+        <thead>
+            <tr>
+                <th>Shaqaalaha</th>
+                <th>Macmiil</th>
+                <th>Lacagta Deynta</th>
+                <th>Hadhaaga</th>
+                <th>Waqtiga Dalabka</th>
+                <th>Fal</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
+
 </div>
 </div>
     </div>
     </div>
     <div class="row">
       
-                        <div class="col-6">
+                        <div class="col-lg-6 col-md-12">
         <div class="page-header">
 <div class="page-title">
 <h4>Alaabta La Tuuray</h4>
@@ -441,27 +445,24 @@
 </div>
 
 <div class="table-responsive">
-<table class="table  " id="tuur">
-<thead>
-<tr>
-        <th>Magaca qofka tuuray </th>
-    <th>Magaca alaabta </th>
-    <th>inta xabo</th>
-
-    <th>lacagta</th>
-    <th>Waqtiga</th>
-
-</tr>
-</thead>
-<tbody>
-
-</tbody>
-</table>
+    <table class="table" id="tuur">
+        <thead>
+            <tr>
+                <th>Magaca</th>
+                <th>Magaca Alaabta</th>
+                <th>Tirada</th>
+                <th>Kharashka Guud</th>
+                <th>Taariikhda</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
+
 </div>
 </div>
     </div>
-                                <div class="col-6">
+                                <div class="col-lg-6 col-md-12">
         <div class="page-header">
 <div class="page-title">
 <h4>Admin ka</h4>
@@ -581,7 +582,16 @@
   </div>
 </div>
 
+        <!-- jQuery -->
 
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
 
     <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
@@ -1062,27 +1072,21 @@
                 type: 'POST',
                 contentType: "application/json",
                 success: function (response) {
-                    console.log(response)
+                    console.log(response);
 
-
+                    // Clear existing table body content
                     $("#deyn tbody").empty();
 
+                    // Loop through the response and populate the table rows
                     for (var i = 0; i < response.d.length; i++) {
                         var EmployeeName = response.d[i].EmployeeName;
                         var CustomerName = response.d[i].CustomerName;
                         var CreditAmount = response.d[i].CreditAmount;
-                  
                         var OrderDateTime = response.d[i].OrderDateTime;
-                        var OrderID = response.d[i].OrderID;
                         var rem = response.d[i].rem;
                         var CreditID = response.d[i].CreditID;
 
-
-                        
-
-
-
-
+                        // Append the new rows to the table body
                         $("#deyn tbody").append(
                             "<tr>" +
                             "<td>" + EmployeeName + "</td>" +
@@ -1093,12 +1097,25 @@
                             "<td>" +
                             '<a class="me-3 btn btn-success text-white edit-button" data-id="' + CreditID + '">' +
                             ' Bixi' +
+                            "</a>" +
                             "</td>" +
                             "</tr>"
                         );
                     }
 
-
+                    // Initialize DataTable with search, pagination, and export buttons
+                    $("#deyn").DataTable({
+                        destroy: true,  // Destroy any existing instance before re-initializing
+                        dom: 'Bfrtip',  // Define the placement of buttons and the search box
+                        buttons: [
+                            'excelHtml5',  // Export to Excel
+                            'print'        // Print button
+                        ],
+                        paging: true,       // Enable pagination
+                        pageLength: 10,     // Default number of rows per page
+                        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        responsive: true    // Make the table responsive
+                    });
                 },
                 error: function (response) {
                     alert(response.responseText);
@@ -1114,11 +1131,12 @@
                 type: 'POST',
                 contentType: "application/json",
                 success: function (response) {
-                    console.log(response)
+                    console.log(response);
 
-
+                    // Clear existing table body content
                     $("#tuur tbody").empty();
 
+                    // Loop through the response and populate the table rows
                     for (var i = 0; i < response.d.length; i++) {
                         var ItemName = response.d[i].ItemName;
                         var quantity = response.d[i].quantity;
@@ -1126,28 +1144,37 @@
                         var date = response.d[i].date;
                         var name = response.d[i].name;
 
-
-
+                        // Append the new rows to the table body
                         $("#tuur tbody").append(
                             "<tr>" +
                             "<td>" + name + "</td>" +
                             "<td>" + ItemName + "</td>" +
                             "<td>" + quantity + "</td>" +
-                                  "<td>" + SubTotalAmount + "</td>" +
+                            "<td>" + SubTotalAmount + "</td>" +
                             "<td>" + date + "</td>" +
-                         
                             "</tr>"
                         );
                     }
 
-
+                    // Initialize DataTable with search, pagination, and export buttons
+                    $("#tuur").DataTable({
+                        destroy: true,  // Destroy any existing instance before re-initializing
+                        dom: 'Bfrtip',  // Define the placement of buttons and the search box
+                        buttons: [
+                            'excelHtml5',  // Export to Excel
+                            'print'        // Print button
+                        ],
+                        paging: true,       // Enable pagination
+                        pageLength: 10,     // Default number of rows per page
+                        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        responsive: true    // Make the table responsive
+                    });
                 },
                 error: function (response) {
                     alert(response.responseText);
                 }
             });
         }
-
 
 
         displayadmin();

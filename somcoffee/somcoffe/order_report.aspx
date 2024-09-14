@@ -1,5 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/homepage.Master" AutoEventWireup="true" CodeBehind="order_report.aspx.cs" Inherits="somcoffe.order_report" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+            <!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css"/>
           <style>
       #datatable{
           font-size: 1.2em;
@@ -381,7 +384,7 @@
 
 
 
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12">
                     <div class="page-header">
 <div class="page-title">
 <h4>Report ka Maalin Walbo</h4>
@@ -418,35 +421,32 @@
 </ul>
 </div>
 </div>
-
-
+ 
+ 
 
 <div class="table-responsive">
-<table class="table  " id="todaystocktbl">
-<thead>
-<tr>
-
-    <th>Waqtiga </th>
+    <table class="table" id="todaystocktbl">
+        <thead>
+            <tr>
+                 <th>Waqtiga </th>
             <th>Lacagta Guud </th>
 <th>Lacagta la Bixiye </th>
 
 <th>Lacagta La Hartay</th>
-
-
-</tr>
-</thead>
-<tbody>
-
-</tbody>
-</table>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
+
 </div>
 </div>
         </div>
 
 
 
-            <div class="col-6">
+            <div class="col-lg-6 col-md-12">
         <div class="page-header">
 <div class="page-title">
 <h4>Reporka Alaabta Maalin Walbo</h4>
@@ -519,37 +519,37 @@
 </div>
 </div>
 </div>
-
-<div class="table-responsive">
-<table class="table  " id="itemstock">
-<thead>
-<tr>
-
-    <th>Waqtiga</th>
+    <div class="table-responsive">
+    <table class="table" id="itemstock">
+        <thead>
+            <tr>
+                  <th>Waqtiga</th>
 <th>Inta La Haystay </th>
         <th>Inta La Gaday</th>
 <th>Inta Soo Hartay</th>
-
-
-
-
-
-
-             
-
-
-</tr>
-</thead>
-<tbody>
-
-</tbody>
-</table>
+                <th>ficil</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
+
+
+
 </div>
 </div>
     </div>
         </div>
 
+
+
+    <!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
         <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/dataTables.bootstrap4.min.js"></script>
@@ -565,26 +565,17 @@
                 type: 'POST',
                 contentType: "application/json",
                 success: function (response) {
-                    console.log(response)
+                    console.log(response);
 
-
+                    // Clear existing table body content
                     $("#itemstock tbody").empty();
 
+                    // Populate the table rows
                     for (var i = 0; i < response.d.length; i++) {
                         var StockDate = response.d[i].StockDate;
                         var TotalQuantityAvailable = response.d[i].TotalQuantityAvailable;
                         var TotalQuantitySold = response.d[i].TotalQuantitySold;
                         var TotalQuantityRemaining = response.d[i].TotalQuantityRemaining;
-
-
-
-
-
-
-
-
-
-
 
                         $("#itemstock tbody").append(
                             "<tr>" +
@@ -592,19 +583,32 @@
                             "<td>" + TotalQuantityAvailable + "</td>" +
                             "<td>" + TotalQuantitySold + "</td>" +
                             "<td>" + TotalQuantityRemaining + "</td>" +
-
                             "<td>" +
                             '<a class="me-3 btn btn-success text-white edit-button" data-id="' + StockDate + '">' +
-                     ' Check' +
+                            ' Check' +
+                            "</a>" +
                             "</td>" +
                             "</tr>"
                         );
                     }
 
-
+                    // Initialize DataTable with search, pagination, and export buttons
+                    $("#itemstock").DataTable({
+                        destroy: true,  // Destroy any existing instance before re-initializing
+                        dom: 'Bfrtip',  // Define the placement of buttons and the search box
+                        buttons: [
+                            'excelHtml5',  // Export to Excel
+                            'print'        // Print button
+                        ],
+                        paging: true,       // Enable pagination
+                        pageLength: 10,     // Default number of rows per page
+                        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        responsive: true    // Make the table responsive
+                    });
                 },
                 error: function (response) {
                     alert(response.responseText);
+                    console.log(response.responseText);
                 }
             });
         }
@@ -617,38 +621,46 @@
                 type: 'POST',
                 contentType: "application/json",
                 success: function (response) {
-                    console.log(response)
+                    console.log(response);
 
-
+                    // Clear existing table body content
                     $("#todaystocktbl tbody").empty();
 
+                    // Populate the table rows
                     for (var i = 0; i < response.d.length; i++) {
                         var OrderDate = response.d[i].OrderDate;
                         var totalcredits = response.d[i].totalcredits;
                         var TotalAmountPerDay = response.d[i].TotalAmountPerDay;
                         var TotalCombinedAmountPerDay = response.d[i].TotalCombinedAmountPerDay;
-              
-
-
-
 
                         $("#todaystocktbl tbody").append(
                             "<tr>" +
                             "<td>" + OrderDate + "</td>" +
                             "<td>" + TotalAmountPerDay + "</td>" +
-                        
-                        
                             "<td>" + TotalCombinedAmountPerDay + "</td>" +
                             "<td>" + totalcredits + "</td>" +
                             "<td>" +
                             '<a class="me-3 edit-button" data-id="' + OrderDate + '">' +
                             '<img src="assets/img/icons/edit.svg" alt="Edit">' +
-                              "</td>" +
+                            "</a>" +
+                            "</td>" +
                             "</tr>"
                         );
                     }
 
-
+                    // Initialize DataTable with search, pagination, and export buttons
+                    $("#todaystocktbl").DataTable({
+                        destroy: true,  // Destroy any existing instance before re-initializing
+                        dom: 'Bfrtip',  // Define the placement of buttons and the search box
+                        buttons: [
+                            'excelHtml5',  // Export to Excel
+                            'print'        // Print button
+                        ],
+                        paging: true,       // Enable pagination
+                        pageLength: 10,     // Default number of rows per page
+                        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        responsive: true    // Make the table responsive
+                    });
                 },
                 error: function (response) {
                     alert(response.responseText);

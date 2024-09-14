@@ -961,80 +961,81 @@
                         displaytodaystock();
                         // Print the receipt
                         let printContent = `
-<div style="text-align: center; font-family: Arial, sans-serif; font-size: 12px; max-width: 250px; margin: 0 auto; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
-  <div style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px;">
-    <img src="assets/somcof%20(1).png" alt="SomCoffe Logo" style="width: 50px; height: 50px; margin-bottom: 5px;" />
-    <h2 style="margin: 5px 0; font-size: 16px; font-weight: bold;">SomCoffe</h2>
-    <p style="margin: 0; font-size: 10px; color: #666;">SomCoffe Kismayo, Somalia</p>
+<div style="text-align: center; font-family: Arial, sans-serif; max-width: 100%; width: 58mm; margin: 0 auto; padding: 10px; border: none;">
+  <div style="border-bottom: 1px solid #000; padding-bottom: 10px; margin-bottom: 10px;">
+    <img src="assets/somcof%20(1).png" alt="SomCoffe Logo" style="width: 40px; height: 40px; margin-bottom: 5px;" />
+    <h2 style="margin: 0; font-size: 16px; font-weight: bold; color: #333;">SomCoffe</h2>
+    <p style="margin: 5px 0; font-size: 12px; color: #555;">Kismayo, Somalia</p>
   </div>
 
-  <div style="border-bottom: 1px solid #ddd; padding-bottom: 10px;">
-    <p style="margin: 5px 0; font-size: 12px; color: #333;">EVC: <strong>*712*0614020290*${totalPrice.toFixed(2)}#</strong></p>
-    <p style="margin: 5px 0; font-size: 12px; color: #333;">E-DAHAB: <strong>*712*0624020290*${totalPrice.toFixed(2)}#</strong></p>
+  <div style="margin-bottom: 10px;">
+    <p style="margin: 0; font-size: 12px; color: #333;">EVC: <strong style="font-size: 14px;">*712*0614020290*${totalPrice.toFixed(2)}#</strong></p>
+    <p style="margin: 5px 0; font-size: 12px; color: #333;">E-DAHAB: <strong style="font-size: 14px;">*712*0624020290*${totalPrice.toFixed(2)}#</strong></p>
   </div>
 
-  <div style="border-bottom: 1px solid #ddd; padding-bottom: 10px;">
-    <p style="margin: 5px 0; font-size: 10px;">Customer ID: <strong>${customerId || 'N/A'}</strong></p>
-    <p style="margin: 5px 0; font-size: 10px;">Employee ID: <strong>${employeeId || 'N/A'}</strong></p>
-    <p style="margin: 5px 0; font-size: 10px;">Booking ID: <strong>${bookingId || 'N/A'}</strong></p>
+  <div style="border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 10px 0; margin-bottom: 10px;">
+    <p style="margin: 0; font-size: 10px; color: #555;">Customer ID: <strong>${customerId || 'N/A'}</strong></p>
+    <p style="margin: 5px 0; font-size: 10px; color: #555;">Employee ID: <strong>${employeeId || 'N/A'}</strong></p>
+    <p style="margin: 5px 0; font-size: 10px; color: #555;">Booking ID: <strong>${bookingId || 'N/A'}</strong></p>
     <p style="margin: 5px 0; font-size: 12px; font-weight: bold;">Total Price: $${totalPrice.toFixed(2)}</p>
   </div>
 
-  <table style="width: 100%; margin-top: 10px; font-size: 10px; border-collapse: collapse;" cellpadding="5" cellspacing="0">
-      <thead>
-          <tr style="border-bottom: 1px solid #ddd;">
-              <th style="text-align: left; padding: 5px;">Item</th>
-              <th style="text-align: center; padding: 5px;">Qty</th>
-              <th style="text-align: center; padding: 5px;">Price</th>
-              <th style="text-align: right; padding: 5px;">Total</th>
-          </tr>
-      </thead>
-      <tbody>`;
+  <table style="width: 100%; margin-top: 10px; font-size: 10px; border-collapse: collapse; color: #333;" cellpadding="5" cellspacing="0">
+    <thead>
+      <tr style="border-bottom: 1px solid #000;">
+        <th style="text-align: left; padding: 5px; font-size: 10px;">Item</th>
+        <th style="text-align: center; padding: 5px; font-size: 10px;">Qty</th>
+        <th style="text-align: center; padding: 5px; font-size: 10px;">Price</th>
+        <th style="text-align: right; padding: 5px; font-size: 10px;">Total</th>
+      </tr>
+    </thead>
+    <tbody>`;
 
                         let receiptTotalPrice = 0;
                         Object.values(selectedItems).forEach(itemDetails => {
                             receiptTotalPrice += itemDetails.quantity * itemDetails.price;
                             printContent += `
-      <tr>
-          <td style="padding: 5px 0;">${itemDetails.name}</td>
-          <td style="text-align: center; padding: 5px 0;">${itemDetails.quantity}</td>
-          <td style="text-align: center; padding: 5px 0;">$${itemDetails.price.toFixed(2)}</td>
-          <td style="text-align: right; padding: 5px 0;">$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
-      </tr>`;
+    <tr style="border-bottom: 1px dashed #ccc;">
+      <td style="padding: 5px 0; color: #555;">${itemDetails.name}</td>
+      <td style="text-align: center; padding: 5px 0; color: #555;">${itemDetails.quantity}</td>
+      <td style="text-align: center; padding: 5px 0; color: #555;">$${itemDetails.price.toFixed(2)}</td>
+      <td style="text-align: right; padding: 5px 0; color: #555;">$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
+    </tr>`;
                         });
 
                         printContent += `
-      </tbody>
-      <tfoot>
-          <tr style="border-top: 1px solid #ddd;">
-              <th colspan="3" style="text-align: right; padding: 5px;">Total:</th>
-              <th style="text-align: right; padding: 5px;">$${receiptTotalPrice.toFixed(2)}</th>
-          </tr>
-      </tfoot>
+    </tbody>
+    <tfoot>
+      <tr style="border-top: 1px solid #000;">
+        <th colspan="3" style="text-align: right; padding: 10px; font-size: 12px;">Total:</th>
+        <th style="text-align: right; padding: 10px; font-size: 12px;">$${receiptTotalPrice.toFixed(2)}</th>
+      </tr>
+    </tfoot>
   </table>`;
 
                         if (amountPaid > 0) {
                             printContent += `
-    <div style="border-top: 1px solid #ddd; margin-top: 10px; padding-top: 10px;">
-      <p style="margin: 5px 0;">Amount Paid: $${amountPaid.toFixed(2)}</p>
-      <p style="margin: 5px 0;">Remaining: $${(receiptTotalPrice - amountPaid).toFixed(2)}</p>
+    <div style="border-top: 1px dashed #000; margin-top: 10px; padding-top: 10px;">
+      <p style="margin: 5px 0; font-size: 12px; color: #333;">Amount Paid: <strong>$${amountPaid.toFixed(2)}</strong></p>
+      <p style="margin: 5px 0; font-size: 12px; color: #333;">Remaining: <strong>$${(receiptTotalPrice - amountPaid).toFixed(2)}</strong></p>
     </div>`;
                         }
 
                         printContent += `
-  <div style="margin-top: 10px; border-top: 1px solid #ddd; padding-top: 10px;">
-    <p style="font-weight: bold; margin: 5px 0;">Thank you for your Order!</p>
+  <div style="margin-top: 10px; border-top: 1px solid #000; padding-top: 10px;">
+    <p style="font-weight: bold; font-size: 12px; color: #333;">Thank you for your Order!</p>
     <p style="font-size: 10px; color: #666;">Developed by KismatoICT</p>
   </div>
 </div>`;
 
                         const printWindow = window.open('', '', 'height=400,width=300');
-                        printWindow.document.write('<html><head><title>Order Receipt</title></head><body>');
+                        printWindow.document.write('<html><head><title>Order Receipt</title><style>@media print { body { width: 58mm; } }</style></head><body>');
                         printWindow.document.write(printContent);
                         printWindow.document.write('</body></html>');
                         printWindow.document.close();
                         printWindow.focus();
                         printWindow.print();
+
 
                         $('#selectedItemsList').empty();
                         $('#totalPrice').text('0.00');
@@ -2143,17 +2144,19 @@
                         $('#catmodal').modal('hide');
                         // Print the receipt
                         let printContent = `
-<div style="text-align: center; font-family: Arial, sans-serif; font-size: 12px; max-width: 250px; margin: 0 auto;">
-    <img src="assets/somcof%20(1).png" alt="SomCoffe Logo" style="width: 50px; height: 50px; margin-bottom: 10px;" />
-    <h2 style="margin: 0; font-size: 16px; font-weight: bold;">SomCoffe</h2>
-    <p style="margin: 2px 0; font-size: 12px;">Kismayo, Somalia</p>
+<div style="text-align: center; font-family: Arial, sans-serif; max-width: 250px; margin: 0 auto; padding: 10px; border: none;">
+    <div style="border-bottom: 1px solid #000; padding-bottom: 10px; margin-bottom: 10px;">
+        <img src="assets/somcof%20(1).png" alt="SomCoffe Logo" style="width: 40px; height: 40px; margin-bottom: 5px;" />
+        <h2 style="margin: 0; font-size: 16px; font-weight: bold; color: #333;">SomCoffe</h2>
+        <p style="margin: 5px 0; font-size: 12px; color: #555;">Kismayo, Somalia</p>
+    </div>
 
-    <div style="margin: 10px 0; font-size: 12px;">
-        <p style="margin: 5px 0;">EVC: <strong>*712*0614020290*${totalAmount.toFixed(2)}#</strong></p>
-        <p style="margin: 5px 0;">E-DAHAB: <strong>*712*0624020290*${totalAmount.toFixed(2)}#</strong></p>
+    <div style="margin-bottom: 10px;">
+        <p style="margin: 0; font-size: 12px; color: #333;">EVC: <strong style="font-size: 14px;">*712*0614020290*${totalAmount.toFixed(2)}#</strong></p>
+        <p style="margin: 5px 0; font-size: 12px; color: #333;">E-DAHAB: <strong style="font-size: 14px;">*712*0624020290*${totalAmount.toFixed(2)}#</strong></p>
     </div>
     
-    <hr style="border-top: 1px dashed #ccc; margin: 10px 0;">
+    <hr style="border-top: 1px dashed #000; margin: 10px 0;">
     
     <div style="text-align: left; font-size: 12px;">
         <p style="margin: 2px 0;">Customer ID: <strong>${customerId || 'N/A'}</strong></p>
@@ -2164,11 +2167,11 @@
 
     <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px;" cellpadding="5" cellspacing="0">
         <thead>
-            <tr style="border-bottom: 1px solid #ccc;">
-                <th style="text-align: left; padding: 5px;">Item</th>
-                <th style="text-align: center; padding: 5px;">Qty</th>
-                <th style="text-align: center; padding: 5px;">Price</th>
-                <th style="text-align: right; padding: 5px;">Total</th>
+            <tr style="border-bottom: 1px solid #000;">
+                <th style="text-align: left; padding: 5px; font-size: 12px;">Item</th>
+                <th style="text-align: center; padding: 5px; font-size: 12px;">Qty</th>
+                <th style="text-align: center; padding: 5px; font-size: 12px;">Price</th>
+                <th style="text-align: right; padding: 5px; font-size: 12px;">Total</th>
             </tr>
         </thead>
         <tbody>`;
@@ -2177,18 +2180,18 @@
                         Object.values(selectedItems).forEach(itemDetails => {
                             receiptTotalPrice += itemDetails.quantity * itemDetails.price;
                             printContent += `
-            <tr>
-                <td style="padding: 5px;">${itemDetails.name}</td>
-                <td style="text-align: center; padding: 5px;">${itemDetails.quantity}</td>
-                <td style="text-align: center; padding: 5px;">$${itemDetails.price.toFixed(2)}</td>
-                <td style="text-align: right; padding: 5px;">$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
-            </tr>`;
+        <tr style="border-bottom: 1px dashed #ccc;">
+            <td style="padding: 5px 0; color: #555;">${itemDetails.name}</td>
+            <td style="text-align: center; padding: 5px 0; color: #555;">${itemDetails.quantity}</td>
+            <td style="text-align: center; padding: 5px 0; color: #555;">$${itemDetails.price.toFixed(2)}</td>
+            <td style="text-align: right; padding: 5px 0; color: #555;">$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
+        </tr>`;
                         });
 
                         printContent += `
         </tbody>
         <tfoot>
-            <tr style="border-top: 1px solid #ccc;">
+            <tr style="border-top: 1px solid #000;">
                 <th colspan="3" style="text-align: right; padding: 5px;">Total Price</th>
                 <th style="text-align: right; padding: 5px;">$${receiptTotalPrice.toFixed(2)}</th>
             </tr>
@@ -2204,13 +2207,13 @@
                         }
 
                         printContent += `
-    <hr style="border-top: 1px dashed #ccc;">
-    <p style="margin: 10px 0; font-size: 12px; font-weight: bold;">Thank you for your Order!</p>
+    <hr style="border-top: 1px dashed #000; margin-top: 10px; padding-top: 10px;">
+    <p style="font-weight: bold; font-size: 12px; color: #333;">Thank you for your Order!</p>
     <p style="font-size: 10px; color: #777;">--- Kismayo ICT Solutions ---</p>
 </div>`;
 
                         const printWindow = window.open('', '', 'height=400,width=300');
-                        printWindow.document.write('<html><head><title>Order Receipt</title></head><body>');
+                        printWindow.document.write('<html><head><title>Order Receipt</title><style>@media print { body { width: 58mm; } }</style></head><body>');
                         printWindow.document.write(printContent);
                         printWindow.document.write('</body></html>');
                         printWindow.document.close();

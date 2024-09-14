@@ -1,5 +1,11 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/homepage.Master" AutoEventWireup="true" CodeBehind="items.aspx.cs" Inherits="somcoffe.items" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css"/>
+
+
+
       <style>
       #datatable{
           font-size: 1.4em;
@@ -200,22 +206,22 @@
                         </div>
                     </div>
                 </div>
+<div class="table-responsive">
+    <table class="table" id="datatable">
+        <thead>
+            <tr>
+                <th>sawirka</th>
+                <th>Magaca Alaabta</th>
+                <th>Nooca</th>
+                <th>Qeybta</th>
+                <th>Qiimaha</th>
+                <th>Fal</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
-                <div class="table-responsive">
-                    <table class="table" id="datatable">
-                        <thead>
-                            <tr>
-                                <th>sawirka</th>
-                                <th>Magaca Alaabta</th>
-                                <th>Nooca</th>
-                                <th>Qeybta</th>
-                                <th>Qiimaha</th>
-                                <th>Fal</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
             </div>
         </div>
     </div>
@@ -255,21 +261,23 @@
                     </div>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table" id="datatable1">
-                        <thead>
-                            <tr>
-                                     <th>sawirka</th>
-                           <th>Alaabta</th>
-                                <th>Taariikhda</th>
-                                <th>Tirada La Heli Karo</th>
-                                <th>Tirada La Iibiyey</th>
-                                <th>Tirada Hartay</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+          <div class="table-responsive">
+    <table class="table" id="datatable1">
+        <thead>
+            <tr>
+                <th>sawirka</th>
+                <th>Magaca </th>
+                <th>Taariikhda </th>
+                <th>Tirada la heli karo</th>
+                <th>Tirada la gaday</th>
+                <th>Tirada Hartay</th>
+                <th>Fal</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
             </div>
         </div>
     </div>
@@ -310,22 +318,23 @@
                         </ul>
                     </div>
                 </div>
+<div class="table-responsive">
+    <table class="table" id="todaystocktbl">
+        <thead>
+            <tr>
+                <th>sawirka</th>
+                <th>Magaca Alaabta</th>
+                <th>Taariikhda Stock</th>
+                <th>Quantity Available</th>
+                <th>Quantity Sold</th>
+                <th>Quantity Remaining</th>
+                <th>Fal</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
-                <div class="table-responsive">
-                    <table class="table" id="todaystocktbl">
-                        <thead>
-                            <tr>
-                                     <th>sawirka</th>
-                            <th>Alaabta</th>
-                                <th>Taariikhda</th>
-                                <th>Tirada La Heli Karo</th>
-                                <th>Tirada La Iibiyey</th>
-                                <th>Tirada Hartay</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
             </div>
         </div>
     </div>
@@ -405,9 +414,18 @@
 
 
 
-    <script src="datatables/jquery-3.4.1.min.js"></script>
+ <%--   <script src="datatables/jquery-3.4.1.min.js"></script>--%>
 
+    <!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
 
     <script src="assets/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/dataTables.bootstrap4.min.js"></script>
@@ -625,7 +643,7 @@
                     var section = $("#section").val();
                     var catdrop = $("#catdrop").val();
 
-            
+                  
                     // Validate the form values
                     let isValid = true;
 
@@ -639,26 +657,6 @@
                         document.getElementById('price1').textContent = "Please enter the  Price.";
                         isValid = false;
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     var im = $("#FileUpload1").val();
 
@@ -703,6 +701,10 @@
                                     title: 'Success',
                                     text: r.d
                                 });
+                                $('#catmodal').modal('hide');
+                                clearInputFields();
+                                datadisplay();
+                                getitem();
                             },
                             error: function (r) {
                                 Swal.fire({
@@ -717,6 +719,15 @@
                                 console.log(r);
                             }
                         });
+
+                        function clearInputFields() {
+                            // Replace these lines with code to clear the input fields
+                            $("#itemname").val('');
+                            $("#price").val('');
+                            $("#section").val('');
+                            $("#catdrop").val('');
+                            
+                        }
                     }
                         return false;
                 });
@@ -735,7 +746,7 @@
                         dataType: "json",
                         success: function (r) {
                             var catdrop = $("[id*=catdrop]");
-                            catdrop.empty().append('<option selected="selected" value="0">Please select</option>');
+                            catdrop.empty().append('<option selected="selected" value="">Please select</option>');
                             $.each(r.d, function () {
                                 catdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
                             });
@@ -763,59 +774,70 @@
                         }
                     });
                 }
+            datadisplay();
+            function datadisplay() {
+                $.ajax({
+                    url: 'items.aspx/datadisplay',
+                    dataType: "json",
+                    type: 'POST',
+                    contentType: "application/json",
+                    success: function (response) {
+                        console.log(response);
 
-         
-        datadisplay();
-        function datadisplay() {
-            $.ajax({
-                url: 'items.aspx/datadisplay',
-                dataType: "json",
-                type: 'POST',
-                contentType: "application/json",
-                success: function (response) {
-                    console.log(response)
+                        $("#datatable tbody").empty();
 
-                
-                    $("#datatable tbody").empty();
+                        for (var i = 0; i < response.d.length; i++) {
+                            var id = response.d[i].ItemID;
+                            var name = response.d[i].ItemName;
+                            var CategoryName = response.d[i].CategoryName;
+                            var Section = response.d[i].Section;
+                            var Price = response.d[i].Price;
+                            var image = response.d[i].image;
 
-                    for (var i = 0; i < response.d.length; i++) {
-                        var id = response.d[i].ItemID;
-                        var name = response.d[i].ItemName;
-                        var CategoryName = response.d[i].CategoryName;
-                        var Section = response.d[i].Section;
-                        var Price = response.d[i].Price;
-                        var image = response.d[i].image;
+                            // If 'image' is a URL, wrap it in an <img> tag
+                            var imageTag = '<img src="' + image + '" alt="Item Image" style="width:50px;height:50px;">';
 
-                        // If 'image' is a URL, wrap it in an <img> tag
-                        var imageTag = '<img src="' + image + '" alt="Item Image" style="width:50px;height:50px;">';
+                            $("#datatable tbody").append(
+                                "<tr>" +
+                                "<td>" + imageTag + "</td>" +
+                                "<td>" + name + "</td>" +
+                                "<td>" + CategoryName + "</td>" +
+                                "<td>" + Section + "</td>" +
+                                "<td>" + Price + "</td>" +
+                                "<td>" +
+                                '<a class="me-3 edit-button" data-id="' + id + '">' +
+                                '<img src="assets/img/icons/edit.svg" alt="Edit">' +
+                                '</a>' +
+                                '<a class="me-3 delete-btn" data-id="' + id + '">' +
+                                '<img src="assets/img/icons/delete.svg" alt="Delete">' +
+                                '</a>' +
+                                "</td>" +
+                                "</tr>"
+                            );
+                        }
 
-                        $("#datatable tbody").append(
-                            "<tr>" +
-                            "<td>" + imageTag + "</td>" +
-                            "<td>" + name + "</td>" +
-                            "<td>" + CategoryName + "</td>" +
-                            "<td>" + Section + "</td>" +
-                            "<td>" + Price + "</td>" +
-                            "<td>" +
-                            '<a class="me-3 edit-button" data-id="' + id + '">' +
-                            '<img src="assets/img/icons/edit.svg" alt="Edit">' +
-                            '</a>' +
-                            '<a class="me-3 delete-btn" data-id="' + id + '">' +
-                            '<img src="assets/img/icons/delete.svg" alt="Delete">' +
-                            '</a>' +
-                            "</td>" +
-                            "</tr>"
-                        );
+                        // Initialize DataTable with export, search, and pagination features
+                        $("#datatable").DataTable({
+                            destroy: true,  // Reinitialize DataTable if it exists
+                            dom: 'Bfrtip',  // Show buttons and search
+                            buttons: [
+                                'excelHtml5',  // Export to Excel button
+                                'print'        // Print button
+                            ],
+                            paging: true,
+                            pageLength: 10,
+                            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                            responsive: true
+                        });
+
+                        call();
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
                     }
+                });
+            }
 
-
-                    call();
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                }
-            });
-        }
 
         function submititem1() {
             // Clear previous error messages
@@ -831,7 +853,9 @@
             var section = $("#section").val();
             var catdrop = $("#catdrop").val();
 
-        
+            if  (catdrop === 0) {
+                catdrop === ""
+            }
 
             // Validate the form values
             let isValid = true;
@@ -1577,6 +1601,7 @@
                                 displaystock();
                                 displaytodaystock();
 
+
                             } else {
                                 // Handle errors in the response
                                 Swal.fire({
@@ -1637,29 +1662,25 @@
                     type: 'POST',
                     contentType: "application/json",
                     success: function (response) {
-                        console.log(response)
+                        console.log(response);
 
-
+                        // Empty the tbody before populating the new data
                         $("#todaystocktbl tbody").empty();
 
+                        // Loop through the response to populate the table
                         for (var i = 0; i < response.d.length; i++) {
                             var id = response.d[i].StockID;
                             var ItemName = response.d[i].ItemName;
-                            
-                            
                             var StockDate = response.d[i].StockDate;
                             var QuantityAvailable = response.d[i].QuantityAvailable;
                             var QuantitySold = response.d[i].QuantitySold;
                             var QuantityRemaining = response.d[i].QuantityRemaining;
-                            
                             var image = response.d[i].image;
 
                             // If 'image' is a URL, wrap it in an <img> tag
                             var imageTag = '<img src="' + image + '" alt="Item Image" style="width:50px;height:50px;">';
 
-
-
-
+                            // Append the data as a new row in the table body
                             $("#todaystocktbl tbody").append(
                                 "<tr>" +
                                 "<td>" + imageTag + "</td>" +
@@ -1680,7 +1701,19 @@
                             );
                         }
 
-
+                        // Initialize DataTable after table data is populated
+                        $("#todaystocktbl").DataTable({
+                            destroy: true,  // Destroy existing instance before re-initializing
+                            dom: 'Bfrtip',  // Define where buttons and search box will be placed
+                            buttons: [
+                                'excelHtml5',  // Export to Excel button
+                                'print'        // Print button
+                            ],
+                            paging: true,       // Enable pagination
+                            pageLength: 10,     // Default number of rows per page
+                            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                            responsive: true    // Make the table responsive
+                        });
                     },
                     error: function (response) {
                         alert(response.responseText);
@@ -1771,11 +1804,12 @@
                     type: 'POST',
                     contentType: "application/json",
                     success: function (response) {
-                        console.log(response)
+                        console.log(response);
 
-
+                        // Empty the tbody before populating the new data
                         $("#datatable1 tbody").empty();
 
+                        // Loop through the response to populate the table
                         for (var i = 0; i < response.d.length; i++) {
                             var ItemName = response.d[i].ItemName;
                             var StockDate = response.d[i].StockDate;
@@ -1783,12 +1817,12 @@
                             var QuantitySold = response.d[i].QuantitySold;
                             var QuantityRemaining = response.d[i].QuantityRemaining;
                             var StockID = response.d[i].StockID;
-                            
                             var image = response.d[i].image;
 
                             // If 'image' is a URL, wrap it in an <img> tag
                             var imageTag = '<img src="' + image + '" alt="Item Image" style="width:50px;height:50px;">';
 
+                            // Append the data as a new row in the table body
                             $("#datatable1 tbody").append(
                                 "<tr>" +
                                 "<td>" + imageTag + "</td>" +
@@ -1798,23 +1832,33 @@
                                 "<td>" + QuantitySold + "</td>" +
                                 "<td>" + QuantityRemaining + "</td>" +
                                 "<td>" +
-                                     
-                                '<a class="me-3 -btn btn-success send-btn" data-id="' + StockID + '">' +
-                            '   <button class=" btn btn-success" >Send</button>  ' +
+                                '<a class="me-3 btn btn-success send-btn" data-id="' + StockID + '">' +
+                                '   <button class="btn btn-success">Send</button>' +
                                 '</a>' +
                                 "</td>" +
                                 "</tr>"
                             );
                         }
-                     
 
+                        // Initialize DataTable after the table is populated
+                        $("#datatable1").DataTable({
+                            destroy: true,  // Destroy existing instance before re-initializing
+                            dom: 'Bfrtip',  // Define where buttons and search box will be placed
+                            buttons: [
+                                'excelHtml5',  // Export to Excel button
+                                'print'        // Print button
+                            ],
+                            paging: true,       // Enable pagination
+                            pageLength: 10,     // Default number of rows per page
+                            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                            responsive: true    // Make the table responsive
+                        });
                     },
                     error: function (response) {
                         alert(response.responseText);
                     }
                 });
             }
-
 
 
 
