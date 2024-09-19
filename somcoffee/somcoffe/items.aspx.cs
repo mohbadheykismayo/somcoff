@@ -440,7 +440,7 @@ FROM
 INNER JOIN 
     Items ON Items.ItemID = Item_Stock.ItemID
 WHERE 
-    CONVERT(DATE, Item_Stock.StockDate) = CONVERT(DATE, GETDATE());
+    CONVERT(DATE, Item_Stock.StockDate) = CONVERT(date, DATEADD(HOUR, 10, GETDATE()));
 
 
         ", con);
@@ -512,7 +512,7 @@ WHERE
         }
 
         [WebMethod]
-        public static string submitstock(string itemdrop, string qtya)
+        public static string submitstock(string itemdrop)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
@@ -525,11 +525,11 @@ WHERE
                 
 
                     // Adjust the query to insert the parsed date
-                    string catquery = "INSERT INTO Item_Stock (ItemID, QuantityAvailable, QuantityRemaining) VALUES (@itemdrop, @qtya, @qtya);";
+                    string catquery = "INSERT INTO Item_Stock (ItemID) VALUES (@itemdrop);";
                     using (SqlCommand cmd = new SqlCommand(catquery, con))
                     {
                         cmd.Parameters.AddWithValue("@itemdrop", itemdrop);
-                        cmd.Parameters.AddWithValue("@qtya", qtya);
+                
          // Insert the parsed DateTime object
 
                         cmd.ExecuteNonQuery();
@@ -663,7 +663,7 @@ WHERE
                         "      SUM(Item_Stock.QuantitySold) AS QuantitySold,\r\n        SUM(Item_Stock.QuantityRemaining) AS QuantityRemaining\r\n " +
                         "   FROM \r\n        Item_Stock\r\n    INNER JOIN \r\n        Items ON Items.ItemID = Item_Stock.ItemID\r\n    WHERE\r\n    " +
                         "    Item_Stock.StockID = @id       \r\n    GROUP BY \r\n        Items.ItemID\r\n)\r\n\r\n\r\nINSERT " +
-                        "INTO Item_Stock (ItemID, StockDate, QuantityAvailable, QuantitySold, QuantityRemaining)\r\nSELECT \r\n    ItemID,\r\n    GETDATE(),     " +
+                        "INTO Item_Stock (ItemID, StockDate, QuantityAvailable, QuantitySold, QuantityRemaining)\r\nSELECT \r\n    ItemID,\r\n   DATEADD(HOUR, 10, GETDATE()),     " +
                         "       \r\n    0,                 \r\n    0,            \r\n    0       \r\nFROM \r\n    AggregatedStock;";
                   
                     
@@ -705,7 +705,7 @@ WHERE
                         " \r\n        MAX(Items.Price) AS Price,\r\n        MAX(Item_Stock.StockDate) AS StockDate,\r\n    " +
                         "    SUM(Item_Stock.QuantitySold) AS QuantitySold,\r\n        SUM(Item_Stock.QuantityRemaining) AS QuantityRemaining\r\n   " +
                         " FROM \r\n        Item_Stock\r\n    INNER JOIN \r\n        Items ON Items.ItemID = Item_Stock.ItemID\r\n    GROUP BY \r\n   " +
-                        "     Items.ItemID\r\n)\r\n\r\n\r\nINSERT INTO Item_Stock (ItemID, StockDate, QuantityAvailable, QuantitySold, QuantityRemaining)\r\nSELECT \r\n    ItemID,\r\n    GETDATE(),     " +
+                        "     Items.ItemID\r\n)\r\n\r\n\r\nINSERT INTO Item_Stock (ItemID, StockDate, QuantityAvailable, QuantitySold, QuantityRemaining)\r\nSELECT \r\n    ItemID,\r\n    DATEADD(HOUR, 10, GETDATE()),     " +
                         "     \r\n    0,                 \r\n    0,      \r\n    0   \r\nFROM \r\n    AggregatedStock;\r\n";
                     using (SqlCommand cmd = new SqlCommand(catquery, con))
                     {

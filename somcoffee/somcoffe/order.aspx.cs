@@ -97,7 +97,7 @@ FROM
 INNER JOIN 
     Items ON Items.ItemID = Item_Stock.ItemID
 	WHERE 
-Items.CategoryID = @search   AND CAST(Item_Stock.StockDate AS DATE) = CAST(GETDATE() AS DATE)
+Items.CategoryID = @search   AND CAST(Item_Stock.StockDate AS DATE) = CAST(DATEADD(HOUR, 10, GETDATE()) AS DATE)
 GROUP BY 
     Items.ItemName,
    Items.image
@@ -177,7 +177,7 @@ FROM
 INNER JOIN 
     Items ON Items.ItemID = Item_Stock.ItemID
 	WHERE 
-Items.Section = @search   AND CAST(Item_Stock.StockDate AS DATE) = CAST(GETDATE() AS DATE)
+Items.Section = @search   AND CAST(Item_Stock.StockDate AS DATE) = CAST(DATEADD(HOUR, 10, GETDATE()) AS DATE)
 GROUP BY 
     Items.ItemName,
    Items.image
@@ -322,7 +322,7 @@ GROUP BY
                 // Insert the order into the Orders table
                 using (SqlCommand cmd = new SqlCommand(@"INSERT INTO Orders (CustomerID, EmployeeID, OrderDateTime, TotalAmount)
                                                     OUTPUT INSERTED.OrderID
-                                                    VALUES (@CustomerID, @EmployeeID,  GETDATE(), @TotalAmount)", conn))
+                                                    VALUES (@CustomerID, @EmployeeID,  DATEADD(HOUR, 10, GETDATE()), @TotalAmount)", conn))
                 {
                     cmd.Parameters.AddWithValue("@CustomerID", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@EmployeeID", employeeId.HasValue ? (object)employeeId.Value : DBNull.Value);
@@ -428,7 +428,7 @@ GROUP BY
 SELECT DISTINCT(Orders.OrderID), Orders.OrderDateTime 
 FROM Orders
 INNER JOIN Order_Items ON Orders.OrderID = Order_Items.OrderID
-WHERE CONVERT(date, Orders.OrderDateTime) = CONVERT(date, GETDATE())
+WHERE CONVERT(date, Orders.OrderDateTime) = CONVERT(date, DATEADD(HOUR, 10, GETDATE()))
 ORDER BY Orders.OrderDateTime DESC;
 
 
@@ -645,7 +645,7 @@ GROUP BY Order_Items.ItemID
                                 using (SqlCommand cmd5 = new SqlCommand(@"
                             UPDATE Orders 
                             SET 
-                                OrderDateTime = GETDATE(), 
+                                OrderDateTime = DATEADD(HOUR, 10, GETDATE()), 
                             
                                 TotalAmount = @TotalAmount
                             WHERE OrderID = @OrderID;", con, transaction))
@@ -662,7 +662,7 @@ GROUP BY Order_Items.ItemID
                                     using (SqlCommand cmd = new SqlCommand(@"
                             UPDATE Orders 
                             SET EmployeeID = @EmployeeID, 
-                                OrderDateTime = GETDATE(), 
+                                OrderDateTime = DATEADD(HOUR, 10, GETDATE()), 
                                 CustomerID = @CustomerID,
                                 TotalAmount = @TotalAmount
                             WHERE OrderID = @OrderID;", con, transaction))
