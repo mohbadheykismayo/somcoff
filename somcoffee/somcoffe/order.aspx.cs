@@ -23,37 +23,69 @@ namespace somcoffe
 
 
 
-
         [WebMethod]
-        public static List<ListItem> getemployee()
+        public static List<ListItem> getemployee1(string id)
         {
-            string query = "select EmployeeID,EmployeeName from Employees";
+            List<ListItem> employees = new List<ListItem>();
             string constr = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            // SQL to get the selected employee
+            string selectedEmployeeQuery = "SELECT Employees.EmployeeID, Employees.EmployeeName FROM Employees INNER JOIN Orders ON Employees.EmployeeID = Orders.EmployeeID WHERE Orders.OrderID = @id";
+
+            // SQL to get all employees
+            string allEmployeesQuery = "SELECT EmployeeID, EmployeeName FROM Employees";
+
             using (SqlConnection con = new SqlConnection(constr))
             {
-                using (SqlCommand cmd = new SqlCommand(query))
+                // First, get the selected employee
+                using (SqlCommand cmd = new SqlCommand(selectedEmployeeQuery))
                 {
-                    List<ListItem> customers = new List<ListItem>();
-                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        if (sdr.Read())
+                        {
+                            employees.Add(new ListItem
+                            {
+                                Value = sdr["EmployeeID"].ToString(),
+                                Text = sdr["EmployeeName"].ToString(),
+                                Selected = true // Mark this employee as selected
+                            });
+                        }
+                    }
+                    con.Close();
+                }
+
+                // Now, get all employees
+                using (SqlCommand cmd = new SqlCommand(allEmployeesQuery))
+                {
                     cmd.Connection = con;
                     con.Open();
                     using (SqlDataReader sdr = cmd.ExecuteReader())
                     {
                         while (sdr.Read())
                         {
-                            customers.Add(new ListItem
+                            string employeeID = sdr["EmployeeID"].ToString();
+
+                            // Avoid adding the selected employee again
+                            if (!employees.Any(e => e.Value == employeeID))
                             {
-                                Value = sdr["EmployeeID"].ToString(),
-                                Text = sdr["EmployeeName"].ToString()
-                            });
+                                employees.Add(new ListItem
+                                {
+                                    Value = employeeID,
+                                    Text = sdr["EmployeeName"].ToString()
+                                });
+                            }
                         }
                     }
                     con.Close();
-                    return customers;
                 }
             }
-        }
 
+            return employees;
+        }
 
         public class orderslist
         {
@@ -297,6 +329,69 @@ GROUP BY
             }
         }
 
+
+        public class numner
+        {
+            public string number;
+        }
+
+        [WebMethod]
+        public static numner[] empnumber(string search)
+        {
+            List<numner> details = new List<numner>();
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand(@"  
+       select * from Employees where EmployeeID = @id
+        ", con);
+                cmd.Parameters.AddWithValue("@id", search);
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    numner field = new numner();
+                    field.number = dr["ContactInfo"].ToString();
+
+             
+
+                    details.Add(field);
+                }
+            } // Connection will be automatically closed here
+
+            return details.ToArray();
+        }
+
+
+
+        [WebMethod]
+        public static numner[] empnumber1(string search)
+        {
+            List<numner> details = new List<numner>();
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand(@"  
+       select * from Employees where EmployeeID = @id
+        ", con);
+                cmd.Parameters.AddWithValue("@id", search);
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    numner field = new numner();
+                    field.number = dr["ContactInfo"].ToString();
+
+
+
+                    details.Add(field);
+                }
+            } // Connection will be automatically closed here
+
+            return details.ToArray();
+        }
 
 
 
@@ -655,17 +750,16 @@ GROUP BY Order_Items.ItemID
                                     cmd5.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
                                     cmd5.ExecuteNonQuery();
                                 }
-                                // Update customer credit if customerId or employeeId is provided
-                                if (customerId != 0 || employeeId != 0)
+                                if (employeeId > 0 && (customerId >= 0))
                                 {
                                     // Update the order in the Orders table
                                     using (SqlCommand cmd = new SqlCommand(@"
-                            UPDATE Orders 
-                            SET EmployeeID = @EmployeeID, 
-                                OrderDateTime = DATEADD(HOUR, 10, GETDATE()), 
-                                CustomerID = @CustomerID,
-                                TotalAmount = @TotalAmount
-                            WHERE OrderID = @OrderID;", con, transaction))
+    UPDATE Orders 
+    SET EmployeeID = @EmployeeID, 
+        OrderDateTime = DATEADD(HOUR, 10, GETDATE()), 
+        CustomerID = @CustomerID,
+        TotalAmount = @TotalAmount
+    WHERE OrderID = @OrderID;", con, transaction))
                                     {
                                         cmd.Parameters.AddWithValue("@OrderID", order.orderin);
                                         cmd.Parameters.AddWithValue("@EmployeeID", employeeId);
@@ -677,9 +771,9 @@ GROUP BY Order_Items.ItemID
                                     // Insert or update the credit entry
                                     int creditID;
                                     using (SqlCommand cmd = new SqlCommand(@"
-                            SELECT CreditID
-                            FROM Credits
-                            WHERE OrderID = @OrderID;", con, transaction))
+    SELECT CreditID
+    FROM Credits
+    WHERE OrderID = @OrderID;", con, transaction))
                                     {
                                         cmd.Parameters.AddWithValue("@OrderID", order.orderin);
                                         object result = cmd.ExecuteScalar();
@@ -689,10 +783,10 @@ GROUP BY Order_Items.ItemID
                                     if (creditID > 0)
                                     {
                                         using (SqlCommand cmd = new SqlCommand(@"
-                                UPDATE Credits 
-                                SET CreditAmount = @CreditAmount, 
-                                    IssuedByEmployeeID = @EmployeeID 
-                                WHERE CreditID = @CreditID;", con, transaction))
+        UPDATE Credits 
+        SET CreditAmount = @CreditAmount, 
+            IssuedByEmployeeID = @EmployeeID 
+        WHERE CreditID = @CreditID;", con, transaction))
                                         {
                                             cmd.Parameters.AddWithValue("@CreditID", creditID);
                                             cmd.Parameters.AddWithValue("@CreditAmount", amountPaid);
@@ -703,8 +797,8 @@ GROUP BY Order_Items.ItemID
                                     else
                                     {
                                         using (SqlCommand cmd = new SqlCommand(@"
-                                INSERT INTO Credits (CustomerID, CreditAmount, IssuedByEmployeeID, OrderID)
-                                VALUES (@CustomerID, @CreditAmount, @EmployeeID, @OrderID);", con, transaction))
+        INSERT INTO Credits (CustomerID, CreditAmount, IssuedByEmployeeID, OrderID)
+        VALUES (@CustomerID, @CreditAmount, @EmployeeID, @OrderID);", con, transaction))
                                         {
                                             cmd.Parameters.AddWithValue("@CustomerID", customerId);
                                             cmd.Parameters.AddWithValue("@CreditAmount", amountPaid);
@@ -714,6 +808,7 @@ GROUP BY Order_Items.ItemID
                                         }
                                     }
                                 }
+
                             }
 
                             // Commit the transaction after processing all items

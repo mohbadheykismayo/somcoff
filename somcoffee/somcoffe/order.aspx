@@ -213,6 +213,8 @@
     </div>
   </div>
 </div>
+    <span class="" id="numberDisplay"></span>
+        <span class="" id="numberDisplay1"></span>
 
         <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
@@ -929,10 +931,10 @@
                 const employeeId = isCreditOrder ? $('#employeeID').val() : null;
                 const bookingId = isCreditOrder ? $('#bookingID').val() : null;
                 const amountPaid = isCreditOrder ? (parseFloat($('#amountPaid').val()) || 0) : null;
-
+                var spanText = $('#numberDisplay').text();
 
                 const totalPrice = parseFloat($('#totalPrice').text()) || 0; // Get total price
-                alert(amountPaid);
+     
            
                 // Prepare the data object to be sent to the server
                 const orderData = [];
@@ -955,7 +957,7 @@
 
            
                 console.log(dataToSend);
-
+            
                 $.ajax({
                     url: 'order.aspx/takeOrder',
                     data: JSON.stringify(dataToSend),
@@ -980,8 +982,8 @@
   </div>
 
   <div style="margin-bottom: 10px;">
-    <p style="margin: 0; font-size: 12px; color: #333;">EVC: <strong style="font-size: 14px;">*712*0614020290*${totalPrice.toFixed(2)}#</strong></p>
-    <p style="margin: 5px 0; font-size: 12px; color: #333;">E-DAHAB: <strong style="font-size: 14px;">*712*0624020290*${totalPrice.toFixed(2)}#</strong></p>
+    <p style="margin: 0; font-size: 12px; color: #333;">EVC: <strong style="font-size: 14px;">*712*${spanText || 'N/A'}*${totalPrice.toFixed(2)}#</strong></p>
+    <p style="margin: 5px 0; font-size: 12px; color: #333;">E-DAHAB: <strong style="font-size: 14px;">*712*${spanText || 'N/A'}*${totalPrice.toFixed(2)}#</strong></p>
   </div>
 
   <div style="border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 10px 0; margin-bottom: 10px;">
@@ -1361,6 +1363,66 @@
 
 
  
+        $(document).ready(function () {
+            $('#employeeID').change(function () {
+                var search = $(this).val();
+                $.ajax({
+                    url: 'order.aspx/empnumber',
+                    data: "{'search':'" + search + "' }",
+                    dataType: "json",
+                    type: 'POST',
+                    contentType: "application/json",
+                    success: function (response) {
+                        console.log(response)
+
+                        // Assuming 'response.d' is an array with the number inside
+                        if (response.d && response.d.length > 0) {
+                            var empNumber = response.d[0].number; // Extract the number
+                            $('#numberDisplay').text(empNumber);  // Set the number in the span
+                        }
+              
+
+                     
+
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+
+
+
+
+        // Second AJAX request when the value in the dropdown changes
+        $(document).ready(function () {
+            $('#employeeID1').change(function () {
+                var search = $(this).val();
+                $.ajax({
+                    url: 'order.aspx/empnumber1',
+                    data: "{'search':'" + search + "' }",
+                    dataType: "json",
+                    type: 'POST',
+                    contentType: "application/json",
+                    success: function (response) {
+                        console.log(response);
+
+                        // Assuming 'response.d' is an array with the number inside
+                        if (response.d && response.d.length > 0) {
+                            var empNumber11 = response.d[0].number; // Extract the number
+                            $('#numberDisplay1').text(empNumber11);  // Set the number in the span
+                        }
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+
+
+
 
 
         $(document).ready(function () {
@@ -1796,6 +1858,34 @@
 
 
 
+        $(document).ready(function () {
+
+
+
+            $(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "add_details.aspx/getcust",
+                    data: '{}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var itemdrop = $("[id*=customerID1]");
+                        itemdrop.empty().append('<option selected="selected" value="0">Please select</option>');
+                        $.each(r.d, function () {
+                            itemdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                    }
+                });
+
+
+
+            });
+
+        });
+
 
 
         $(document).ready(function () {
@@ -1813,7 +1903,7 @@
                     dataType: "json",
                     success: function (r) {
                         var itemdrop = $("[id*=customerID]");
-                        itemdrop.empty().append('<option selected="selected" value="0">Please select</option>');
+                        itemdrop.empty().append('<option selected="selected" value="">Please select</option>');
                         $.each(r.d, function () {
                             itemdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
                         });
@@ -2118,7 +2208,7 @@
                 const orderin = $('#orderin').val() || null; // Get BookingID or null if empty
                 const totalAmount = parseFloat($('#totalPrice1').text()) || null; // Convert to number
                 const amountPaid = isCreditOrder ? parseFloat($('#amountPaid1').val()) || 0 : null; // Convert to number
-
+                var spanText1 = $('#numberDisplay1').text();
                 for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
                     orderData.push({
                         ItemID: itemID,
@@ -2163,8 +2253,8 @@
     </div>
 
     <div style="margin-bottom: 10px;">
-        <p style="margin: 0; font-size: 12px; color: #333;">EVC: <strong style="font-size: 14px;">*712*0614020290*${totalAmount.toFixed(2)}#</strong></p>
-        <p style="margin: 5px 0; font-size: 12px; color: #333;">E-DAHAB: <strong style="font-size: 14px;">*712*0624020290*${totalAmount.toFixed(2)}#</strong></p>
+        <p style="margin: 0; font-size: 12px; color: #333;">EVC: <strong style="font-size: 14px;">*712*${spanText1 || 'N/A'}*${totalAmount.toFixed(2)}#</strong></p>
+        <p style="margin: 5px 0; font-size: 12px; color: #333;">E-DAHAB: <strong style="font-size: 14px;">*712*${spanText1 || 'N/A'}*${totalAmount.toFixed(2)}#</strong></p>
     </div>
     
     <hr style="border-top: 1px dashed #000; margin: 10px 0;">
@@ -2247,6 +2337,38 @@
 
                     var row = $(this).closest("tr");
                     var id = $(this).data("id");
+
+
+                // First AJAX request to populate the dropdown
+                $.ajax({
+                    type: "POST",
+                    url: "order.aspx/getemployee1", // Ensure this matches the actual path to your web method
+                    data: JSON.stringify({ 'id': id }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var itemdrop = $("[id*=employeeID1]"); // Assuming employeeID1 is the ID of your <select> element
+                        itemdrop.empty().append('<option value="0">Please select</option>');
+
+                        // Loop through the returned employees and add them to the dropdown
+                        $.each(r.d, function () {
+                            var option = $("<option></option>").val(this['Value']).html(this['Text']);
+
+                            // Check if this employee is marked as selected from the server
+                            if (this['Selected']) {
+                                option.attr("selected", "selected"); // Set the selected attribute
+                            }
+
+                            itemdrop.append(option);
+                        });
+
+                        // Automatically trigger the change event on the dropdown to call the second AJAX
+                        itemdrop.trigger('change');
+                    },
+                    error: function (error) {
+                        console.log("Error: " + error);
+                    }
+                });
 
                     var orderid = row.find("td:nth-child(1)").text();
                     $("#orderin").val(orderid);
