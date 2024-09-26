@@ -298,7 +298,7 @@ ORDER BY Orders.OrderDateTime DESC;
 
 
         [WebMethod]
-        public static string updateemploy(string employname, string number, string username, string password, string id)
+        public static string updateemploy(string employname, string number, string username, string password, string id , string edahab)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
@@ -309,11 +309,12 @@ ORDER BY Orders.OrderDateTime DESC;
                     con.Open();
 
                     // Update the item in the Items table
-                    string catquery = "UPDATE Employees SET EmployeeName = @employname, ContactInfo = @number,username = @username, password = @password WHERE EmployeeID = @id;";
+                    string catquery = "UPDATE Employees SET EmployeeName = @employname, ContactInfo = @number ,edahab = @edahab,username = @username, password = @password WHERE EmployeeID = @id;";
                     using (SqlCommand cmd = new SqlCommand(catquery, con))
                     {
                         cmd.Parameters.AddWithValue("@employname", employname);
                         cmd.Parameters.AddWithValue("@number", number);
+                        cmd.Parameters.AddWithValue("@edahab", edahab);
                         cmd.Parameters.AddWithValue("@username", username);
                         cmd.Parameters.AddWithValue("@password", password);
                         cmd.Parameters.AddWithValue("@id", id);
@@ -334,7 +335,7 @@ ORDER BY Orders.OrderDateTime DESC;
 
 
         [WebMethod]
-        public static string submitemploy(string employname, string number, string username, string password)
+        public static string submitemploy(string employname, string number, string username, string password , string edahab)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
@@ -346,14 +347,14 @@ ORDER BY Orders.OrderDateTime DESC;
 
 
                     // Adjust the query to insert the parsed date
-                    string catquery = "INSERT INTO Employees (EmployeeName, ContactInfo,username,password) VALUES (@employname, @number ,@username,@password);";
+                    string catquery = "INSERT INTO Employees (EmployeeName, ContactInfo,username,password, edahab) VALUES (@employname, @number ,@username,@password ,@edahab);";
                     using (SqlCommand cmd = new SqlCommand(catquery, con))
                     {
                         cmd.Parameters.AddWithValue("@employname", employname);
                         cmd.Parameters.AddWithValue("@number", number);
                         cmd.Parameters.AddWithValue("@username", username);
                         cmd.Parameters.AddWithValue("@password", password);
-
+                        cmd.Parameters.AddWithValue("@edahab", edahab);
 
 
                         cmd.ExecuteNonQuery();

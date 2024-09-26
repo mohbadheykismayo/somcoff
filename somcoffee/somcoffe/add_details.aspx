@@ -5,20 +5,25 @@
     background-color: #dda15e;
 }
       #datatable{
-          font-size: 1.2em;
+          font-size: 2.2em;
+            font-weight:bold;
       }
 
         #datatable1{
-      font-size: 1.2em;
+      font-size: 2.2em;
+        font-weight:bold;
+
   }
 
      
         #todaystocktbl{
-    font-size: 1.2em;
+    font-size: 2.2em;
+      font-weight:bold;
 }
 
             #itemstock{
-    font-size: 1.2em;
+    font-size: 2.2em;
+    font-weight:bold;
 }
 
   

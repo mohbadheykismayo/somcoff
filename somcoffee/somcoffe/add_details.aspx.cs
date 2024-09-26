@@ -256,6 +256,7 @@ namespace somcoffe
             public string ContactInfo;
             public string username;
             public string password;
+            public string edahab;
         }
 
 
@@ -317,6 +318,7 @@ namespace somcoffe
 
                     field.ContactInfo = dr["ContactInfo"].ToString();
 
+                    field.edahab = dr["edahab"].ToString();
 
                     field.username = dr["username"].ToString();
 

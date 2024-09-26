@@ -1,10 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/homepage.Master" AutoEventWireup="true" CodeBehind="items.aspx.cs" Inherits="somcoffe.items" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css"/>
 
 
+    <link href="dtmini/datatables.min.css" rel="stylesheet" />
 
       <style>
           .page-header {
@@ -271,6 +269,7 @@
             <tr>
                 <th>sawirka</th>
                 <th>Magaca </th>
+                      <th>Tirada la heli karo</th>
                 <%--<th>Taariikhda </th>
                 <th>Tirada la heli karo</th>
                 <th>Tirada la gaday</th>
@@ -418,19 +417,15 @@
 
 
 
- <%--   <script src="datatables/jquery-3.4.1.min.js"></script>--%>
+    <script src="datatables/jquery-3.4.1.min.js"></script>
 
     <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<%--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--%>
 
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
 
+
+
+    <script src="dtmini/datatables.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/dataTables.bootstrap4.min.js"></script>
         <script>
@@ -1037,7 +1032,7 @@
                 var qty = $("#qtya").val();
 
                 var id = $("#id1").val();
-             
+ 
                 // Validate the form values
                 let isValid = true;
 
@@ -1065,7 +1060,7 @@
                             if (response.d === 'true') {
                                 Swal.fire(
                                     'Successfully Saved!',
-                                    'You added a new Item!',
+                                    'You added a changer a new item stock!',
                                     'success'
                                 );
                                 $('#stockmodal').modal('hide');
@@ -1243,30 +1238,30 @@
 
 
 
-            //$("#datatable1").on("click", ".edit-button", function (event) {
-            //    event.preventDefault(); // Prevent default behavior
+            $("#datatable1").on("click", ".edit-button", function (event) {
+                event.preventDefault(); // Prevent default behavior
 
-            //    var row = $(this).closest("tr");
-            //    var id = $(this).data("id");
+                var row = $(this).closest("tr");
+                var id = $(this).data("id");
 
  
-            //    var qty = row.find("td:nth-child(3)").text();
-            //    $("#id1").val(id);
+                var qty = row.find("td:nth-child(3)").text();
+                $("#id1").val(id);
              
              
-            //    $("#qtya").val(qty);
+                $("#qtya").val(qty);
 
-            //    document.getElementById('dropee').style.display = 'none';
+                document.getElementById('dropee').style.display = 'none';
 
-            //    document.getElementById('submitbtn1').style.display = 'none';
-            //    document.getElementById('editbtn1').style.display = 'inline-block';
-            //    document.getElementById('deletebtn1').style.display = 'none';
+                document.getElementById('submitbtn1').style.display = 'none';
+                document.getElementById('editbtn1').style.display = 'inline-block';
+                document.getElementById('deletebtn1').style.display = 'none';
+                document.getElementById('editbtn11').style.display = 'none';
+                $('#stockmodal').modal('show');
 
-            //    $('#stockmodal').modal('show');
 
 
-
-            //});
+            });
 
 
 
@@ -1548,7 +1543,7 @@
                 document.getElementById('editbtn11').style.display = 'none';
                 document.getElementById('deletebtn1').style.display = 'none';
                 document.getElementById('dropee').style.display = 'inline-block';
-                document.getElementById('qtydropee').style.display = 'none';
+                document.getElementById('qtydropee').style.display = 'inline-block';
                 $('#stockmodal').modal('show');
 
             }
@@ -1734,7 +1729,7 @@
 
                 var itemdrop = $("#itemdrop").val();
            /*     var date = $("#date").val();*/
-        /*        var qtya = $("#qtya").val();*/
+                var qtya = $("#qtya").val();
            
                 // Validate the form values
                 let isValid = true;
@@ -1748,16 +1743,16 @@
                  //    document.getElementById('price1').textContent = "Please enter a valid date.";
                  //    isValid = false;
                  //}
-                 //if (qtya.trim() === "" || isNaN(qtya)) {
-                 //    document.getElementById('price1').textContent = "Please enter a valid quantity.";
-                 //    isValid = false;
-                 //}
+                 if (qtya.trim() === "" || isNaN(qtya)) {
+                     document.getElementById('price1').textContent = "Please enter a valid quantity.";
+                     isValid = false;
+                 }
 
                 // If all validations pass, proceed with AJAX call
                 if (isValid) {
                     $.ajax({
                         url: 'items.aspx/submitstock',
-                        data: JSON.stringify({ 'itemdrop': itemdrop }),
+                        data: JSON.stringify({ 'itemdrop': itemdrop, 'qtya': qtya }),
                         contentType: 'application/json; charset=utf-8',
                         dataType: 'json',
                         type: 'POST',
@@ -1833,9 +1828,14 @@
                                 "<td>" + imageTag + "</td>" +
                                 "<td>" + ItemName + "</td>" +
                                 //"<td>" + StockDate + "</td>" +
-                                //"<td>" + QuantityAvailable + "</td>" +
+                                "<td>" + QuantityAvailable + "</td>" +
                                 //"<td>" + QuantitySold + "</td>" +
                                 //"<td>" + QuantityRemaining + "</td>" +
+                                "<td>" +
+                                '<a class="me-3 edit-button" data-id="' + StockID + '">' +
+                                '<img src="assets/img/icons/edit.svg" alt="Edit">' +
+                                '</a>' +
+                                   "</td>" +
                                 "<td>" +
                                 '<a class="me-3 btn btn-success send-btn" data-id="' + StockID + '">' +
                                 '   <button class="btn btn-success">Send</button>' +

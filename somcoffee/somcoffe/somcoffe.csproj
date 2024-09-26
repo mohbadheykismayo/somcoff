@@ -112,6 +112,7 @@
     <Content Include="assets\css\dataTables.bootstrap4.min.css" />
     <Content Include="assets\css\somcof.png" />
     <Content Include="assets\css\style.css" />
+    <Content Include="assets\fastclick.js" />
     <Content Include="assets\img\barcode1.png" />
     <Content Include="assets\img\brand\adidas.png" />
     <Content Include="assets\img\brand\colgate.png" />
@@ -607,6 +608,10 @@
     <Content Include="datatables\jquery-3.4.1.min.js" />
     <Content Include="datatables\jzip.js" />
     <Content Include="datatables\pdf.js" />
+    <Content Include="dtmini\datatables.css" />
+    <Content Include="dtmini\datatables.js" />
+    <Content Include="dtmini\datatables.min.css" />
+    <Content Include="dtmini\datatables.min.js" />
     <Content Include="Global.asax" />
     <Content Include="items.aspx" />
     <Content Include="login.aspx" />

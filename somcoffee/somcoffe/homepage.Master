@@ -264,6 +264,9 @@
 </script>
 <script src="assets/js/feather.min.js"></script>
 
+    <script src="assets/fastclick.js"></script>
+
+
 <script src="assets/js/jquery.slimscroll.min.js"></script>
 
 <script src="assets/js/jquery.dataTables.min.js"></script>

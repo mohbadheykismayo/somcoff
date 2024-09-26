@@ -333,6 +333,7 @@ GROUP BY
         public class numner
         {
             public string number;
+            public string edahab;
         }
 
         [WebMethod]
@@ -353,8 +354,8 @@ GROUP BY
                 {
                     numner field = new numner();
                     field.number = dr["ContactInfo"].ToString();
+                    field.edahab = dr["edahab"].ToString();
 
-             
 
                     details.Add(field);
                 }
@@ -383,7 +384,7 @@ GROUP BY
                 {
                     numner field = new numner();
                     field.number = dr["ContactInfo"].ToString();
-
+                    field.edahab = dr["edahab"].ToString();
 
 
                     details.Add(field);
@@ -555,6 +556,35 @@ ORDER BY Orders.OrderDateTime DESC;
 
 
 
+        [WebMethod]
+        public static List<ListItem> getemployee11()
+        {
+            string query = "SELECT EmployeeID, EmployeeName FROM Employees";
+            string constr = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    List<ListItem> customers = new List<ListItem>();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            customers.Add(new ListItem
+                            {
+                                Value = sdr["EmployeeID"].ToString(),
+                                Text = sdr["EmployeeName"].ToString()
+                            });
+                        }
+                    }
+                    con.Close();
+                    return customers;
+                }
+            }
+        }
 
 
 
@@ -645,11 +675,8 @@ GROUP BY Order_Items.ItemID
         }
 
 
-
-
-
         [WebMethod]
-        public static string takeOrder7(OrderData[] orders, int customerId, int employeeId, decimal amountPaid)
+        public static string takeOrder7(OrderData[] orders, int? customerId, int employeeId, decimal amountPaid)
         {
             string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
 
@@ -671,9 +698,9 @@ GROUP BY Order_Items.ItemID
                                     // Get the previous quantity for the order item
                                     int previousQuantity;
                                     using (SqlCommand cmd = new SqlCommand(@"
-                            SELECT Quantity
-                            FROM Order_Items
-                            WHERE OrderItemID = @OrderItemID;", con, transaction))
+                                SELECT Quantity
+                                FROM Order_Items
+                                WHERE OrderItemID = @OrderItemID;", con, transaction))
                                     {
                                         cmd.Parameters.AddWithValue("@OrderItemID", order.OrderItemID);
                                         previousQuantity = (int)cmd.ExecuteScalar();
@@ -684,10 +711,10 @@ GROUP BY Order_Items.ItemID
 
                                     // Update the order item
                                     using (SqlCommand cmd = new SqlCommand(@"
-                            UPDATE Order_Items
-                            SET Quantity = @Quantity,
-                                SubTotalAmount = @SubTotalAmount
-                            WHERE OrderItemID = @OrderItemID;", con, transaction))
+                                UPDATE Order_Items
+                                SET Quantity = @Quantity,
+                                    SubTotalAmount = @SubTotalAmount
+                                WHERE OrderItemID = @OrderItemID;", con, transaction))
                                     {
                                         cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
                                         cmd.Parameters.AddWithValue("@SubTotalAmount", order.SubTotalAmount);
@@ -697,10 +724,10 @@ GROUP BY Order_Items.ItemID
 
                                     // Update the stock based on the quantity difference
                                     using (SqlCommand cmd = new SqlCommand(@"
-                            UPDATE Item_Stock
-                            SET QuantitySold = QuantitySold + @QuantityDifference,
-                                QuantityRemaining = QuantityRemaining - @QuantityDifference
-                            WHERE StockID = @StockID AND ItemID = @ItemID;", con, transaction))
+                                UPDATE Item_Stock
+                                SET QuantitySold = QuantitySold + @QuantityDifference,
+                                    QuantityRemaining = QuantityRemaining - @QuantityDifference
+                                WHERE StockID = @StockID AND ItemID = @ItemID;", con, transaction))
                                     {
                                         cmd.Parameters.AddWithValue("@QuantityDifference", quantityDifference);
                                         cmd.Parameters.AddWithValue("@StockID", order.StockID);
@@ -712,8 +739,8 @@ GROUP BY Order_Items.ItemID
                                 {
                                     // Insert new order item
                                     using (SqlCommand cmd = new SqlCommand(@"
-                            INSERT INTO Order_Items (OrderID, ItemID, StockID, Quantity, SubTotalAmount)
-                            VALUES (@OrderID, @ItemID, @StockID, @Quantity, @SubTotalAmount);", con, transaction))
+                                INSERT INTO Order_Items (OrderID, ItemID, StockID, Quantity, SubTotalAmount)
+                                VALUES (@OrderID, @ItemID, @StockID, @Quantity, @SubTotalAmount);", con, transaction))
                                     {
                                         cmd.Parameters.AddWithValue("@OrderID", order.orderin);
                                         cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
@@ -725,10 +752,10 @@ GROUP BY Order_Items.ItemID
 
                                     // Update stock for the new order item
                                     using (SqlCommand cmd = new SqlCommand(@"
-                            UPDATE Item_Stock
-                            SET QuantitySold = QuantitySold + @Quantity,
-                                QuantityRemaining = QuantityRemaining - @Quantity
-                            WHERE StockID = @StockID AND ItemID = @ItemID;", con, transaction))
+                                UPDATE Item_Stock
+                                SET QuantitySold = QuantitySold + @Quantity,
+                                    QuantityRemaining = QuantityRemaining - @Quantity
+                                WHERE StockID = @StockID AND ItemID = @ItemID;", con, transaction))
                                     {
                                         cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
                                         cmd.Parameters.AddWithValue("@StockID", order.StockID);
@@ -736,34 +763,34 @@ GROUP BY Order_Items.ItemID
                                         cmd.ExecuteNonQuery();
                                     }
                                 }
+
                                 // Update the order in the Orders table
                                 using (SqlCommand cmd5 = new SqlCommand(@"
                             UPDATE Orders 
                             SET 
                                 OrderDateTime = DATEADD(HOUR, 10, GETDATE()), 
-                            
                                 TotalAmount = @TotalAmount
                             WHERE OrderID = @OrderID;", con, transaction))
                                 {
                                     cmd5.Parameters.AddWithValue("@OrderID", order.orderin);
-                             
                                     cmd5.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
                                     cmd5.ExecuteNonQuery();
                                 }
-                                if (employeeId > 0 && (customerId >= 0))
+
+                                if (employeeId > 0 && (customerId.HasValue && customerId.Value >= 0))
                                 {
                                     // Update the order in the Orders table
                                     using (SqlCommand cmd = new SqlCommand(@"
-    UPDATE Orders 
-    SET EmployeeID = @EmployeeID, 
-        OrderDateTime = DATEADD(HOUR, 10, GETDATE()), 
-        CustomerID = @CustomerID,
-        TotalAmount = @TotalAmount
-    WHERE OrderID = @OrderID;", con, transaction))
+                                UPDATE Orders 
+                                SET EmployeeID = @EmployeeID, 
+                                    OrderDateTime = DATEADD(HOUR, 10, GETDATE()), 
+                                    CustomerID = @CustomerID,
+                                    TotalAmount = @TotalAmount
+                                WHERE OrderID = @OrderID;", con, transaction))
                                     {
                                         cmd.Parameters.AddWithValue("@OrderID", order.orderin);
                                         cmd.Parameters.AddWithValue("@EmployeeID", employeeId);
-                                        cmd.Parameters.AddWithValue("@CustomerID", customerId);
+                                        cmd.Parameters.AddWithValue("@CustomerID", customerId ?? (object)DBNull.Value); // Handle nullable CustomerID
                                         cmd.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
                                         cmd.ExecuteNonQuery();
                                     }
@@ -771,9 +798,9 @@ GROUP BY Order_Items.ItemID
                                     // Insert or update the credit entry
                                     int creditID;
                                     using (SqlCommand cmd = new SqlCommand(@"
-    SELECT CreditID
-    FROM Credits
-    WHERE OrderID = @OrderID;", con, transaction))
+                                SELECT CreditID
+                                FROM Credits
+                                WHERE OrderID = @OrderID;", con, transaction))
                                     {
                                         cmd.Parameters.AddWithValue("@OrderID", order.orderin);
                                         object result = cmd.ExecuteScalar();
@@ -783,10 +810,10 @@ GROUP BY Order_Items.ItemID
                                     if (creditID > 0)
                                     {
                                         using (SqlCommand cmd = new SqlCommand(@"
-        UPDATE Credits 
-        SET CreditAmount = @CreditAmount, 
-            IssuedByEmployeeID = @EmployeeID 
-        WHERE CreditID = @CreditID;", con, transaction))
+                                    UPDATE Credits 
+                                    SET CreditAmount = @CreditAmount, 
+                                        IssuedByEmployeeID = @EmployeeID 
+                                    WHERE CreditID = @CreditID;", con, transaction))
                                         {
                                             cmd.Parameters.AddWithValue("@CreditID", creditID);
                                             cmd.Parameters.AddWithValue("@CreditAmount", amountPaid);
@@ -797,10 +824,10 @@ GROUP BY Order_Items.ItemID
                                     else
                                     {
                                         using (SqlCommand cmd = new SqlCommand(@"
-        INSERT INTO Credits (CustomerID, CreditAmount, IssuedByEmployeeID, OrderID)
-        VALUES (@CustomerID, @CreditAmount, @EmployeeID, @OrderID);", con, transaction))
+                                    INSERT INTO Credits (CustomerID, CreditAmount, IssuedByEmployeeID, OrderID)
+                                    VALUES (@CustomerID, @CreditAmount, @EmployeeID, @OrderID);", con, transaction))
                                         {
-                                            cmd.Parameters.AddWithValue("@CustomerID", customerId);
+                                            cmd.Parameters.AddWithValue("@CustomerID", customerId ?? (object)DBNull.Value); // Handle nullable CustomerID
                                             cmd.Parameters.AddWithValue("@CreditAmount", amountPaid);
                                             cmd.Parameters.AddWithValue("@EmployeeID", employeeId);
                                             cmd.Parameters.AddWithValue("@OrderID", order.orderin);
@@ -808,7 +835,6 @@ GROUP BY Order_Items.ItemID
                                         }
                                     }
                                 }
-
                             }
 
                             // Commit the transaction after processing all items
@@ -829,6 +855,190 @@ GROUP BY Order_Items.ItemID
                 return "Error: " + ex.Message;
             }
         }
+
+
+
+        //    [WebMethod]
+        //    public static string takeOrder7(OrderData[] orders, int? customerId, int employeeId, decimal amountPaid)
+        //    {
+        //        string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+        //        try
+        //        {
+        //            using (SqlConnection con = new SqlConnection(cs))
+        //            {
+        //                con.Open();
+
+        //                // Begin a transaction
+        //                using (SqlTransaction transaction = con.BeginTransaction())
+        //                {
+        //                    try
+        //                    {
+        //                        foreach (var order in orders)
+        //                        {
+        //                            if (order.OrderItemID != null)
+        //                            {
+        //                                // Get the previous quantity for the order item
+        //                                int previousQuantity;
+        //                                using (SqlCommand cmd = new SqlCommand(@"
+        //                        SELECT Quantity
+        //                        FROM Order_Items
+        //                        WHERE OrderItemID = @OrderItemID;", con, transaction))
+        //                                {
+        //                                    cmd.Parameters.AddWithValue("@OrderItemID", order.OrderItemID);
+        //                                    previousQuantity = (int)cmd.ExecuteScalar();
+        //                                }
+
+        //                                // Calculate the difference in quantity
+        //                                int quantityDifference = order.Quantity - previousQuantity;
+
+        //                                // Update the order item
+        //                                using (SqlCommand cmd = new SqlCommand(@"
+        //                        UPDATE Order_Items
+        //                        SET Quantity = @Quantity,
+        //                            SubTotalAmount = @SubTotalAmount
+        //                        WHERE OrderItemID = @OrderItemID;", con, transaction))
+        //                                {
+        //                                    cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
+        //                                    cmd.Parameters.AddWithValue("@SubTotalAmount", order.SubTotalAmount);
+        //                                    cmd.Parameters.AddWithValue("@OrderItemID", order.OrderItemID);
+        //                                    cmd.ExecuteNonQuery();
+        //                                }
+
+        //                                // Update the stock based on the quantity difference
+        //                                using (SqlCommand cmd = new SqlCommand(@"
+        //                        UPDATE Item_Stock
+        //                        SET QuantitySold = QuantitySold + @QuantityDifference,
+        //                            QuantityRemaining = QuantityRemaining - @QuantityDifference
+        //                        WHERE StockID = @StockID AND ItemID = @ItemID;", con, transaction))
+        //                                {
+        //                                    cmd.Parameters.AddWithValue("@QuantityDifference", quantityDifference);
+        //                                    cmd.Parameters.AddWithValue("@StockID", order.StockID);
+        //                                    cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
+        //                                    cmd.ExecuteNonQuery();
+        //                                }
+        //                            }
+        //                            else
+        //                            {
+        //                                // Insert new order item
+        //                                using (SqlCommand cmd = new SqlCommand(@"
+        //                        INSERT INTO Order_Items (OrderID, ItemID, StockID, Quantity, SubTotalAmount)
+        //                        VALUES (@OrderID, @ItemID, @StockID, @Quantity, @SubTotalAmount);", con, transaction))
+        //                                {
+        //                                    cmd.Parameters.AddWithValue("@OrderID", order.orderin);
+        //                                    cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
+        //                                    cmd.Parameters.AddWithValue("@StockID", order.StockID);
+        //                                    cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
+        //                                    cmd.Parameters.AddWithValue("@SubTotalAmount", order.SubTotalAmount);
+        //                                    cmd.ExecuteNonQuery();
+        //                                }
+
+        //                                // Update stock for the new order item
+        //                                using (SqlCommand cmd = new SqlCommand(@"
+        //                        UPDATE Item_Stock
+        //                        SET QuantitySold = QuantitySold + @Quantity,
+        //                            QuantityRemaining = QuantityRemaining - @Quantity
+        //                        WHERE StockID = @StockID AND ItemID = @ItemID;", con, transaction))
+        //                                {
+        //                                    cmd.Parameters.AddWithValue("@Quantity", order.Quantity);
+        //                                    cmd.Parameters.AddWithValue("@StockID", order.StockID);
+        //                                    cmd.Parameters.AddWithValue("@ItemID", order.ItemID);
+        //                                    cmd.ExecuteNonQuery();
+        //                                }
+        //                            }
+        //                            // Update the order in the Orders table
+        //                            using (SqlCommand cmd5 = new SqlCommand(@"
+        //                        UPDATE Orders 
+        //                        SET 
+        //                            OrderDateTime = DATEADD(HOUR, 10, GETDATE()), 
+
+        //                            TotalAmount = @TotalAmount
+        //                        WHERE OrderID = @OrderID;", con, transaction))
+        //                            {
+        //                                cmd5.Parameters.AddWithValue("@OrderID", order.orderin);
+
+        //                                cmd5.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+        //                                cmd5.ExecuteNonQuery();
+        //                            }
+        //                            if (employeeId > 0 && (customerId >= 0))
+        //                            {
+        //                                // Update the order in the Orders table
+        //                                using (SqlCommand cmd = new SqlCommand(@"
+        //UPDATE Orders 
+        //SET EmployeeID = @EmployeeID, 
+        //    OrderDateTime = DATEADD(HOUR, 10, GETDATE()), 
+        //    CustomerID = @CustomerID,
+        //    TotalAmount = @TotalAmount
+        //WHERE OrderID = @OrderID;", con, transaction))
+        //                                {
+        //                                    cmd.Parameters.AddWithValue("@OrderID", order.orderin);
+        //                                    cmd.Parameters.AddWithValue("@EmployeeID", employeeId);
+        //                                    cmd.Parameters.AddWithValue("@CustomerID", customerId);
+        //                                    cmd.Parameters.AddWithValue("@TotalAmount", order.TotalAmount);
+        //                                    cmd.ExecuteNonQuery();
+        //                                }
+
+        //                                // Insert or update the credit entry
+        //                                int creditID;
+        //                                using (SqlCommand cmd = new SqlCommand(@"
+        //SELECT CreditID
+        //FROM Credits
+        //WHERE OrderID = @OrderID;", con, transaction))
+        //                                {
+        //                                    cmd.Parameters.AddWithValue("@OrderID", order.orderin);
+        //                                    object result = cmd.ExecuteScalar();
+        //                                    creditID = result != null ? (int)result : 0;
+        //                                }
+
+        //                                if (creditID > 0)
+        //                                {
+        //                                    using (SqlCommand cmd = new SqlCommand(@"
+        //    UPDATE Credits 
+        //    SET CreditAmount = @CreditAmount, 
+        //        IssuedByEmployeeID = @EmployeeID 
+        //    WHERE CreditID = @CreditID;", con, transaction))
+        //                                    {
+        //                                        cmd.Parameters.AddWithValue("@CreditID", creditID);
+        //                                        cmd.Parameters.AddWithValue("@CreditAmount", amountPaid);
+        //                                        cmd.Parameters.AddWithValue("@EmployeeID", employeeId);
+        //                                        cmd.ExecuteNonQuery();
+        //                                    }
+        //                                }
+        //                                else
+        //                                {
+        //                                    using (SqlCommand cmd = new SqlCommand(@"
+        //    INSERT INTO Credits (CustomerID, CreditAmount, IssuedByEmployeeID, OrderID)
+        //    VALUES (@CustomerID, @CreditAmount, @EmployeeID, @OrderID);", con, transaction))
+        //                                    {
+        //                                        cmd.Parameters.AddWithValue("@CustomerID", customerId);
+        //                                        cmd.Parameters.AddWithValue("@CreditAmount", amountPaid);
+        //                                        cmd.Parameters.AddWithValue("@EmployeeID", employeeId);
+        //                                        cmd.Parameters.AddWithValue("@OrderID", order.orderin);
+        //                                        cmd.ExecuteNonQuery();
+        //                                    }
+        //                                }
+        //                            }
+
+        //                        }
+
+        //                        // Commit the transaction after processing all items
+        //                        transaction.Commit();
+        //                        return "Order processed successfully!";
+        //                    }
+        //                    catch (Exception ex)
+        //                    {
+        //                        // Rollback the transaction if an error occurs
+        //                        transaction.Rollback();
+        //                        return "Error: " + ex.Message;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return "Error: " + ex.Message;
+        //        }
+        //    }
 
 
 
