@@ -398,8 +398,8 @@
             <tr>
                 <th>Shaqaalaha</th>
                 <th>Macmiil</th>
-                <th>Lacagta Deynta</th>
-                <th>Hadhaaga</th>
+                <th>Lacagta Bixiye</th>
+                <th>Deynta</th>
                 <th>Waqtiga Dalabka</th>
                 <th>Fal</th>
             </tr>
@@ -551,6 +551,7 @@
 <div class="card-body">
 <div class="row">
         <input id="id11" style="display:none"/>
+            <input id="lacag" style="display:none"/>
 
 <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
@@ -607,7 +608,7 @@
 
 
 
-
+            var lacag = $("#lacag").val();
 
             var qty = $("#qtya").val();
 
@@ -615,13 +616,16 @@
 
             // Validate the form values
             let isValid = true;
+            // Validate the form values
+           
 
-            if (qty.trim() === "") {
-                document.getElementById('itemname11').textContent = "Please enter the  Item Name.";
+            if (isNaN(qty) || qty <= 0) {
+                document.getElementById('itemname11').textContent = "Please enter a valid quantity.";
+                isValid = false;
+            } else if (qty > lacag) {
+                document.getElementById('itemname11').textContent = "Quantity must be less than or equal to available amount.";
                 isValid = false;
             }
-
-
 
 
 
@@ -685,13 +689,14 @@
 
 
 
-            var qty = row.find("td:nth-child(3)").text();
+            var qty = row.find("td:nth-child(4)").text();
+
             $("#id11").val(id);
+         
 
+            $("#lacag").val(qty);
 
-            $("#qtya").val(qty);
-
-  
+       
 
             document.getElementById('editbtn11').style.display = 'inline-block';
          

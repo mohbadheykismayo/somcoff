@@ -9,6 +9,7 @@
      
     </asp:ContentPlaceHolder>
             <link rel="shortcut icon" type="image/x-icon" href="assets/somcof.ico">
+    
 <style>
     body {
             font-size: 3em; /* Adjust the size as needed */
@@ -263,6 +264,9 @@
     });
 </script>
 <script src="assets/js/feather.min.js"></script>
+
+    <script src="assets/fastclick.js"></script>
+
 
 <script src="assets/js/jquery.slimscroll.min.js"></script>
 

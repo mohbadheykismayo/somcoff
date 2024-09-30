@@ -4,8 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>C:\Users\hp\Documents\sawiro somcoffe\somcoffe puplish</_PublishTargetUrl>
-    <History>True|2024-09-19T07:25:45.5614194Z;True|2024-09-19T09:43:46.2547050+03:00;</History>
+    <_PublishTargetUrl>C:\Users\hp\Music\sm</_PublishTargetUrl>
+    <History>True|2024-09-30T19:47:47.4042688Z;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -13,10 +13,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/11/2024 00:47:06</publishTime>
     </File>
     <File Include="add_details.aspx">
-      <publishTime>09/19/2024 09:38:43</publishTime>
+      <publishTime>09/24/2024 23:49:29</publishTime>
     </File>
     <File Include="admin.aspx">
-      <publishTime>09/19/2024 09:36:33</publishTime>
+      <publishTime>09/30/2024 22:42:56</publishTime>
     </File>
     <File Include="assets/bootstrap.min.css">
       <publishTime>08/28/2024 13:16:40</publishTime>
@@ -38,6 +38,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="assets/css/style.css">
       <publishTime>08/16/2024 13:19:22</publishTime>
+    </File>
+    <File Include="assets/fastclick.js">
+      <publishTime>09/24/2024 23:31:54</publishTime>
     </File>
     <File Include="assets/img/barcode1.png">
       <publishTime>08/16/2024 06:07:41</publishTime>
@@ -1759,10 +1762,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>08/08/2018 15:18:16</publishTime>
     </File>
     <File Include="bin/somcoffe.dll">
-      <publishTime>09/19/2024 10:25:42</publishTime>
+      <publishTime>09/30/2024 22:47:36</publishTime>
     </File>
     <File Include="bin/somcoffe.pdb">
-      <publishTime>09/19/2024 10:25:42</publishTime>
+      <publishTime>09/30/2024 22:47:36</publishTime>
     </File>
     <File Include="bin/System.Web.Optimization.dll">
       <publishTime>02/11/2014 18:26:04</publishTime>
@@ -1803,23 +1806,35 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="datatables/pdf.js">
       <publishTime>09/01/2024 21:30:25</publishTime>
     </File>
+    <File Include="dtmini/datatables.css">
+      <publishTime>09/24/2024 15:40:00</publishTime>
+    </File>
+    <File Include="dtmini/datatables.js">
+      <publishTime>09/24/2024 15:40:00</publishTime>
+    </File>
+    <File Include="dtmini/datatables.min.css">
+      <publishTime>09/24/2024 15:40:00</publishTime>
+    </File>
+    <File Include="dtmini/datatables.min.js">
+      <publishTime>09/24/2024 15:40:00</publishTime>
+    </File>
     <File Include="Global.asax">
       <publishTime>08/16/2024 06:04:58</publishTime>
     </File>
     <File Include="homepage.Master">
-      <publishTime>09/11/2024 00:44:54</publishTime>
+      <publishTime>09/29/2024 15:29:06</publishTime>
     </File>
     <File Include="items.aspx">
-      <publishTime>09/19/2024 10:16:46</publishTime>
+      <publishTime>09/24/2024 15:43:27</publishTime>
     </File>
     <File Include="login.aspx">
       <publishTime>09/04/2024 23:12:15</publishTime>
     </File>
     <File Include="order.aspx">
-      <publishTime>09/19/2024 09:41:12</publishTime>
+      <publishTime>09/27/2024 23:26:31</publishTime>
     </File>
     <File Include="order_report.aspx">
-      <publishTime>09/19/2024 09:25:41</publishTime>
+      <publishTime>09/30/2024 22:26:25</publishTime>
     </File>
     <File Include="Site.Master">
       <publishTime>08/16/2024 06:04:58</publishTime>

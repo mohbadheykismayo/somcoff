@@ -1,8 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/homepage.Master" AutoEventWireup="true" CodeBehind="admin.aspx.cs" Inherits="somcoffe.admin" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-        <!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css"/>
+    <link href="dtmini/datatables.min.css" rel="stylesheet" />
 
 
               <style>
@@ -64,9 +62,16 @@
   
 <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
-<label>Phone Number</label>
+<label>EVC</label>
 <input type="text" class="form-control" id="number">
         <small id="number1" class="text-danger"></small>
+</div>
+</div>
+    <div class="col-lg-4 col-sm-6 col-12">
+<div class="form-group">
+<label>E-DAHAB </label>
+<input type="text" class="form-control" id="edahab">
+        <small id="edahab1" class="text-danger"></small>
 </div>
 </div>
 
@@ -294,10 +299,10 @@
 <tr>
 
     <th>magaca </th>
-<th>number ka</th>
+<th>EVC</th>
     <th>UserName</th>
     <th>Password</th>
-
+     <th>EDAHAB</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -393,8 +398,8 @@
             <tr>
                 <th>Shaqaalaha</th>
                 <th>Macmiil</th>
-                <th>Lacagta Deynta</th>
-                <th>Hadhaaga</th>
+                <th>Lacagta Bixiye</th>
+                <th>Deynta</th>
                 <th>Waqtiga Dalabka</th>
                 <th>Fal</th>
             </tr>
@@ -546,6 +551,7 @@
 <div class="card-body">
 <div class="row">
         <input id="id11" style="display:none"/>
+            <input id="lacag" style="display:none"/>
 
 <div class="col-lg-4 col-sm-6 col-12">
 <div class="form-group">
@@ -587,15 +593,7 @@
 
         <!-- jQuery -->
 
-
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
-
+    <script src="dtmini/datatables.min.js"></script>
     <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/dataTables.bootstrap4.min.js"></script>
@@ -610,7 +608,7 @@
 
 
 
-
+            var lacag = $("#lacag").val();
 
             var qty = $("#qtya").val();
 
@@ -618,13 +616,16 @@
 
             // Validate the form values
             let isValid = true;
+            // Validate the form values
+           
 
-            if (qty.trim() === "") {
-                document.getElementById('itemname11').textContent = "Please enter the  Item Name.";
+            if (isNaN(qty) || qty <= 0) {
+                document.getElementById('itemname11').textContent = "Please enter a valid quantity.";
+                isValid = false;
+            } else if (qty > lacag) {
+                document.getElementById('itemname11').textContent = "Quantity must be less than or equal to available amount.";
                 isValid = false;
             }
-
-
 
 
 
@@ -688,13 +689,14 @@
 
 
 
-            var qty = row.find("td:nth-child(3)").text();
+            var qty = row.find("td:nth-child(4)").text();
+
             $("#id11").val(id);
+         
 
+            $("#lacag").val(qty);
 
-            $("#qtya").val(qty);
-
-  
+       
 
             document.getElementById('editbtn11').style.display = 'inline-block';
          
@@ -781,9 +783,11 @@
             document.getElementById('number1').textContent = "";
             document.getElementById('username1').textContent = "";
             document.getElementById('password1').textContent = "";
+            document.getElementById('edahab1').textContent = "";
 
             var employname = $("#employname").val();
             var number = $("#number").val();
+            var edahab = $("#edahab").val();
             var username = $("#username").val();
 
             var password = $("#password").val();
@@ -798,7 +802,11 @@
                 isValid = false;
             }
             if (number.trim() === "") {
-                document.getElementById('number1').textContent = "Please enter a valid date.";
+                document.getElementById('number1').textContent = "Please enter a valid evc.";
+                isValid = false;
+            }
+            if (edahab.trim() === "") {
+                document.getElementById('edahab1').textContent = "Please enter a valid edahab.";
                 isValid = false;
             }
             if (username.trim() === "") {
@@ -819,7 +827,7 @@
 
                 $.ajax({
                     url: 'admin.aspx/updateemploy',
-                    data: "{'id':'" + id + "', 'employname':'" + employname + "','number':'" + number + "','username':'" + username + "','password':'" + password + "'}",
+                    data: "{'id':'" + id + "', 'employname':'" + employname + "','number':'" + number + "','username':'" + username + "','password':'" + password + "','edahab':'" + edahab + "'}",
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     type: 'POST',
@@ -869,10 +877,10 @@
             var number = row.find("td:nth-child(2)").text();
             var user = row.find("td:nth-child(3)").text();
             var pass = row.find("td:nth-child(4)").text();
-
+            var edahab = row.find("td:nth-child(5)").text();
             $("#id").val(id);
             $("#employname").val(name);
-
+            $("#edahab").val(edahab);
             $("#number").val(number);
             $("#username").val(user);
 
@@ -899,9 +907,10 @@
             document.getElementById('number1').textContent = "";
             document.getElementById('username1').textContent = "";
             document.getElementById('password1').textContent = "";
-
+            document.getElementById('edahab1').textContent = "";
             var employname = $("#employname").val();
             var number = $("#number").val();
+            var edahab = $("#edahab").val();
             var username = $("#username").val();
 
             var password = $("#password").val();
@@ -916,7 +925,11 @@
                 isValid = false;
             }
             if (number.trim() === "") {
-                document.getElementById('number1').textContent = "Please enter a valid date.";
+                document.getElementById('number1').textContent = "Please enter a valid evc.";
+                isValid = false;
+            }
+            if (edahab.trim() === "") {
+                document.getElementById('edahab1').textContent = "Please enter a valid edahab.";
                 isValid = false;
             }
             if (username.trim() === "") {
@@ -935,7 +948,7 @@
             if (isValid) {
                 $.ajax({
                     url: 'admin.aspx/submitemploy',
-                    data: JSON.stringify({ 'employname': employname, 'number': number, 'username': username, 'password': password }),
+                    data: JSON.stringify({ 'employname': employname, 'number': number, 'username': username, 'password': password, 'edahab': edahab }),
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     type: 'POST',
@@ -1031,7 +1044,7 @@
                         var ContactInfo = response.d[i].ContactInfo;
                         var username = response.d[i].username;
                         var password = response.d[i].password;
-
+                        var edahab = response.d[i].edahab;
 
 
 
@@ -1045,7 +1058,7 @@
                             "<td>" + ContactInfo + "</td>" +
                             "<td>" + username + "</td>" +
                             "<td>" + password + "</td>" +
-
+                            "<td>" + edahab + "</td>" +
                             "<td>" +
                             '<a class="me-3 edit-button" data-id="' + EmployeeID + '">' +
                             '<img src="assets/img/icons/edit.svg" alt="Edit">' +

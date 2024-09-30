@@ -106,6 +106,10 @@
     <!-- Action buttons -->
     <div class="action-buttons">
         <button id="takeOrderBtn" class="btn btn-success">Bedel Dalabka</button>
+                  <button id="takeOrderBtnspinner" class="btn btn-success"  style="display: none;" type="button" disabled>
+  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  Loading...
+</button>
         <button id="clearSelectionBtn" class="btn btn-warning">Tir Tir Ayaga Dhan</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
     </div>
@@ -192,6 +196,10 @@
         <!-- Clear Button -->
         <button id="clearSelection" class="btn btn-danger">Tir Tir Ayaga dhan</button>
         <button id="takeOrder" class="btn btn-success" style="display: none;">Qaad Dalabka</button>
+          <button id="takeOrderspinner" class="btn btn-success" type="button" disabled>
+  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  Loading...
+</button>
 
         <br />
         <br />
@@ -715,6 +723,9 @@
         $(document).ready(function () {
             let selectedItems = {}; // Object to store selected items
             $('#takeOrder').hide();
+         
+            $('#takeOrderspinner').hide();
+
             // Generic function to handle AJAX requests
             function handleAjaxRequest(url, dropdownSelector) {
                 const search = $(dropdownSelector).val();
@@ -925,6 +936,11 @@
             $('#takeOrder').click(function (e) {
                 e.preventDefault(); // Prevent page refresh
 
+       
+
+
+
+
        /*         const isCreditOrder = $('#isCreditOrder').is(':checked'); // Check if order is credit*/
 
                 // Conditionally assign values based on isCreditOrder
@@ -945,9 +961,20 @@
                     return;  // Stop further processing if employeeId is invalid
                 }
 
-         
+                // Ensure that amountPaid can only be greater than 0 if customerId has a value
+                if (!customerId && amountPaid > 0) {
+                    Swal.fire('Error!', 'Amount paid cannot be greater than 0 without a valid customer.', 'error');
+                    return; // Stop further processing if validation fails
+                }
+
+                if (amountPaid > totalPrice) {
+                    Swal.fire('Error!', 'Amount paid cannot exceed the total amount.', 'error');
+                    return; // Stop further processing if validation fails
+                }
+
      
-           
+                $('#takeOrder').hide();
+                $('#takeOrderspinner').show();
                 // Prepare the data object to be sent to the server
                 const orderData = [];
                 for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
@@ -977,6 +1004,9 @@
                     type: 'POST',
                     contentType: "application/json; charset=utf-8", // Add charset for proper encoding
                     success: function (response) {
+                    
+                        $('#takeOrderspinner').hide();
+                        $('#takeOrder').hide();
                         Swal.fire(
                             'Waxaad Diiwaangalisey Order!',
                             '!',
@@ -2210,6 +2240,7 @@
             $('#takeOrderBtn').click(function (e) {
                 e.preventDefault(); // Prevent page refresh
                 console.log(selectedItems);
+             
 
                 const orderData = [];
            
@@ -2222,8 +2253,7 @@
                 // Check if customerId is 0, then set it to null
                 const customerId = $('#customerID1').val() === '0' ? null : $('#customerID1').val() || "";
 
-                alert(amountPaid);
-                alert(customerId);
+             
 
                 // Ensure that employeeId has a valid value (not empty or 0)
                 if (!employeeId || employeeId === '0') {
@@ -2234,6 +2264,19 @@
                     );
                     return;  // Stop further processing if employeeId is invalid
                 }
+                // Ensure that amountPaid can only be greater than 0 if customerId has a value
+                if (!customerId && amountPaid > 0) {
+                    Swal.fire('Error!', 'Amount paid cannot be greater than 0 without a valid customer.', 'error');
+                    return; // Stop further processing if validation fails
+                }
+
+                if (amountPaid > totalAmount) {
+                    Swal.fire('Error!', 'Amount paid cannot exceed the total amount.', 'error');
+                    return; // Stop further processing if validation fails
+                }
+                $('#takeOrderBtn').hide();
+
+                $('#takeOrderBtnspinner').show();
               
                 for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
                     orderData.push({
@@ -2261,6 +2304,9 @@
                         amountPaid: amountPaid
                     }),
                     success: function (response) {
+                        $('#takeOrderBtn').hide();
+
+                        $('#takeOrderBtnspinner').hide();
 
                         Swal.fire(
                             'Waxaad Badasha Order!',
@@ -2365,7 +2411,36 @@
                     var row = $(this).closest("tr");
                     var id = $(this).data("id");
 
+                // First AJAX request to populate the dropdown
+                $.ajax({
+                    type: "POST",
+                    url: "order.aspx/customer2", // Ensure this matches the actual path to your web method
+                    data: JSON.stringify({ 'id': id }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var itemdrop = $("[id*=customerID1]"); // Assuming employeeID1 is the ID of your <select> element
+                        itemdrop.empty().append('<option value="0">Please select</option>');
 
+                        // Loop through the returned employees and add them to the dropdown
+                        $.each(r.d, function () {
+                            var option = $("<option></option>").val(this['Value']).html(this['Text']);
+
+                            // Check if this employee is marked as selected from the server
+                            if (this['Selected']) {
+                                option.attr("selected", "selected"); // Set the selected attribute
+                            }
+
+                            itemdrop.append(option);
+                        });
+
+                        // Automatically trigger the change event on the dropdown to call the second AJAX
+                        itemdrop.trigger('change');
+                    },
+                    error: function (error) {
+                        console.log("Error: " + error);
+                    }
+                });
                 // First AJAX request to populate the dropdown
                 $.ajax({
                     type: "POST",

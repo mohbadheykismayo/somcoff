@@ -10,6 +10,9 @@
       #datatable{
           font-size: 2.2em;
       }
+        #datatable5{
+      font-size: 2.2em;
+  }
         #datatable1{
       font-size: 2.2em;
   }
@@ -241,6 +244,93 @@
   </div>
 </div>
 
+
+        <!-- Modal -->
+<div class="modal fade" id="catmodal8" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel8">Report ka Shaqaalaha</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+                         <div class="col-12">
+        <div class="page-header">
+<div class="page-title">
+
+
+</div>
+
+</div>
+
+<div class="card">
+<div class="card-body">
+<div class="table-top">
+<div class="search-set">
+<div class="search-path">
+<a class="btn btn-filter" id="filter_search111">
+<img src="assets/img/icons/filter.svg" alt="img">
+<span><img src="assets/img/icons/closes.svg" alt="img"></span>
+</a>
+</div>
+<div class="search-input">
+<a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+</div>
+</div>
+<div class="wordset">
+<ul>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+</li>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
+</li>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+<div class="table-responsive">
+    <table class="table" id="datatable5">
+        <thead>
+            <tr>
+  
+          
+                <th>Magaca Shaqaalaha</th>
+                <th>Lacagta guud</th>
+                <th>Lacagta Laga Qabtay</th>
+                <th>Lacagta  Maqan</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+</div>
+</div>
+    </div>
+          </div>
+
+          
+
+
+
+
+      </div>
+     <%-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>--%>
+    </div>
+  </div>
+</div>
+
         <!-- Modal -->
 <div class="modal fade" id="catmodal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
@@ -427,7 +517,8 @@
 <th>Lacagta la Bixiye </th>
 
 <th>Lacagta La Hartay</th>
-                <th>Action</th>
+                <th>Order da</th>
+                  <th>Shaqalaha</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -630,12 +721,18 @@
                         $("#todaystocktbl tbody").append(
                             "<tr>" +
                             "<td>" + OrderDate + "</td>" +
-                            "<td>" + TotalAmountPerDay + "</td>" +
+            
                             "<td>" + TotalCombinedAmountPerDay + "</td>" +
+                            "<td>" + TotalAmountPerDay + "</td>" +
                             "<td>" + totalcredits + "</td>" +
                             "<td>" +
-                            '<a class="me-3 edit-button" data-id="' + OrderDate + '">' +
-                            '<img src="assets/img/icons/edit.svg" alt="Edit">' +
+                            '<a class="me-3 btn btn-success text-white edit-button" data-id="' + OrderDate + '">' +
+                            ' Check Orders' +
+                            "</a>" +
+                            "</td>" +
+                            "<td>" +
+                            '<a class="me-3 btn btn-success text-white edit-button1" data-id="' + OrderDate + '">' +
+                            ' check Employee' +
                             "</a>" +
                             "</td>" +
                             "</tr>"
@@ -723,7 +820,7 @@
             var id = $(this).data("id");
 
 
-  
+         
        
             $.ajax({
                 url: 'order_report.aspx/dailyreports',
@@ -754,6 +851,11 @@
                             "<td>" + CreditAmount + "</td>" +
                             "<td>" + TotalAmount + "</td>" +
                             "<td>" + TotalCombinedAmount + "</td>" +
+                            "<td>" +
+                            '<a class="me-3 edit-button" data-id="' + OrderID + '">' +
+                            '<img src="assets/img/icons/edit.svg" alt="Edit">' +
+                            "</td>" +
+
                             "</tr>"
                         );
                     }
@@ -782,6 +884,63 @@
 
             $('#catmodal').modal('show');
         });
+
+
+
+
+        $("#todaystocktbl").on("click", ".edit-button1", function (event) {
+            event.preventDefault(); // Prevent default behavior
+
+            var row = $(this).closest("tr");
+            var id = $(this).data("id");
+
+
+
+            $.ajax({
+                url: 'order_report.aspx/empreports',
+                data: JSON.stringify({ 'id': id }),
+                dataType: "json",
+                type: 'POST',
+                contentType: "application/json",
+                success: function (response) {
+                    console.log(response);
+
+                    // Clear the DataTable properly if it's already initialized
+                    var table = $("#datatable5").DataTable();
+                    table.clear().draw();
+
+                    // Populate the table rows
+                    for (var i = 0; i < response.d.length; i++) {
+                        var EmployeeName = response.d[i].EmployeeName;
+                        var CreditAmount = response.d[i].CreditAmount;
+                        var TotalAmount = response.d[i].TotalAmount;
+                        var TotalCombinedAmount = response.d[i].TotalCombinedAmount;
+                        var EmployeeID = response.d[i].EmployeeID;
+
+                        // Add new row to the table
+                        table.row.add([
+                            EmployeeName,
+                            TotalAmount,
+                     
+                            TotalCombinedAmount,
+                            CreditAmount,
+                          
+                        
+                        ]).draw(false); // Draw the new row without resetting the page
+                    }
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    console.log(response.responseText);
+                }
+            });
+
+            $('#catmodal8').modal('show');
+        });
+
+
+
+
 
 
         $("#itemstock").on("click", ".edit-button", function (event) {

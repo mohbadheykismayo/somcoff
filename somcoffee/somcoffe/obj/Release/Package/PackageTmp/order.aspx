@@ -86,10 +86,8 @@
         <strong>Total Price: $<span id="totalPrice1">0.00</span></strong>
     </div>
 
-            <div>
-    <input type="checkbox" id="isCreditOrder1" /> Credit Order
-</div>
-<div id="creditDetails1" style="display: none;">
+       
+<div id="creditDetails1" >
     <label for="customerID1">Macmiilka:</label>
     <select class="form-control" id="customerID1">
         <option value="">Select Customer</option>
@@ -108,7 +106,12 @@
     <!-- Action buttons -->
     <div class="action-buttons">
         <button id="takeOrderBtn" class="btn btn-success">Bedel Dalabka</button>
+                  <button id="takeOrderBtnspinner" class="btn btn-success"  style="display: none;" type="button" disabled>
+  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  Loading...
+</button>
         <button id="clearSelectionBtn" class="btn btn-warning">Tir Tir Ayaga Dhan</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
     </div>
 </div>
 
@@ -168,10 +171,10 @@
         <!-- Total Price -->
         <div>Total Price: $<span id="totalPrice">0.00</span></div>
 
-        <div>
+     <%--   <div>
           <input type="checkbox" id="isCreditOrder" /> Credit Order
-        </div>
-        <div id="creditDetails" style="display: none;">
+        </div>--%>
+        <div id="creditDetails" >
           <label for="customerID">Macmiilka:</label>
           <select class="form-control" id="customerID">
             <option value="">Select Customer</option>
@@ -193,6 +196,10 @@
         <!-- Clear Button -->
         <button id="clearSelection" class="btn btn-danger">Tir Tir Ayaga dhan</button>
         <button id="takeOrder" class="btn btn-success" style="display: none;">Qaad Dalabka</button>
+          <button id="takeOrderspinner" class="btn btn-success" type="button" disabled>
+  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  Loading...
+</button>
 
         <br />
         <br />
@@ -213,6 +220,10 @@
     </div>
   </div>
 </div>
+    <span class="" id="numberDisplay"></span>
+        <span class="" id="edisplay"></span>
+            <span class="" id="edisplay1"></span>
+        <span class="" id="numberDisplay1"></span>
 
         <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
@@ -712,6 +723,9 @@
         $(document).ready(function () {
             let selectedItems = {}; // Object to store selected items
             $('#takeOrder').hide();
+         
+            $('#takeOrderspinner').hide();
+
             // Generic function to handle AJAX requests
             function handleAjaxRequest(url, dropdownSelector) {
                 const search = $(dropdownSelector).val();
@@ -732,8 +746,8 @@
                             // Check if item is already selected
                             const isChecked = selectedItems[item.ItemID] ? 'checked' : '';
                             const itemHtml = `
-<div class="col-lg-2 col-md-2 col-sm-2 mb-4">
-      <div class="card h-100 shadow-sm border-0 ${isChecked ? 'highlight-card' : ''}">
+<div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+      <div class="card h-70 shadow-sm border-0 ${isChecked ? 'highlight-card' : ''}">
         <label class="card-label" style="cursor: pointer;">
           <input type="checkbox" class="item-checkbox d-none" 
                  data-item-id="${item.ItemID}" 
@@ -910,30 +924,57 @@
                 toggleTakeOrderButton();
             });
 
-            // Toggle visibility of credit order details
-            $('#isCreditOrder').change(function () {
-                if ($(this).is(':checked')) {
-                    $('#creditDetails').show();
-                } else {
-                    $('#creditDetails').hide();
-                }
-            });
+            //// Toggle visibility of credit order details
+            //$('#isCreditOrder').change(function () {
+            //    if ($(this).is(':checked')) {
+            //        $('#creditDetails').show();
+            //    } else {
+            //        $('#creditDetails').hide();
+            //    }
+            //});
 
             $('#takeOrder').click(function (e) {
                 e.preventDefault(); // Prevent page refresh
 
-                const isCreditOrder = $('#isCreditOrder').is(':checked'); // Check if order is credit
+       
+
+
+
+
+       /*         const isCreditOrder = $('#isCreditOrder').is(':checked'); // Check if order is credit*/
 
                 // Conditionally assign values based on isCreditOrder
-                const customerId = isCreditOrder ? $('#customerID').val() : null;
-                const employeeId = isCreditOrder ? $('#employeeID').val() : null;
-                const bookingId = isCreditOrder ? $('#bookingID').val() : null;
-                const amountPaid = isCreditOrder ? (parseFloat($('#amountPaid').val()) || 0) : null;
-
-
+                const customerId = $('#customerID').val();  // Customer ID can be null
+                const employeeId = $('#employeeID').val();  // Employee ID is required
+                const bookingId = $('#bookingID').val();
+                const amountPaid = (parseFloat($('#amountPaid').val()) || 0);
+                var spanText = $('#numberDisplay').text();
                 const totalPrice = parseFloat($('#totalPrice').text()) || 0; // Get total price
-                alert(amountPaid);
-           
+                var spanText5 = $('#edisplay').text();
+                // Ensure that employeeId has a valid value (not empty or 0)
+                if (!employeeId || employeeId === '0') {
+                    Swal.fire(
+                        'Error!',
+                        'Please enter a valid Employee ID.',
+                        'error'
+                    );
+                    return;  // Stop further processing if employeeId is invalid
+                }
+
+                // Ensure that amountPaid can only be greater than 0 if customerId has a value
+                if (!customerId && amountPaid > 0) {
+                    Swal.fire('Error!', 'Amount paid cannot be greater than 0 without a valid customer.', 'error');
+                    return; // Stop further processing if validation fails
+                }
+
+                if (amountPaid > totalPrice) {
+                    Swal.fire('Error!', 'Amount paid cannot exceed the total amount.', 'error');
+                    return; // Stop further processing if validation fails
+                }
+
+     
+                $('#takeOrder').hide();
+                $('#takeOrderspinner').show();
                 // Prepare the data object to be sent to the server
                 const orderData = [];
                 for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
@@ -947,15 +988,15 @@
 
                 const dataToSend = {
                     order: orderData,
-                    customerId: customerId,
-                    employeeId: employeeId,
-                    isCreditOrder: isCreditOrder, // Always include isCreditOrder
+                    customerId: customerId ,
+                    employeeId: employeeId || null,
+            
                     amountPaid: amountPaid // Include amountPaid as null or a value
                 };
 
            
                 console.log(dataToSend);
-
+            
                 $.ajax({
                     url: 'order.aspx/takeOrder',
                     data: JSON.stringify(dataToSend),
@@ -963,6 +1004,9 @@
                     type: 'POST',
                     contentType: "application/json; charset=utf-8", // Add charset for proper encoding
                     success: function (response) {
+                    
+                        $('#takeOrderspinner').hide();
+                        $('#takeOrder').hide();
                         Swal.fire(
                             'Waxaad Diiwaangalisey Order!',
                             '!',
@@ -975,23 +1019,23 @@
 <div style="text-align: center; font-family: Arial, sans-serif; max-width: 100%; width: 58mm; margin: 0 auto; padding: 10px; border: none;">
   <div style="border-bottom: 1px solid #000; padding-bottom: 10px; margin-bottom: 10px;">
     <img src="assets/somcof%20(1).png" alt="SomCoffe Logo" style="width: 40px; height: 40px; margin-bottom: 5px;" />
-    <h2 style="margin: 0; font-size: 16px; font-weight: bold; color: #333;">SomCoffe</h2>
-    <p style="margin: 5px 0; font-size: 12px; color: #555;">Kismayo, Somalia</p>
+    <h2 style="margin: 0; font-size: 16px; font-weight: bold; color: #000;">SomCoffe</h2>
+    <p style="margin: 5px 0; font-size: 12px; color: #000;">Kismayo, Somalia</p>
   </div>
 
   <div style="margin-bottom: 10px;">
-    <p style="margin: 0; font-size: 12px; color: #333;">EVC: <strong style="font-size: 14px;">*712*0614020290*${totalPrice.toFixed(2)}#</strong></p>
-    <p style="margin: 5px 0; font-size: 12px; color: #333;">E-DAHAB: <strong style="font-size: 14px;">*712*0624020290*${totalPrice.toFixed(2)}#</strong></p>
+    <p style="margin: 0; font-size: 12px; color: #000;">EVC: <strong style="font-size: 14px; color: #000;">*712*${spanText || 'N/A'}*${totalPrice.toFixed(2)}#</strong></p>
+    <p style="margin: 5px 0; font-size: 12px; color: #000;">E-DAHAB: <strong style="font-size: 14px; color: #000;">*712*${spanText5 || 'N/A'}*${totalPrice.toFixed(2)}#</strong></p>
   </div>
 
   <div style="border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 10px 0; margin-bottom: 10px;">
-    <p style="margin: 0; font-size: 10px; color: #555;">Customer ID: <strong>${customerId || 'N/A'}</strong></p>
-    <p style="margin: 5px 0; font-size: 10px; color: #555;">Employee ID: <strong>${employeeId || 'N/A'}</strong></p>
-    <p style="margin: 5px 0; font-size: 10px; color: #555;">Booking ID: <strong>${bookingId || 'N/A'}</strong></p>
-    <p style="margin: 5px 0; font-size: 12px; font-weight: bold;">Total Price: $${totalPrice.toFixed(2)}</p>
+    <p style="margin: 0; font-size: 10px; color: #000;">Customer ID: <strong>${customerId || 'N/A'}</strong></p>
+    <p style="margin: 5px 0; font-size: 10px; color: #000;">Employee ID: <strong>${employeeId || 'N/A'}</strong></p>
+    <p style="margin: 5px 0; font-size: 10px; color: #000;">Booking ID: <strong>${bookingId || 'N/A'}</strong></p>
+    <p style="margin: 5px 0; font-size: 12px; font-weight: bold; color: #000;">Total Price: $${totalPrice.toFixed(2)}</p>
   </div>
 
-  <table style="width: 100%; margin-top: 10px; font-size: 10px; border-collapse: collapse; color: #333;" cellpadding="5" cellspacing="0">
+  <table style="width: 100%; margin-top: 10px; font-size: 10px; border-collapse: collapse; color: #000;" cellpadding="5" cellspacing="0">
     <thead>
       <tr style="border-bottom: 1px solid #000;">
         <th style="text-align: left; padding: 5px; font-size: 10px;">Item</th>
@@ -1006,11 +1050,11 @@
                         Object.values(selectedItems).forEach(itemDetails => {
                             receiptTotalPrice += itemDetails.quantity * itemDetails.price;
                             printContent += `
-    <tr style="border-bottom: 1px dashed #ccc;">
-      <td style="padding: 5px 0; color: #555;">${itemDetails.name}</td>
-      <td style="text-align: center; padding: 5px 0; color: #555;">${itemDetails.quantity}</td>
-      <td style="text-align: center; padding: 5px 0; color: #555;">$${itemDetails.price.toFixed(2)}</td>
-      <td style="text-align: right; padding: 5px 0; color: #555;">$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
+    <tr style="border-bottom: 1px dashed #000;">
+      <td style="padding: 5px 0; color: #000;">${itemDetails.name}</td>
+      <td style="text-align: center; padding: 5px 0; color: #000;">${itemDetails.quantity}</td>
+      <td style="text-align: center; padding: 5px 0; color: #000;">$${itemDetails.price.toFixed(2)}</td>
+      <td style="text-align: right; padding: 5px 0; color: #000;">$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
     </tr>`;
                         });
 
@@ -1027,15 +1071,15 @@
                         if (amountPaid > 0) {
                             printContent += `
     <div style="border-top: 1px dashed #000; margin-top: 10px; padding-top: 10px;">
-      <p style="margin: 5px 0; font-size: 12px; color: #333;">Amount Paid: <strong>$${amountPaid.toFixed(2)}</strong></p>
-      <p style="margin: 5px 0; font-size: 12px; color: #333;">Remaining: <strong>$${(receiptTotalPrice - amountPaid).toFixed(2)}</strong></p>
+      <p style="margin: 5px 0; font-size: 12px; color: #000;">Amount Paid: <strong>$${amountPaid.toFixed(2)}</strong></p>
+      <p style="margin: 5px 0; font-size: 12px; color: #000;">Remaining: <strong>$${(receiptTotalPrice - amountPaid).toFixed(2)}</strong></p>
     </div>`;
                         }
 
                         printContent += `
   <div style="margin-top: 10px; border-top: 1px solid #000; padding-top: 10px;">
-    <p style="font-weight: bold; font-size: 12px; color: #333;">Thank you for your Order!</p>
-    <p style="font-size: 10px; color: #666;">Developed by KismatoICT</p>
+    <p style="font-weight: bold; font-size: 12px; color: #000;">Thank you for your Order!</p>
+    <p style="font-size: 10px; color: #000;">Developed by KismatoICT</p>
   </div>
 </div>`;
 
@@ -1361,6 +1405,70 @@
 
 
  
+        $(document).ready(function () {
+            $('#employeeID').change(function () {
+                var search = $(this).val();
+                $.ajax({
+                    url: 'order.aspx/empnumber',
+                    data: "{'search':'" + search + "' }",
+                    dataType: "json",
+                    type: 'POST',
+                    contentType: "application/json",
+                    success: function (response) {
+                        console.log(response)
+
+                        // Assuming 'response.d' is an array with the number inside
+                        if (response.d && response.d.length > 0) {
+                            var empNumber = response.d[0].number;
+                            var empedahab = response.d[0].edahab;// Extract the number
+                            $('#numberDisplay').text(empNumber);
+                            $('#edisplay').text(empedahab);// Set the number in the span
+                        }
+              
+
+                     
+
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+
+
+
+
+        // Second AJAX request when the value in the dropdown changes
+        $(document).ready(function () {
+            $('#employeeID1').change(function () {
+                var search = $(this).val();
+                $.ajax({
+                    url: 'order.aspx/empnumber1',
+                    data: "{'search':'" + search + "' }",
+                    dataType: "json",
+                    type: 'POST',
+                    contentType: "application/json",
+                    success: function (response) {
+                        console.log(response);
+
+                        // Assuming 'response.d' is an array with the number inside
+                        if (response.d && response.d.length > 0) {
+                            var empNumber11 = response.d[0].number;
+                            var edh = response.d[0].edahab;// Extract the number
+                            $('#numberDisplay1').text(empNumber11);
+                            $('#edisplay1').text(edh); // Set the number in the span
+                        }
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+
+
+
 
 
         $(document).ready(function () {
@@ -1734,18 +1842,19 @@
 
         $(document).ready(function () {
 
-
+    
 
             $(function () {
 
 
                 $.ajax({
                     type: "POST",
-                    url: "order.aspx/getemployee",
+                    url: "order.aspx/getemployee11",
                     data: '{}',
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (r) {
+                    
                         var itemdrop = $("[id*=employeeID]");
                         itemdrop.empty().append('<option selected="selected" value="0">Please select</option>');
                         $.each(r.d, function () {
@@ -1761,35 +1870,33 @@
         });
 
 
-        $(document).ready(function () {
+        //$(document).ready(function () {
 
 
 
-            $(function () {
+        //    $(function () {
 
 
-                $.ajax({
-                    type: "POST",
-                    url: "order.aspx/getemployee",
-                    data: '{}',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (r) {
-                        var itemdrop = $("[id*=employeeID1]");
-                        itemdrop.empty().append('<option selected="selected" value="0">Please select</option>');
-                        $.each(r.d, function () {
-                            itemdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
-                        });
-                    }
-                });
+        //        $.ajax({
+        //            type: "POST",
+        //            url: "order.aspx/getemployee",
+        //            data: '{}',
+        //            contentType: "application/json; charset=utf-8",
+        //            dataType: "json",
+        //            success: function (r) {
+        //                var itemdrop = $("[id*=employeeID1]");
+        //                itemdrop.empty().append('<option selected="selected" value="0">Please select</option>');
+        //                $.each(r.d, function () {
+        //                    itemdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
+        //                });
+        //            }
+        //        });
 
 
 
-            });
+        //    });
 
-        });
-
-
+        //});
 
 
 
@@ -1812,8 +1919,38 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (r) {
-                        var itemdrop = $("[id*=customerID]");
+                        var itemdrop = $("[id*=customerID1]");
                         itemdrop.empty().append('<option selected="selected" value="0">Please select</option>');
+                        $.each(r.d, function () {
+                            itemdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                    }
+                });
+
+
+
+            });
+
+        });
+
+
+
+        $(document).ready(function () {
+
+
+
+            $(function () {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "add_details.aspx/getcust",
+                    data: '{}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var itemdrop = $("[id*=customerID]");
+                        itemdrop.empty().append('<option selected="selected" value="">Please select</option>');
                         $.each(r.d, function () {
                             itemdrop.append($("<option></option>").val(this['Value']).html(this['Text']));
                         });
@@ -1849,8 +1986,8 @@
                             // Check if item is already selected
                             const isChecked = selectedItems[item.ItemID] ? 'checked' : '';
                             const itemHtml = `
-<div class="col-lg-6 col-md-6 col-sm-12 mb-4">
-    <div class="card h-100 shadow-sm border-0 ${isChecked ? 'highlight-card' : ''}">
+<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+    <div class="card h-60 shadow-sm border-0 ${isChecked ? 'highlight-card' : ''}">
         <label class="card-label" style="cursor: pointer;">
             <input type="checkbox" class="item-checkbox d-none" 
                    data-item-id="${item.ItemID}" 
@@ -2099,26 +2236,48 @@
                 $('.item-checkbox').prop('checked', false);
             });
 
-            // Toggle visibility of credit order details
-            $('#isCreditOrder1').change(function () {
-                if ($(this).is(':checked')) {
-                    $('#creditDetails1').show();
-                } else {
-                    $('#creditDetails1').hide();
-                }
-            });
           
             $('#takeOrderBtn').click(function (e) {
                 e.preventDefault(); // Prevent page refresh
                 console.log(selectedItems);
+             
 
                 const orderData = [];
-                const customerId = $('#customerID1').val() || null; // Get CustomerID or null if empty
+           
                 const employeeId = $('#employeeID1').val() || null; // Get EmployeeID or null if empty
                 const orderin = $('#orderin').val() || null; // Get BookingID or null if empty
                 const totalAmount = parseFloat($('#totalPrice1').text()) || null; // Convert to number
-                const amountPaid = isCreditOrder ? parseFloat($('#amountPaid1').val()) || 0 : null; // Convert to number
+                const amountPaid = (parseFloat($('#amountPaid1').val()) || 0);
+                var spanText1 = $('#numberDisplay1').text();
+                var spanText3 = $('#edisplay1').text();
+                // Check if customerId is 0, then set it to null
+                const customerId = $('#customerID1').val() === '0' ? null : $('#customerID1').val() || "";
 
+             
+
+                // Ensure that employeeId has a valid value (not empty or 0)
+                if (!employeeId || employeeId === '0') {
+                    Swal.fire(
+                        'Error!',
+                        'Please enter a valid Employee ID.',
+                        'error'
+                    );
+                    return;  // Stop further processing if employeeId is invalid
+                }
+                // Ensure that amountPaid can only be greater than 0 if customerId has a value
+                if (!customerId && amountPaid > 0) {
+                    Swal.fire('Error!', 'Amount paid cannot be greater than 0 without a valid customer.', 'error');
+                    return; // Stop further processing if validation fails
+                }
+
+                if (amountPaid > totalAmount) {
+                    Swal.fire('Error!', 'Amount paid cannot exceed the total amount.', 'error');
+                    return; // Stop further processing if validation fails
+                }
+                $('#takeOrderBtn').hide();
+
+                $('#takeOrderBtnspinner').show();
+              
                 for (const [itemID, itemDetails] of Object.entries(selectedItems)) {
                     orderData.push({
                         ItemID: itemID,
@@ -2145,6 +2304,9 @@
                         amountPaid: amountPaid
                     }),
                     success: function (response) {
+                        $('#takeOrderBtn').hide();
+
+                        $('#takeOrderBtnspinner').hide();
 
                         Swal.fire(
                             'Waxaad Badasha Order!',
@@ -2158,31 +2320,31 @@
 <div style="text-align: center; font-family: Arial, sans-serif; max-width: 250px; margin: 0 auto; padding: 10px; border: none;">
     <div style="border-bottom: 1px solid #000; padding-bottom: 10px; margin-bottom: 10px;">
         <img src="assets/somcof%20(1).png" alt="SomCoffe Logo" style="width: 40px; height: 40px; margin-bottom: 5px;" />
-        <h2 style="margin: 0; font-size: 16px; font-weight: bold; color: #333;">SomCoffe</h2>
-        <p style="margin: 5px 0; font-size: 12px; color: #555;">Kismayo, Somalia</p>
+        <h2 style="margin: 0; font-size: 18px; font-weight: bold; color: #000;">SomCoffe</h2>
+        <p style="margin: 5px 0; font-size: 14px; color: #000;">Kismayo, Somalia</p>
     </div>
 
     <div style="margin-bottom: 10px;">
-        <p style="margin: 0; font-size: 12px; color: #333;">EVC: <strong style="font-size: 14px;">*712*0614020290*${totalAmount.toFixed(2)}#</strong></p>
-        <p style="margin: 5px 0; font-size: 12px; color: #333;">E-DAHAB: <strong style="font-size: 14px;">*712*0624020290*${totalAmount.toFixed(2)}#</strong></p>
+        <p style="margin: 0; font-size: 14px; color: #000;">EVC: <strong style="font-size: 16px; color: #000;">*712*${spanText1 || 'N/A'}*${totalAmount.toFixed(2)}#</strong></p>
+        <p style="margin: 5px 0; font-size: 14px; color: #000;">E-DAHAB: <strong style="font-size: 16px; color: #000;">*712*${spanText3 || 'N/A'}*${totalAmount.toFixed(2)}#</strong></p>
     </div>
     
     <hr style="border-top: 1px dashed #000; margin: 10px 0;">
     
-    <div style="text-align: left; font-size: 12px;">
-        <p style="margin: 2px 0;">Customer ID: <strong>${customerId || 'N/A'}</strong></p>
-        <p style="margin: 2px 0;">Employee ID: <strong>${employeeId || 'N/A'}</strong></p>
-        <p style="margin: 2px 0;">Booking ID: <strong>${orderin || 'N/A'}</strong></p>
-        <p style="margin: 5px 0;">Total Price: <strong>$${totalAmount.toFixed(2)}</strong></p>
+    <div style="text-align: left; font-size: 14px;">
+        <p style="margin: 2px 0; color: #000;">Customer ID: <strong style="color: #000;">${customerId || 'N/A'}</strong></p>
+        <p style="margin: 2px 0; color: #000;">Employee ID: <strong style="color: #000;">${employeeId || 'N/A'}</strong></p>
+        <p style="margin: 2px 0; color: #000;">Booking ID: <strong style="color: #000;">${orderin || 'N/A'}</strong></p>
+        <p style="margin: 5px 0; color: #000;">Total Price: <strong style="color: #000;">$${totalAmount.toFixed(2)}</strong></p>
     </div>
 
-    <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px;" cellpadding="5" cellspacing="0">
+    <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px;" cellpadding="5" cellspacing="0">
         <thead>
             <tr style="border-bottom: 1px solid #000;">
-                <th style="text-align: left; padding: 5px; font-size: 12px;">Item</th>
-                <th style="text-align: center; padding: 5px; font-size: 12px;">Qty</th>
-                <th style="text-align: center; padding: 5px; font-size: 12px;">Price</th>
-                <th style="text-align: right; padding: 5px; font-size: 12px;">Total</th>
+                <th style="text-align: left; padding: 5px; font-size: 14px; color: #000;">Item</th>
+                <th style="text-align: center; padding: 5px; font-size: 14px; color: #000;">Qty</th>
+                <th style="text-align: center; padding: 5px; font-size: 14px; color: #000;">Price</th>
+                <th style="text-align: right; padding: 5px; font-size: 14px; color: #000;">Total</th>
             </tr>
         </thead>
         <tbody>`;
@@ -2191,11 +2353,11 @@
                         Object.values(selectedItems).forEach(itemDetails => {
                             receiptTotalPrice += itemDetails.quantity * itemDetails.price;
                             printContent += `
-        <tr style="border-bottom: 1px dashed #ccc;">
-            <td style="padding: 5px 0; color: #555;">${itemDetails.name}</td>
-            <td style="text-align: center; padding: 5px 0; color: #555;">${itemDetails.quantity}</td>
-            <td style="text-align: center; padding: 5px 0; color: #555;">$${itemDetails.price.toFixed(2)}</td>
-            <td style="text-align: right; padding: 5px 0; color: #555;">$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
+        <tr style="border-bottom: 1px dashed #000;">
+            <td style="padding: 5px 0; color: #000;">${itemDetails.name}</td>
+            <td style="text-align: center; padding: 5px 0; color: #000;">${itemDetails.quantity}</td>
+            <td style="text-align: center; padding: 5px 0; color: #000;">$${itemDetails.price.toFixed(2)}</td>
+            <td style="text-align: right; padding: 5px 0; color: #000;">$${(itemDetails.quantity * itemDetails.price).toFixed(2)}</td>
         </tr>`;
                         });
 
@@ -2203,24 +2365,24 @@
         </tbody>
         <tfoot>
             <tr style="border-top: 1px solid #000;">
-                <th colspan="3" style="text-align: right; padding: 5px;">Total Price</th>
-                <th style="text-align: right; padding: 5px;">$${receiptTotalPrice.toFixed(2)}</th>
+                <th colspan="3" style="text-align: right; padding: 5px; font-size: 14px; color: #000;">Total Price</th>
+                <th style="text-align: right; padding: 5px; font-size: 14px; color: #000;">$${receiptTotalPrice.toFixed(2)}</th>
             </tr>
         </tfoot>
     </table>`;
 
                         if (amountPaid > 0) {
                             printContent += `
-    <div style="margin: 10px 0; font-size: 12px;">
-        <p>Amount Paid: <strong>$${amountPaid.toFixed(2)}</strong></p>
-        <p>Remaining Amount: <strong>$${(receiptTotalPrice - amountPaid).toFixed(2)}</strong></p>
+    <div style="margin: 10px 0; font-size: 14px; color: #000;">
+        <p>Amount Paid: <strong style="color: #000;">$${amountPaid.toFixed(2)}</strong></p>
+        <p>Remaining Amount: <strong style="color: #000;">$${(receiptTotalPrice - amountPaid).toFixed(2)}</strong></p>
     </div>`;
                         }
 
                         printContent += `
     <hr style="border-top: 1px dashed #000; margin-top: 10px; padding-top: 10px;">
-    <p style="font-weight: bold; font-size: 12px; color: #333;">Thank you for your Order!</p>
-    <p style="font-size: 10px; color: #777;">--- Kismayo ICT Solutions ---</p>
+    <p style="font-weight: bold; font-size: 14px; color: #000;">Thank you for your Order!</p>
+    <p style="font-size: 12px; color: #000;">--- Kismayo ICT Solutions ---</p>
 </div>`;
 
                         const printWindow = window.open('', '', 'height=400,width=300');
@@ -2230,6 +2392,7 @@
                         printWindow.document.close();
                         printWindow.focus();
                         printWindow.print();
+
 
                         $('#selectedItemsList1').empty();
                         $('#totalPrice1').text('0.00');
@@ -2247,6 +2410,67 @@
 
                     var row = $(this).closest("tr");
                     var id = $(this).data("id");
+
+                // First AJAX request to populate the dropdown
+                $.ajax({
+                    type: "POST",
+                    url: "order.aspx/customer2", // Ensure this matches the actual path to your web method
+                    data: JSON.stringify({ 'id': id }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var itemdrop = $("[id*=customerID1]"); // Assuming employeeID1 is the ID of your <select> element
+                        itemdrop.empty().append('<option value="0">Please select</option>');
+
+                        // Loop through the returned employees and add them to the dropdown
+                        $.each(r.d, function () {
+                            var option = $("<option></option>").val(this['Value']).html(this['Text']);
+
+                            // Check if this employee is marked as selected from the server
+                            if (this['Selected']) {
+                                option.attr("selected", "selected"); // Set the selected attribute
+                            }
+
+                            itemdrop.append(option);
+                        });
+
+                        // Automatically trigger the change event on the dropdown to call the second AJAX
+                        itemdrop.trigger('change');
+                    },
+                    error: function (error) {
+                        console.log("Error: " + error);
+                    }
+                });
+                // First AJAX request to populate the dropdown
+                $.ajax({
+                    type: "POST",
+                    url: "order.aspx/getemployee1", // Ensure this matches the actual path to your web method
+                    data: JSON.stringify({ 'id': id }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        var itemdrop = $("[id*=employeeID1]"); // Assuming employeeID1 is the ID of your <select> element
+                        itemdrop.empty().append('<option value="0">Please select</option>');
+
+                        // Loop through the returned employees and add them to the dropdown
+                        $.each(r.d, function () {
+                            var option = $("<option></option>").val(this['Value']).html(this['Text']);
+
+                            // Check if this employee is marked as selected from the server
+                            if (this['Selected']) {
+                                option.attr("selected", "selected"); // Set the selected attribute
+                            }
+
+                            itemdrop.append(option);
+                        });
+
+                        // Automatically trigger the change event on the dropdown to call the second AJAX
+                        itemdrop.trigger('change');
+                    },
+                    error: function (error) {
+                        console.log("Error: " + error);
+                    }
+                });
 
                     var orderid = row.find("td:nth-child(1)").text();
                     $("#orderin").val(orderid);

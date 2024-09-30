@@ -37,25 +37,28 @@ namespace somcoffe
                 SqlCommand cmd = new SqlCommand(@"  
  
 	 
-	SELECT 
-    CAST(O.OrderDateTime AS DATE) AS OrderDate, 
-    SUM(COALESCE(O.TotalAmount, 0)) AS TotalAmountPerDay,  -- Total order amount per day
-    SUM(COALESCE(C.CreditAmount, O.TotalAmount)) AS TotalCreditsPaid,  -- Total amount paid (Credit or Full Payment)
-    SUM(COALESCE(O.TotalAmount, 0) - COALESCE(C.CreditAmount, 0)) AS TotalRemainingAmount,  -- Remaining unpaid credit (if any)
-    SUM(COALESCE(C.CreditAmount, O.TotalAmount)) AS TotalMoneyReceived,  -- Total money received (credit payments or full payments)
-    SUM(COALESCE(O.TotalAmount, 0)) - SUM(COALESCE(C.CreditAmount, O.TotalAmount)) AS Difference,  -- Difference between TotalAmountPerDay and TotalMoneyReceived
-    COUNT(OI.OrderItemID) AS TotalItemsSold,  -- Total number of items sold per day
-    SUM(OI.SubTotalAmount) AS TotalItemsSubTotal -- Total of items' SubTotalAmount per day
+WITH OrdersWithItems AS (
+    -- Select distinct OrderIDs from the Orders table that have items in the Order_Items table
+    SELECT DISTINCT o.OrderID, o.OrderDateTime, o.TotalAmount
+    FROM [db_aa5963_somcoffee].[dbo].[Orders] o
+    JOIN [db_aa5963_somcoffee].[dbo].[Order_Items] oi 
+        ON o.OrderID = oi.OrderID  -- Only include orders that have items
+)
+SELECT 
+    CONVERT(DATE, owi.OrderDateTime) AS OrderDate,                 -- Group by order date (without time)
+    SUM(owi.TotalAmount) AS TotalAmountSum,                        -- Sum of total order amounts (this is the amount that should be in hand)
+    SUM(ISNULL(c.CreditAmount, owi.TotalAmount)) AS ActualMoneyInHand,  -- Actual money paid: CreditAmount or TotalAmount if no credit
+    SUM(owi.TotalAmount - ISNULL(c.CreditAmount, owi.TotalAmount)) AS MissingAmount -- Difference between TotalAmount and actual money paid (i.e., missing amount)
 FROM 
-    Orders O
+    OrdersWithItems owi  -- Use only orders with items from the CTE
 LEFT JOIN 
-    Credits C ON O.OrderID = C.OrderID
-INNER JOIN 
-    Order_Items OI ON O.OrderID = OI.OrderID
+    [db_aa5963_somcoffee].[dbo].[Credits] c
+    ON owi.OrderID = c.OrderID  -- Join Orders with Credits on OrderID
 GROUP BY 
-    CAST(O.OrderDateTime AS DATE)
+    CONVERT(DATE, owi.OrderDateTime)  -- Group by the date part of OrderDateTime
 ORDER BY 
-    OrderDate DESC;
+    OrderDate;
+
 
         ", con);
 
@@ -64,12 +67,12 @@ ORDER BY
                 {
                     dailyorderreport field = new dailyorderreport();
                     field.OrderDate = dr["OrderDate"].ToString();
-                    field.totalcredits = dr["Difference"].ToString();
+                    field.totalcredits = dr["MissingAmount"].ToString();
 
 
-                    field.TotalAmountPerDay = dr["TotalAmountPerDay"].ToString();
+                    field.TotalAmountPerDay = dr["ActualMoneyInHand"].ToString();
 
-                    field.TotalCombinedAmountPerDay = dr["TotalMoneyReceived"].ToString();
+                    field.TotalCombinedAmountPerDay = dr["TotalAmountSum"].ToString();
 
 
 
@@ -86,7 +89,8 @@ ORDER BY
             public string OrderDateTime;
             public string CustomerName;
             public string EmployeeName;
-
+            public string EmployeeID;
+            
             public string CreditAmount;
             public string TotalAmount;
             public string TotalCombinedAmount;
@@ -222,6 +226,89 @@ WHERE
         }
 
 
+        public class empreport
+        {
+            public string EmployeeID;
+            public string EmployeeName;
+            public string CreditAmount;
+            public string TotalAmount;
+            public string TotalCombinedAmount;
+
+        }
+
+        [WebMethod]
+        public static empreport[] empreports(string id)
+        {
+            List<empreport> details = new List<empreport>();
+            string cs = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand(@"  
+
+	
+
+	
+	
+  WITH OrdersWithItems AS (
+    -- Select distinct OrderIDs from the Orders table that have items in the Order_Items table
+    SELECT DISTINCT o.OrderID, o.OrderDateTime, o.TotalAmount, o.EmployeeID
+    FROM [db_aa5963_somcoffee].[dbo].[Orders] o
+    JOIN [db_aa5963_somcoffee].[dbo].[Order_Items] oi 
+        ON o.OrderID = oi.OrderID  -- Only include orders that have items
+)
+SELECT 
+    e.EmployeeName,                                         -- Include EmployeeName from the Employees table
+    owi.EmployeeID,                                         -- Group by EmployeeID
+    CONVERT(DATE, owi.OrderDateTime) AS OrderDate,          -- Group by order date (without time)
+    SUM(owi.TotalAmount) AS TotalAmountSum,                 -- Sum of total order amounts (this is the amount that should be in hand)
+    SUM(ISNULL(c.CreditAmount, owi.TotalAmount)) AS ActualMoneyInHand,  -- Actual money paid: CreditAmount or TotalAmount if no credit
+    SUM(owi.TotalAmount - ISNULL(c.CreditAmount, owi.TotalAmount)) AS MissingAmount -- Difference between TotalAmount and actual money paid (i.e., missing amount)
+FROM 
+    OrdersWithItems owi  -- Use only orders with items from the CTE
+LEFT JOIN 
+    [db_aa5963_somcoffee].[dbo].[Credits] c
+    ON owi.OrderID = c.OrderID  -- Join Orders with Credits on OrderID
+JOIN
+    [db_aa5963_somcoffee].[dbo].[Employees] e
+    ON owi.EmployeeID = e.EmployeeID  -- Join with Employees table to get EmployeeName
+WHERE 
+    CONVERT(DATE, owi.OrderDateTime) = @id  -- Filter for orders on September 30, 2024
+GROUP BY 
+    e.EmployeeName,                                         -- Group by EmployeeName
+    owi.EmployeeID,                                         -- Group by EmployeeID
+    CONVERT(DATE, owi.OrderDateTime)                        -- Group by the date part of OrderDateTime
+ORDER BY 
+    owi.EmployeeID,                                         -- Order by EmployeeID
+    OrderDate;
+
+
+        ", con);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    empreport field = new empreport();
+     
+
+          
+
+                    field.EmployeeID = dr["EmployeeID"].ToString();
+                    field.EmployeeName = dr["EmployeeName"].ToString();
+                    field.CreditAmount = dr["MissingAmount"].ToString();
+
+                    field.TotalAmount = dr["TotalAmountSum"].ToString();
+                    field.TotalCombinedAmount = dr["ActualMoneyInHand"].ToString();
+
+              
+                    details.Add(field);
+                }
+            } // Connection will be automatically closed here
+
+            return details.ToArray();
+        }
 
 
 

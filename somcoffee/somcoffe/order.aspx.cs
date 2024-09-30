@@ -22,6 +22,70 @@ namespace somcoffe
         }
 
 
+        [WebMethod]
+        public static List<ListItem> customer2(string id)
+        {
+            List<ListItem> employees = new List<ListItem>();
+            string constr = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+
+            // SQL to get the selected employee
+            string selectedEmployeeQuery = "SELECT Customers.CustomerID, Customers.CustomerName FROM Customers INNER JOIN Orders ON Customers.CustomerID = Orders.CustomerID where Orders.OrderID =@id  ";
+
+            // SQL to get all employees
+            string allEmployeesQuery = "SELECT CustomerID, CustomerName FROM Customers";
+
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                // First, get the selected employee
+                using (SqlCommand cmd = new SqlCommand(selectedEmployeeQuery))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        if (sdr.Read())
+                        {
+                            employees.Add(new ListItem
+                            {
+                                Value = sdr["CustomerID"].ToString(),
+                                Text = sdr["CustomerName"].ToString(),
+                                Selected = true // Mark this employee as selected
+                            });
+                        }
+                    }
+                    con.Close();
+                }
+
+                // Now, get all employees
+                using (SqlCommand cmd = new SqlCommand(allEmployeesQuery))
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            string employeeID = sdr["CustomerID"].ToString();
+
+                            // Avoid adding the selected employee again
+                            if (!employees.Any(e => e.Value == employeeID))
+                            {
+                                employees.Add(new ListItem
+                                {
+                                    Value = employeeID,
+                                    Text = sdr["CustomerName"].ToString()
+                                });
+                            }
+                        }
+                    }
+                    con.Close();
+                }
+            }
+
+            return employees;
+        }
+
 
         [WebMethod]
         public static List<ListItem> getemployee1(string id)
@@ -777,16 +841,16 @@ GROUP BY Order_Items.ItemID
                                     cmd5.ExecuteNonQuery();
                                 }
 
-                                if (employeeId > 0 && (customerId.HasValue && customerId.Value >= 0))
+                                try
                                 {
                                     // Update the order in the Orders table
                                     using (SqlCommand cmd = new SqlCommand(@"
-                                UPDATE Orders 
-                                SET EmployeeID = @EmployeeID, 
-                                    OrderDateTime = DATEADD(HOUR, 10, GETDATE()), 
-                                    CustomerID = @CustomerID,
-                                    TotalAmount = @TotalAmount
-                                WHERE OrderID = @OrderID;", con, transaction))
+        UPDATE Orders 
+        SET EmployeeID = @EmployeeID, 
+            OrderDateTime = DATEADD(HOUR, 10, GETDATE()), 
+            CustomerID = @CustomerID,
+            TotalAmount = @TotalAmount
+        WHERE OrderID = @OrderID;", con, transaction))
                                     {
                                         cmd.Parameters.AddWithValue("@OrderID", order.orderin);
                                         cmd.Parameters.AddWithValue("@EmployeeID", employeeId);
@@ -798,9 +862,9 @@ GROUP BY Order_Items.ItemID
                                     // Insert or update the credit entry
                                     int creditID;
                                     using (SqlCommand cmd = new SqlCommand(@"
-                                SELECT CreditID
-                                FROM Credits
-                                WHERE OrderID = @OrderID;", con, transaction))
+        SELECT CreditID
+        FROM Credits
+        WHERE OrderID = @OrderID;", con, transaction))
                                     {
                                         cmd.Parameters.AddWithValue("@OrderID", order.orderin);
                                         object result = cmd.ExecuteScalar();
@@ -809,11 +873,12 @@ GROUP BY Order_Items.ItemID
 
                                     if (creditID > 0)
                                     {
+                                        // Update the credit entry if it exists
                                         using (SqlCommand cmd = new SqlCommand(@"
-                                    UPDATE Credits 
-                                    SET CreditAmount = @CreditAmount, 
-                                        IssuedByEmployeeID = @EmployeeID 
-                                    WHERE CreditID = @CreditID;", con, transaction))
+            UPDATE Credits 
+            SET CreditAmount = @CreditAmount, 
+                IssuedByEmployeeID = @EmployeeID 
+            WHERE CreditID = @CreditID;", con, transaction))
                                         {
                                             cmd.Parameters.AddWithValue("@CreditID", creditID);
                                             cmd.Parameters.AddWithValue("@CreditAmount", amountPaid);
@@ -823,9 +888,10 @@ GROUP BY Order_Items.ItemID
                                     }
                                     else
                                     {
+                                        // Insert a new credit entry if it doesn't exist
                                         using (SqlCommand cmd = new SqlCommand(@"
-                                    INSERT INTO Credits (CustomerID, CreditAmount, IssuedByEmployeeID, OrderID)
-                                    VALUES (@CustomerID, @CreditAmount, @EmployeeID, @OrderID);", con, transaction))
+            INSERT INTO Credits (CustomerID, CreditAmount, IssuedByEmployeeID, OrderID)
+            VALUES (@CustomerID, @CreditAmount, @EmployeeID, @OrderID);", con, transaction))
                                         {
                                             cmd.Parameters.AddWithValue("@CustomerID", customerId ?? (object)DBNull.Value); // Handle nullable CustomerID
                                             cmd.Parameters.AddWithValue("@CreditAmount", amountPaid);
@@ -835,6 +901,13 @@ GROUP BY Order_Items.ItemID
                                         }
                                     }
                                 }
+                                catch (SqlException ex)
+                                {
+                                    // Handle exception (log error, rollback transaction, etc.)
+                                    transaction.Rollback();
+                                    throw;
+                                }
+
                             }
 
                             // Commit the transaction after processing all items

@@ -1,24 +1,26 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/homepage.Master" AutoEventWireup="true" CodeBehind="order_report.aspx.cs" Inherits="somcoffe.order_report" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-            <!-- DataTables CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css"/>
+
+    <link href="dtmini/datatables.min.css" rel="stylesheet" />
           <style>
               .page-header {
     background-color: #dda15e;
 }
 
       #datatable{
-          font-size: 1.2em;
+          font-size: 2.2em;
       }
+        #datatable5{
+      font-size: 2.2em;
+  }
         #datatable1{
-      font-size: 1.2em;
+      font-size: 2.2em;
   }
               #todaystocktbl{
-    font-size: 1.2em;
+    font-size: 2.2em;
 }
             #itemstock{
-    font-size: 1.2em;
+    font-size: 2.2em;
 }
   
    
@@ -207,31 +209,109 @@
 </div>
 
 <div class="table-responsive">
-<table class="table  " id="datatable1">
-<thead>
-<tr>
-
-    <th>Waqtiga</th>
-<th>Magaca Macmiilka</th>
-        <th>Magaca Shaqaalaha</th>
-<th>Lacagta U Bixiye</th>
-    <th>Lacagta Laga Rabay</th>
-<th>Lacagta Ku Hartay</th>
-
-
-
-
-
-             
-
-
-</tr>
-</thead>
-<tbody>
-
-</tbody>
-</table>
+    <table class="table" id="datatable1">
+        <thead>
+            <tr>
+                <th>Waqtiga</th>
+                <th>Magaca Macmiilka</th>
+                <th>Magaca Shaqaalaha</th>
+                <th>Lacagta U Bixiye</th>
+                <th>Lacagta Laga Rabay</th>
+                <th>Lacagta Ku Hartay</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </div>
+
+</div>
+</div>
+    </div>
+          </div>
+
+          
+
+
+
+
+      </div>
+     <%-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>--%>
+    </div>
+  </div>
+</div>
+
+
+        <!-- Modal -->
+<div class="modal fade" id="catmodal8" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel8">Report ka Shaqaalaha</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+                         <div class="col-12">
+        <div class="page-header">
+<div class="page-title">
+
+
+</div>
+
+</div>
+
+<div class="card">
+<div class="card-body">
+<div class="table-top">
+<div class="search-set">
+<div class="search-path">
+<a class="btn btn-filter" id="filter_search111">
+<img src="assets/img/icons/filter.svg" alt="img">
+<span><img src="assets/img/icons/closes.svg" alt="img"></span>
+</a>
+</div>
+<div class="search-input">
+<a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img"></a>
+</div>
+</div>
+<div class="wordset">
+<ul>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
+</li>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
+</li>
+<li>
+<a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img"></a>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+<div class="table-responsive">
+    <table class="table" id="datatable5">
+        <thead>
+            <tr>
+  
+          
+                <th>Magaca Shaqaalaha</th>
+                <th>Lacagta guud</th>
+                <th>Lacagta Laga Qabtay</th>
+                <th>Lacagta  Maqan</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
 </div>
 </div>
     </div>
@@ -437,7 +517,8 @@
 <th>Lacagta la Bixiye </th>
 
 <th>Lacagta La Hartay</th>
-                <th>Action</th>
+                <th>Order da</th>
+                  <th>Shaqalaha</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -551,13 +632,9 @@
 
 
 
-    <!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
+
+    <script src="dtmini/datatables.min.js"></script>
+
         <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/dataTables.bootstrap4.min.js"></script>
@@ -644,12 +721,18 @@
                         $("#todaystocktbl tbody").append(
                             "<tr>" +
                             "<td>" + OrderDate + "</td>" +
-                            "<td>" + TotalAmountPerDay + "</td>" +
+            
                             "<td>" + TotalCombinedAmountPerDay + "</td>" +
+                            "<td>" + TotalAmountPerDay + "</td>" +
                             "<td>" + totalcredits + "</td>" +
                             "<td>" +
-                            '<a class="me-3 edit-button" data-id="' + OrderDate + '">' +
-                            '<img src="assets/img/icons/edit.svg" alt="Edit">' +
+                            '<a class="me-3 btn btn-success text-white edit-button" data-id="' + OrderDate + '">' +
+                            ' Check Orders' +
+                            "</a>" +
+                            "</td>" +
+                            "<td>" +
+                            '<a class="me-3 btn btn-success text-white edit-button1" data-id="' + OrderDate + '">' +
+                            ' check Employee' +
                             "</a>" +
                             "</td>" +
                             "</tr>"
@@ -737,7 +820,7 @@
             var id = $(this).data("id");
 
 
-  
+         
        
             $.ajax({
                 url: 'order_report.aspx/dailyreports',
@@ -746,26 +829,20 @@
                 type: 'POST',
                 contentType: "application/json",
                 success: function (response) {
-
+                    // Clear existing table body content
                     $("#datatable1 tbody").empty();
 
+                    // Populate the table rows
                     for (var i = 0; i < response.d.length; i++) {
                         var OrderDateTime = response.d[i].OrderDateTime;
                         var CustomerName = response.d[i].CustomerName;
                         var EmployeeName = response.d[i].EmployeeName;
-
                         var CreditAmount = response.d[i].CreditAmount;
                         var TotalAmount = response.d[i].TotalAmount;
                         var TotalCombinedAmount = response.d[i].TotalCombinedAmount;
                         var OrderID = response.d[i].OrderID;
 
-                        
-
-
-
-
-
-
+                        // Append data into the table body
                         $("#datatable1 tbody").append(
                             "<tr>" +
                             "<td>" + OrderDateTime + "</td>" +
@@ -778,18 +855,92 @@
                             '<a class="me-3 edit-button" data-id="' + OrderID + '">' +
                             '<img src="assets/img/icons/edit.svg" alt="Edit">' +
                             "</td>" +
+
                             "</tr>"
                         );
                     }
 
+                    // Initialize DataTable with search, pagination, and export buttons
+                    $("#datatable1").DataTable({
+                        destroy: true,  // Destroy any existing instance before re-initializing
+                        dom: 'Bfrtip',  // Define the placement of buttons and the search box
+                        buttons: [
+                            'excelHtml5',  // Export to Excel
+                            'print'        // Print button
+                        ],
+                        paging: true,       // Enable pagination
+                        pageLength: 10,     // Default number of rows per page
+                        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        responsive: true    // Make the table responsive
+                    });
                 },
                 error: function (response) {
                     alert(response.responseText);
+                    console.log(response.responseText);
                 }
             });
 
+
+
             $('#catmodal').modal('show');
         });
+
+
+
+
+        $("#todaystocktbl").on("click", ".edit-button1", function (event) {
+            event.preventDefault(); // Prevent default behavior
+
+            var row = $(this).closest("tr");
+            var id = $(this).data("id");
+
+
+
+            $.ajax({
+                url: 'order_report.aspx/empreports',
+                data: JSON.stringify({ 'id': id }),
+                dataType: "json",
+                type: 'POST',
+                contentType: "application/json",
+                success: function (response) {
+                    console.log(response);
+
+                    // Clear the DataTable properly if it's already initialized
+                    var table = $("#datatable5").DataTable();
+                    table.clear().draw();
+
+                    // Populate the table rows
+                    for (var i = 0; i < response.d.length; i++) {
+                        var EmployeeName = response.d[i].EmployeeName;
+                        var CreditAmount = response.d[i].CreditAmount;
+                        var TotalAmount = response.d[i].TotalAmount;
+                        var TotalCombinedAmount = response.d[i].TotalCombinedAmount;
+                        var EmployeeID = response.d[i].EmployeeID;
+
+                        // Add new row to the table
+                        table.row.add([
+                            EmployeeName,
+                            TotalAmount,
+                     
+                            TotalCombinedAmount,
+                            CreditAmount,
+                          
+                        
+                        ]).draw(false); // Draw the new row without resetting the page
+                    }
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    console.log(response.responseText);
+                }
+            });
+
+            $('#catmodal8').modal('show');
+        });
+
+
+
+
 
 
         $("#itemstock").on("click", ".edit-button", function (event) {

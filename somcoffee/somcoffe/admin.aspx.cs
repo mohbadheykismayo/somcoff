@@ -32,7 +32,7 @@ namespace somcoffe
 
 
                     // Adjust the query to insert the parsed date
-                    string catquery = "UPDATE Credits SET CreditAmount = @qtya  WHERE CreditID = @id;";
+                    string catquery = "UPDATE Credits SET CreditAmount = CreditAmount + @qtya  WHERE CreditID = @id;";
 
 
                     using (SqlCommand cmd = new SqlCommand(catquery, con))
@@ -103,8 +103,10 @@ INNER JOIN Customers ON Credits.CustomerID = Customers.CustomerID
 INNER JOIN Employees ON Credits.IssuedByEmployeeID = Employees.EmployeeID
 INNER JOIN Orders ON Credits.OrderID = Orders.OrderID
 INNER JOIN Order_Items ON Orders.OrderID = Order_Items.OrderID
-GROUP BY Orders.OrderID, Customers.CustomerName, Employees.EmployeeName, Credits.CreditAmount, Orders.OrderDateTime ,   Credits.CreditID
+GROUP BY Orders.OrderID, Customers.CustomerName, Employees.EmployeeName, Credits.CreditAmount, Orders.OrderDateTime, Credits.CreditID
+HAVING SUM(COALESCE(Orders.TotalAmount, 0)) - SUM(COALESCE(Credits.CreditAmount, 0)) > 0
 ORDER BY Orders.OrderDateTime DESC;
+
         ", con);
 
                 SqlDataReader dr = cmd.ExecuteReader();
