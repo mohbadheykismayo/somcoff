@@ -2,30 +2,182 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
     <link href="dtmini/datatables.min.css" rel="stylesheet" />
-          <style>
-              .page-header {
-    background-color: #dda15e;
-}
+ <style>
+        /* General styling */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #faf3e0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
 
-      #datatable{
-          font-size: 2.2em;
-      }
-        #datatable5{
-      font-size: 2.2em;
-  }
-        #datatable1{
-      font-size: 2.2em;
-  }
-              #todaystocktbl{
-    font-size: 2.2em;
-}
-            #itemstock{
-    font-size: 2.2em;
-}
-  
-   
-        
-  </style>
+        /* Page header */
+        .page-header {
+            background-color: #e63946;
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .page-title h1 {
+            margin: 0;
+            font-size: 3.5em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Card Styling */
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: #2a9d8f;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.3em;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background-color: #21867a;
+            cursor: pointer;
+        }
+
+        .btn-close {
+            font-size: 1.7em;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 20px;
+            font-size: 1.5em;
+            text-align: center;
+            font-family: 'Verdana', sans-serif;
+        }
+
+        table thead {
+            background-color: #e76f51;
+            color: white;
+            font-weight: bold;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background-color: #f1faee;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #faf3e0;
+        }
+
+        table tbody tr:hover {
+            background-color: #ffb703;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Table Responsive */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        /* Wordset (Export Buttons) */
+        .wordset ul {
+            list-style-type: none;
+            display: flex;
+            gap: 20px;
+            justify-content: flex-end;
+            padding: 0;
+        }
+
+        .wordset ul li a {
+            background-color: #f4a261;
+            padding: 14px;
+            border-radius: 50%;
+            display: inline-block;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .wordset ul li a:hover {
+            transform: scale(1.2);
+        }
+
+        /* Modal Styling */
+        .modal-header {
+            background-color: #e63946;
+            color: white;
+            padding: 20px 25px;
+            font-size: 1.7em;
+        }
+
+        .modal-body {
+            padding: 35px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .page-title h1 {
+                font-size: 2.5em;
+            }
+
+            table th, table td {
+                padding: 15px;
+                font-size: 1.3em;
+            }
+
+            .btn {
+                font-size: 1.2em;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-title h1 {
+                font-size: 2em;
+            }
+
+            .modal-dialog {
+                width: 100%;
+                margin: 0;
+            }
+
+            .btn {
+                padding: 12px;
+                font-size: 1em;
+            }
+
+            .table-responsive {
+                overflow-x: scroll;
+            }
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
         <!-- Modal -->
@@ -721,8 +873,8 @@
                         $("#todaystocktbl tbody").append(
                             "<tr>" +
                             "<td>" + OrderDate + "</td>" +
-            
                             "<td>" + TotalCombinedAmountPerDay + "</td>" +
+                            "<td>" + TotalAmountPerDay + "</td>" +
                             "<td>" + TotalAmountPerDay + "</td>" +
                             "<td>" + totalcredits + "</td>" +
                             "<td>" +
@@ -732,14 +884,14 @@
                             "</td>" +
                             "<td>" +
                             '<a class="me-3 btn btn-success text-white edit-button1" data-id="' + OrderDate + '">' +
-                            ' check Employee' +
+                            ' Check Employee' +
                             "</a>" +
                             "</td>" +
                             "</tr>"
                         );
                     }
 
-                    // Initialize DataTable with search, pagination, and export buttons
+                    // Initialize DataTable with search, pagination, export buttons, and ordering by the OrderDate column
                     $("#todaystocktbl").DataTable({
                         destroy: true,  // Destroy any existing instance before re-initializing
                         dom: 'Bfrtip',  // Define the placement of buttons and the search box
@@ -750,7 +902,8 @@
                         paging: true,       // Enable pagination
                         pageLength: 10,     // Default number of rows per page
                         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                        responsive: true    // Make the table responsive
+                        responsive: true,   // Make the table responsive
+                        order: [[0, 'desc']] // Sort by the first column (OrderDate) in descending order
                     });
                 },
                 error: function (response) {
@@ -759,6 +912,7 @@
                 }
             });
         }
+
 
   /*      datadisplay();*/
         function datadisplay() {
